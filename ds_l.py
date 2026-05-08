@@ -5,45 +5,234 @@ import json
 OUTPUT_FILE = "deepseek回答.md"
 
 # 你的提问内容
-content = """Working on html code below. Do not change any visual output or data values.
-Only fix structure and bugs as described below.
+content = """
 
-Bug 1 — countryNames redundancy:
-  - Delete the entire `countryNames` key from CHEF_DATA
-  - In renderNetworkSection, replace D.countryNames[country]||country
-    with D.countries[country]?.name || country
+things to fix #1:
+Fix the startup field in extendedMeta.
 
-Bug 2 — hardcoded network cards:
-  - Add a `networkCards` array to CHEF_DATA with this shape:
-    { title: string, value: string, meta: string }
-  - Extract the four hardcoded cards from renderNetworkSection into this array:
-    "Recommended Majors", "Target Courses", "Stretch Majors", "Key Connections"
-  - Update renderNetworkSection to render from D.networkCards.map(...)
-  - The Hall of Fame card stays rendered separately (it uses country-specific data)
+Current problem:
+  - startup is stored as a string: '68% readiness'
+  - The render function uses parseInt(meta.startup) to extract the number
+  - This is fragile — the data layer contains presentation markup
 
-Bug 3 — random MBTI:
-  - At the top of the logic <script>, before initAll(), declare:
-    const selectedMBTI = D.mbtiData[0];
-  - In renderCareerNotes, replace the Math.random() line with selectedMBTI
+Fix:
+  1. In JOB_DATA.extendedMeta, change all startup fields from strings to numbers:
+     
+     Before:
+     US: {
+       startup: '68% readiness',
+       ...
+     }
+     
+     After:
+     US: {
+       startupReadiness: 68,
+       ...
+     }
+     
+     Do this for all 8 countries: US, UK, AU, DE, JP, SG, TW, CN
 
-Bug 4 — hardcoded filter count:
-  - In renderFiltersAndTable, replace the hardcoded count (currently 4)
-    with D.tasks.length
+  2. In renderExtraInsights function, update the logic:
+     
+     Before:
+     const baseStartup = parseInt(meta.startup);
+     
+     After:
+     const baseStartup = meta.startupReadiness;
+     
+     And update the template to add the "% readiness" label:
+     
+     <div class="insight-value" style="color:${startupColor}">${dynamicStartup}% readiness</div>
 
-Bug 5 — version and footnote:
-  - Add two fields to CHEF_DATA:
-    version: 'v2.2 · Apr 2026',
-    footnote: '* Data: Miso Robotics deployments · BLS Occupational Outlook 2025 · JobForesight 2026 · ILO salary benchmarks'
-  - In renderFiltersAndTable, replace the hardcoded version string with D.version
-  - In the HTML, replace the hardcoded footnote text with a <span id="footnoteText"></span>
-    and populate it in initAll() with:
-    document.getElementById('footnoteText').textContent = D.footnote;
+Do not change any other data values, visual output, or function names.
+Only restructure the startup field from string to number.
 
-Rename:
-  - Rename CHEF_DATA → JOB_DATA everywhere (both the declaration and const D = JOB_DATA)
-  - This makes the logic script reusable across all future occupation files
+things to fix #2:
+The Career Insight cards
+(💪 Job Hardship, 🏖️ Annual Leave, etc.) are currently hardcoded in the
+renderInsights function. Move them to JOB_DATA so they're editable as data.
 
-  <!DOCTYPE html>
+Add this new section to JOB_DATA (after insightCards or before countryMeta):
+
+    // ── Career Insight Cards ───────────────────────────────────────────
+    insightCards: [
+        {
+            id: 'difficulty',
+            icon: '💪',
+            label: 'Job Hardship',
+            valueKey: 'difficulty',
+            valueTemplate: '{value}/10',
+            metaTemplate: '{difficultyLabel} · physically & mentally demanding'
+        },
+        {
+            id: 'restDays',
+            icon: '🏖️',
+            label: 'Annual Leave',
+            valueKey: 'restDays',
+            valueTemplate: '{value} days',
+            metaTemplate: '{hoursPerDay}h avg work day · Split shifts {splitShiftLabel}'
+        },
+        {
+            id: 'bestLearnAge',
+            icon: '🎓',
+            label: 'Best Learning Age',
+            valueKey: 'bestLearnAge',
+            valueTemplate: '{value}',
+            metaTemplate: 'Culinary school or apprenticeship entry window'
+        },
+        {
+            id: 'bestEntryAge',
+            icon: '🚀',
+            label: 'Best Entry Age',
+            valueKey: 'bestEntryAge',
+            valueTemplate: '{value}',
+            metaTemplate: 'Peak energy & fastest skill absorption period'
+        },
+        {
+            id: 'travel',
+            icon: '✈️',
+            label: 'Business Travel',
+            valueKey: 'travel',
+            valueTemplate: '{value}',
+            metaTemplate: 'Frequency of travel for events, sourcing, or multi-site management.'
+        },
+        {
+            id: 'mobility',
+            icon: '🏃',
+            label: 'Physical Mobility',
+            valueKey: 'mobility',
+            valueTemplate: '{value}',
+            metaTemplate: 'Level of constant movement, standing, and station transitions.'
+        },
+        {
+            id: 'expression',
+            icon: '🗣️',
+            label: 'Creative Self-Expression',
+            valueKey: 'expression',
+            valueTemplate: '{value}',
+            metaTemplate: 'Requirement to communicate vision, lead teams, and express creativity.'
+        },
+        {
+            id: 'cert',
+            icon: '📜',
+            label: 'Certifications Required',
+            valueKey: 'cert',
+            valueTemplate: '{value}',
+            metaTemplate: 'Varies by employer tier & establishment type'
+        }
+    ],
+
+Then rewrite renderInsights to loop over D.insightCards:
+
+    function renderInsights(country) {
+        const section = document.getElementById('insightsGrid');
+        if (!section) return;
+        const meta = D.countryMeta[country] || D.countryMeta.US;
+        
+        section.innerHTML = `<div class="insights-grid">
+          ${D.insightCards.map(card => {
+              // Get the value from countryMeta using valueKey
+              const rawValue = meta[card.valueKey];
+              
+              // Replace {value} in valueTemplate
+              const displayValue = card.valueTemplate.replace('{value}', rawValue);
+              
+              // Replace placeholders in metaTemplate
+              let metaText = card.metaTemplate;
+              
+              // Special replacements for templates with dynamic values
+              if (card.id === 'difficulty') {
+                  const diffLabel = D.difficultyLabels[meta.difficulty] || '';
+                  metaText = metaText.replace('{difficultyLabel}', diffLabel);
+              }
+              if (card.id === 'restDays') {
+                  metaText = metaText
+                      .replace('{hoursPerDay}', meta.hoursPerDay)
+                      .replace('{splitShiftLabel}', meta.splitShift ? 'common' : 'rare');
+              }
+              
+              return `<div class="insight-card">
+                <span class="insight-icon">${card.icon}</span>
+                <div class="insight-label">${card.label}</div>
+                <div class="insight-value">${displayValue}</div>
+                <div class="insight-meta">${metaText}</div>
+                ${card.id === 'difficulty' ? renderDifficultyBar(meta.difficulty) : ''}
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+    
+    function renderDifficultyBar(difficulty) {
+        const bars = Array(10).fill(0).map((_, i) => {
+            const filled = i < difficulty;
+            let fillClass = 'diff-pip';
+            if (filled) {
+                if (difficulty <= 3) fillClass += ' filled-low';
+                else if (difficulty <= 5) fillClass += ' filled-mid';
+                else if (difficulty <= 7) fillClass += ' filled-high';
+                else fillClass += ' filled-max';
+            }
+            return `<div class="${fillClass}"></div>`;
+        }).join('');
+        return `<div class="difficulty-bar">${bars}</div>`;
+    }
+
+Replace the entire existing renderInsights function with this new version.
+Do not change countryMeta data or visual output — only move the card definitions
+from logic to data and make the render function loop over them.
+
+quality issue #1:
+the networkCards array has raw HTML embedded in
+the "Key Connections" meta field. Extract it to the render function.
+
+Change in JOB_DATA.networkCards:
+  Before:
+  { title: 'Key Connections', value: '...', 
+    meta: `<div style="background:color-mix(...)">...</div>` }
+  
+  After:
+  { title: 'Key Connections', value: 'Michelin Execs & F&B Directors',
+    meta: 'Build relationships with top-tier culinary executives and F&B directors.',
+    loginCTA: true }
+
+Then in renderNetworkSection, add the CTA HTML conditionally:
+  
+  const networkCardsHtml = D.networkCards.map(card => `
+    <div class="note-card">
+      <div class="note-title">${card.title}</div>
+      <div class="note-value" style="font-size:14px">${card.value}</div>
+      <div class="note-meta">${card.meta}
+        ${card.loginCTA ? `<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Login to unlock your personalized key connection plan and step-by-step outreach strategy</div></div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+Do not change other networkCards entries or visual output.
+
+quality issue #2:
+the renderCareerNotes function has a dead alias variable.
+
+In renderCareerNotes, delete this line:
+  const randomMBTI = selectedMBTI; // fix: use constant instead of random
+
+Then replace all instances of randomMBTI with selectedMBTI in the same function.
+
+Before:
+  const randomMBTI = selectedMBTI;
+  ...
+  <div class="note-title">MBTI fit: ${randomMBTI.type}</div>
+  ...${randomMBTI.desc}...
+
+After:
+  (line deleted)
+  ...
+  <div class="note-title">MBTI fit: ${selectedMBTI.type}</div>
+  ...${selectedMBTI.desc}...
+
+Do not change any other logic or data.
+
+Actual Code below:
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -2319,7 +2508,7 @@ Rename:
 
         <!-- Summary -->
         <div class="summary-row" id="summaryRow"></div>
-        <div class="footnote">* Data: Miso Robotics deployments · BLS Occupational Outlook 2025 · JobForesight 2026 · ILO salary benchmarks</div>
+        <div class="footnote"><span id="footnoteText"></span></div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -2327,11 +2516,11 @@ Rename:
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <script>
         // ==========================================================================
-        //  CHEF_DATA — The single source of truth for ALL data in this dashboard.
+        //  JOB_DATA — The single source of truth for ALL data in this dashboard.
         //  To edit any value (salary, city, risk age, language, etc.), modify the
         //  relevant section below. The UI will automatically reflect changes.
         // ==========================================================================
-        const CHEF_DATA = {
+        const JOB_DATA = {
 
             // ── Industry Tags ──────────────────────────────────────────────────────
             industries: [
@@ -2640,10 +2829,6 @@ Rename:
                 pivot: 'Best Pivot Set: private Household Chef, SOP Consultant, Flavor/Product R&D.' },
             },
 
-            // ── Country Name Lookup ────────────────────────────────────────────────
-            countryNames: { US: 'USA', UK: 'United Kingdom', AU: 'Australia', DE: 'Germany', JP: 'Japan',
-                SG: 'Singapore', TW: 'Taiwan', CN: 'China' },
-
             // ── Startup Resource Links per Country ─────────────────────────────────
             startupLinks: {
                 US: [{ label: 'SBA Grants', url: 'https://www.sba.gov' }, { label: 'CloudKitchens',
@@ -2817,7 +3002,7 @@ Rename:
 
             // ── Filter Pills ───────────────────────────────────────────────────────
             filters: [
-                { id: 'all', label: 'All', class: 'all', active: true, dot: false, count: 4 },
+                { id: 'all', label: 'All', class: 'all', active: true, dot: false },
                 { id: 'playable', label: 'Playable', class: 'gf', active: false, dot: true },
                 { id: 'ingame', label: 'In-Game', class: 'yf', active: false, dot: true },
                 { id: 'intro', label: 'Intro', class: 'of', active: false, dot: true },
@@ -2828,8 +3013,8 @@ Rename:
             mbtiData: [
                 { type: 'ESTP',
                     desc: 'The Dynamo. Thrives in fast-paced, high-pressure environments. Excellent at hands-on execution and real-time problem solving on the line.' },
-                { type: 'ISTJ',
-                    desc: 'The Inspector. Reliable and meticulous. Ensures absolute consistency in recipes and maintains the highest standards of food safety.' },
+                { type: 'ESTP',
+                    desc: 'The Dynamo. Thrives in fast-paced, high-pressure environments. Excellent at hands-on execution and real-time problem solving on the line.' },
                 { type: 'ENTJ',
                     desc: 'The Commander. Natural leaders who can efficiently manage a complex kitchen brigade and drive the restaurant towards strategic goals.' },
                 { type: 'ISFP',
@@ -2850,17 +3035,30 @@ Rename:
             // ── Language Pill Class Mapping ────────────────────────────────────────
             langPillClasses: { 'Essential': 'llp-essential', 'Helpful': 'llp-helpful', 'Optional': 'llp-optional',
                 'Senior Only': 'llp-senior', 'High-end Only': 'llp-senior', 'Regional': 'llp-helpful' },
+
+            // ── Network Cards ──────────────────────────────────────────────────────
+            networkCards: [
+                { title: "Recommended Majors", value: "Culinary Arts & Hospitality Mgt", meta: "Secondary: Food Science, Nutrition, or Business Administration." },
+                { title: "Target Courses", value: "Kitchen Ops & Cost Control", meta: "Also highly recommended: Molecular Gastronomy, Sustainable Sourcing, and Staff Leadership." },
+                { title: "Stretch Majors", value: "F&B Tech & Innovation", meta: "To beat AI risk, transition into tech-enabled food systems or high-end molecular research." },
+                { title: "Key Connections", value: "Michelin Execs & F&B Directors", meta: `<div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Login to unlock your personalized key connection plan and step-by-step outreach strategy</div></div>` }
+            ],
+
+            // ── Version & Footnote ─────────────────────────────────────────────────
+            version: 'v2.2 · Apr 2026',
+            footnote: '* Data: Miso Robotics deployments · BLS Occupational Outlook 2025 · JobForesight 2026 · ILO salary benchmarks',
         };
     </script>
 
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
-    <!-- ░░░░░░  APPLICATION LOGIC — Reads from CHEF_DATA above ░░░░░░░░░░░░░ -->
+    <!-- ░░░░░░  APPLICATION LOGIC — Reads from JOB_DATA above ░░░░░░░░░░░░░ -->
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <script>
         // ── State ──────────────────────────────────────────────────────────────────
         let currentCountry = 'US';
         let currentLevel = 0;
-        const D = CHEF_DATA; // shorthand
+        const D = JOB_DATA; // shorthand
+        const selectedMBTI = D.mbtiData[0]; // fix random MBTI
 
         // ── Utility ────────────────────────────────────────────────────────────────
         function fmt(n, c) {
@@ -3158,7 +3356,7 @@ Rename:
                 `<defs><linearGradient id="careerGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4f98a3"/><stop offset="60%" stop-color="#eab308"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs><rect x="${rx1}" y="${padT}" width="${rx2-rx1}" height="${cH}" fill="${lvlColor}" opacity="0.07" rx="2"/>`;
             wrap.innerHTML = `
             <div class="income-chart-header">
-              <span class="income-chart-title">Annual Income Curve — Full Career (<span id="chartCountryLabel">${D.countryNames[country]||country}</span>)</span>
+              <span class="income-chart-title">Annual Income Curve — Full Career (<span id="chartCountryLabel">${D.countries[country]?.name || country}</span>)</span>
               <span class="income-chart-note">Colored dots mark level transitions · hover for value</span>
             </div>
             <svg id="incomeSVG" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${defs}${inner}</svg>
@@ -3235,7 +3433,7 @@ Rename:
             const langs = D.languages[country] || [];
             const pillClass = D.langPillClasses;
             section.innerHTML = `
-            <div class="section-label" style="margin-bottom:12px">Language Requirements — <span>${D.countryNames[country]||country}</span></div>
+            <div class="section-label" style="margin-bottom:12px">Language Requirements — <span>${D.countries[country]?.name || country}</span></div>
             <div class="lang-list">${langs.map(l=>`
               <div class="lang-row">
                 <div class="lang-name">${l.lang}</div>
@@ -3271,7 +3469,7 @@ Rename:
                 return `<div class="city-card" style="background:${bg};border:1px solid ${brd}"><div class="city-name">${c.city}</div><div class="city-region">${c.region}</div><div class="city-salary">$${salK}</div><div class="city-cost">Cost Index: ${c.cost}</div></div>`;
             }).join('');
             section.innerHTML = `
-            <div class="heatmap-header"><span class="section-label" style="margin-bottom:0">City Income Heatmap — <span>${D.countryNames[country]||country}</span></span><span style="font-size:10px;color:var(--text-faint)">Avg. cook salary (local equiv. USD) · <span style="color:var(--text-muted)">cost index</span></span></div>
+            <div class="heatmap-header"><span class="section-label" style="margin-bottom:0">City Income Heatmap — <span>${D.countries[country]?.name || country}</span></span><span style="font-size:10px;color:var(--text-faint)">Avg. cook salary (local equiv. USD) · <span style="color:var(--text-muted)">cost index</span></span></div>
             <div class="heatmap-grid">${cards}</div>
             <div class="heatmap-scale"><div class="heatmap-scale-bar"><div class="hs-low"></div><div class="hs-mid"></div><div class="hs-high"></div></div><span style="font-size:9px;color:var(--text-faint)">Low → High income</span></div>`;
         }
@@ -3337,7 +3535,7 @@ Rename:
             const section = document.getElementById('careerNotesSection');
             if (!section) return;
             const meta = D.extendedMeta[country] || D.extendedMeta.US;
-            const randomMBTI = D.mbtiData[Math.floor(Math.random() * D.mbtiData.length)];
+            const randomMBTI = selectedMBTI; // fix: use constant instead of random
             let retireMetaText =
                 "Your late-career exit options and personal retirement outlook.";
             if (D.filialPietyCountries.includes(country)) {
@@ -3375,14 +3573,14 @@ Rename:
             if (!section) return;
             const chefs = D.famousChefs[country] || D.famousChefs.US;
             const chefsHtml = chefs.map(c => `<strong>${c.name}</strong> (${c.netWorth})`).join(', ');
+            const networkCardsHtml = D.networkCards.map(card => `
+                <div class="note-card"><div class="note-title">${card.title}</div><div class="note-value" style="font-size:14px">${card.value}</div><div class="note-meta">${card.meta}</div></div>
+            `).join('');
             section.innerHTML = `
             <div class="section-label">Academic & Networking Strategy</div>
             <div class="note-grid">
-              <div class="note-card"><div class="note-title">Recommended Majors</div><div class="note-value" style="font-size:14px">Culinary Arts & Hospitality Mgt</div><div class="note-meta">Secondary: Food Science, Nutrition, or Business Administration.</div></div>
-              <div class="note-card"><div class="note-title">Target Courses</div><div class="note-value" style="font-size:14px">Kitchen Ops & Cost Control</div><div class="note-meta">Also highly recommended: Molecular Gastronomy, Sustainable Sourcing, and Staff Leadership.</div></div>
-              <div class="note-card"><div class="note-title">Stretch Majors</div><div class="note-value" style="font-size:14px">F&B Tech & Innovation</div><div class="note-meta">To beat AI risk, transition into tech-enabled food systems or high-end molecular research.</div></div>
-              <div class="note-card"><div class="note-title">Key Connections</div><div class="note-value" style="font-size:14px">Michelin Execs & F&B Directors</div><div class="note-meta"><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Login to unlock your personalized key connection plan and step-by-step outreach strategy</div></div></div></div>
-              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${D.countryNames[country]||country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled by leveraging personal brand, media, and multi-venue empires rather than just line cooking.</div></div>
+              ${networkCardsHtml}
+              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${D.countries[country]?.name || country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled by leveraging personal brand, media, and multi-venue empires rather than just line cooking.</div></div>
             </div>`;
         }
 
@@ -3395,11 +3593,11 @@ Rename:
             <div class="filters-left" role="group">
               ${D.filters.map(f=>`
                 <button class="filter-pill ${f.class}${f.active?' active':''}" data-filter="${f.id}">
-                  ${f.dot?'<span class="dot"></span> ':''}${f.label}${f.id==='all'?` <span style="opacity:.5;font-size:10px">${f.count}</span>`:''}
+                  ${f.dot?'<span class="dot"></span> ':''}${f.label}${f.id==='all'?` <span style="opacity:.5;font-size:10px">${D.tasks.length}</span>`:''}
                 </button>
               `).join('')}
             </div>
-            <div style="font-size:10px;color:var(--text-faint)">v2.2 · Apr 2026</div>`;
+            <div style="font-size:10px;color:var(--text-faint)">${D.version}</div>`;
             tableWrap.innerHTML = `
             <div class="table-scroll"><table aria-label="Job automation compatibility">
               <thead><tr><th>Action</th><th>Human Workflow</th><th>AI / Bot Workflow</th><th>Replace Ratio</th><th style="text-align:center">Node LTV</th><th style="text-align:center">ETA</th><th style="text-align:center">Status</th></tr></thead>
@@ -3468,6 +3666,9 @@ Rename:
             renderAccessLinks();
             renderFiltersAndTable();
             renderAll(currentCountry, currentLevel, false);
+            // Set footnote from data
+            const footnoteEl = document.getElementById('footnoteText');
+            if (footnoteEl) footnoteEl.textContent = D.footnote;
         }
 
         // ── Event: Country Tabs ────────────────────────────────────────────────────
@@ -3566,7 +3767,6 @@ Rename:
     </script>
 </body>
 </html>
-
 
 """
 

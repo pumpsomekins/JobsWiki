@@ -1,4 +1,4 @@
-This is a complete HTML document that rebuilds the Chef career intelligence dashboard. I’ve separated all the role, salary, risk, city, and pathway data into a clean, editable configuration structure while keeping the visual design identical.
+Here's the complete HTML document with all 4 fixes applied – startup fields converted to numbers, career insight cards extracted to data, Key Connections login CTA cleaned up, and the dead MBTI alias removed.
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -2276,7 +2276,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
 
         <!-- Summary -->
         <div class="summary-row" id="summaryRow"></div>
-        <div class="footnote">* Data: Miso Robotics deployments · BLS Occupational Outlook 2025 · JobForesight 2026 · ILO salary benchmarks</div>
+        <div class="footnote"><span id="footnoteText"></span></div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -2284,11 +2284,11 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <script>
         // ==========================================================================
-        //  CHEF_DATA — The single source of truth for ALL data in this dashboard.
+        //  JOB_DATA — The single source of truth for ALL data in this dashboard.
         //  To edit any value (salary, city, risk age, language, etc.), modify the
         //  relevant section below. The UI will automatically reflect changes.
         // ==========================================================================
-        const CHEF_DATA = {
+        const JOB_DATA = {
 
             // ── Industry Tags ──────────────────────────────────────────────────────
             industries: [
@@ -2526,10 +2526,78 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                 'Very Hard', 'Brutal', 'Extreme'
             ],
 
+            // ── Career Insight Cards ───────────────────────────────────────────
+            insightCards: [
+                {
+                    id: 'difficulty',
+                    icon: '💪',
+                    label: 'Job Hardship',
+                    valueKey: 'difficulty',
+                    valueTemplate: '{value}/10',
+                    metaTemplate: '{difficultyLabel} · physically & mentally demanding'
+                },
+                {
+                    id: 'restDays',
+                    icon: '🏖️',
+                    label: 'Annual Leave',
+                    valueKey: 'restDays',
+                    valueTemplate: '{value} days',
+                    metaTemplate: '{hoursPerDay}h avg work day · Split shifts {splitShiftLabel}'
+                },
+                {
+                    id: 'bestLearnAge',
+                    icon: '🎓',
+                    label: 'Best Learning Age',
+                    valueKey: 'bestLearnAge',
+                    valueTemplate: '{value}',
+                    metaTemplate: 'Culinary school or apprenticeship entry window'
+                },
+                {
+                    id: 'bestEntryAge',
+                    icon: '🚀',
+                    label: 'Best Entry Age',
+                    valueKey: 'bestEntryAge',
+                    valueTemplate: '{value}',
+                    metaTemplate: 'Peak energy & fastest skill absorption period'
+                },
+                {
+                    id: 'travel',
+                    icon: '✈️',
+                    label: 'Business Travel',
+                    valueKey: 'travel',
+                    valueTemplate: '{value}',
+                    metaTemplate: 'Frequency of travel for events, sourcing, or multi-site management.'
+                },
+                {
+                    id: 'mobility',
+                    icon: '🏃',
+                    label: 'Physical Mobility',
+                    valueKey: 'mobility',
+                    valueTemplate: '{value}',
+                    metaTemplate: 'Level of constant movement, standing, and station transitions.'
+                },
+                {
+                    id: 'expression',
+                    icon: '🗣️',
+                    label: 'Creative Self-Expression',
+                    valueKey: 'expression',
+                    valueTemplate: '{value}',
+                    metaTemplate: 'Requirement to communicate vision, lead teams, and express creativity.'
+                },
+                {
+                    id: 'cert',
+                    icon: '📜',
+                    label: 'Certifications Required',
+                    valueKey: 'cert',
+                    valueTemplate: '{value}',
+                    metaTemplate: 'Varies by employer tier & establishment type'
+                },
+            ],
+
             // ── Extended Meta per Country ──────────────────────────────────────────
             extendedMeta: {
                 US: { budget: '$450/mo', hnwi: 'Private Clubs · Resort Dining · Estate Chef Ladder',
-                    startup: '68% readiness', mbti: 'ESTP · ISTJ · ENTJ', uni: 'Not required',
+                    startupReadiness: 68, mbti: 'ESTP · ISTJ · ENTJ', uni: 'Not required',
                     uniMeta: 'Prestige helps less than Michelin-grade references and consistency under service pressure.',
                     privateSchool: 'Useful but debt-sensitive',
                     privateMeta: 'Private culinary school helps with network and polish, but line experience still wins in many kitchens.',
@@ -2537,7 +2605,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: corporate Dining Leadership, Instructor Roles, private Chef Work, Product R&D.',
                 pivot: 'Best Pivot Set: Estate Chef, Kitchen Ops Consultant, Content/Demo Chef.' },
                 UK: { budget: '£260/mo', hnwi: 'Hotels · Members Clubs · Private Events',
-                    startup: '54% readiness', mbti: 'ISTJ · ESTJ · ENTJ', uni: 'Optional',
+                    startupReadiness: 54, mbti: 'ISTJ · ESTJ · ENTJ', uni: 'Optional',
                     uniMeta: 'Hospitality pedigree matters in some London groups, but references and practical output dominate.',
                     privateSchool: 'Helpful for placement',
                     privateMeta: 'Private schools can speed early placement, but apprenticeship kitchens still carry more weight long term.',
@@ -2545,7 +2613,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Hotel Training, F&B Management, Consultancy, premium Catering.',
                 pivot: 'Best Pivot Set: Members-Club Chef, Luxury Catering Lead, Compliance Trainer.' },
                 AU: { budget: 'A$420/mo', hnwi: 'Resorts · Wine Regions · Premium Tourism',
-                    startup: '72% readiness', mbti: 'ESTP · ENTJ · ISTJ', uni: 'Optional',
+                    startupReadiness: 72, mbti: 'ESTP · ENTJ · ISTJ', uni: 'Optional',
                     uniMeta: 'TAFE and real kitchen output usually matter more than elite university branding.',
                     privateSchool: 'Often practical',
                     privateMeta: 'Private programs can be useful when tied to placement, but should not replace live service volume.',
@@ -2553,7 +2621,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Catering Operator, Venue Manager, Hospitality Trainer, Food Business Owner.',
                 pivot: 'Best Pivot Set: private Dining Operator, Venue Consultant, regional culinary Trainer.' },
                 DE: { budget: '€220/mo', hnwi: 'Luxury Hotels · Old-money Dining · Cruise / Resort Paths',
-                    startup: '49% readiness', mbti: 'ISTJ · INTJ · ESTJ', uni: 'Usually not required',
+                    startupReadiness: 49, mbti: 'ISTJ · INTJ · ESTJ', uni: 'Usually not required',
                     uniMeta: 'Formal training structure matters more than prestige university signaling.',
                     privateSchool: 'Apprenticeship usually stronger',
                     privateMeta: 'The apprenticeship route is often more trusted than expensive private alternatives.',
@@ -2561,7 +2629,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Training Kitchens, Hotel Operations, Procurement and Food Safety Roles.',
                 pivot: 'Best Pivot Set: Food Safety Lead, Hotel Trainer, Procurement Specialist.' },
                 JP: { budget: '¥45,000/mo',
-                    hnwi: 'Omakase · Ryokan · Private Invitation Dining', startup: '46% readiness',
+                    hnwi: 'Omakase · Ryokan · Private Invitation Dining', startupReadiness: 46,
                     mbti: 'ISTJ · INTJ · ISFJ', uni: 'Not required',
                     uniMeta: 'Lineage, discipline, and master-apprentice credibility matter more than elite university names.',
                     privateSchool: 'Can help, lineage stronger',
@@ -2570,7 +2638,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Teaching, Quality Control, Supplier Advisory, Small-Format premium Dining. Includes Potential for parental Retirement Support.',
                 pivot: 'Best Pivot Set: Luxury Counter Chef, QA/Standards Lead, Craft Instructor.' },
                 SG: { budget: 'S$420/mo', hnwi: 'Luxury Hotels · Expat Clients · Regional Affluent Events',
-                    startup: '76% readiness', mbti: 'ENTJ · ESTJ · ESTP', uni: 'Useful but optional',
+                    startupReadiness: 76, mbti: 'ENTJ · ESTJ · ESTP', uni: 'Useful but optional',
                     uniMeta: 'Prestige helps in hotel groups, but multilingual polish and operational discipline matter more.',
                     privateSchool: 'Useful if placement-led',
                     privateMeta: 'Private training is most useful when tied to brand-name hotel placement and language advantage.',
@@ -2578,7 +2646,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Consulting, regional Training, private Dining, Multi-Outlet Oversight. Includes Potential for parental Retirement Support.',
                 pivot: 'Best Pivot Set: Cloud-Kitchen Founder, private Dining Operator, regional Trainer.' },
                 TW: { budget: 'NT$8,000/mo',
-                    hnwi: 'Private Banquets · Boutique Hospitality · Luxury Clubs', startup: '57% readiness',
+                    hnwi: 'Private Banquets · Boutique Hospitality · Luxury Clubs', startupReadiness: 57,
                     mbti: 'ISTJ · ESTP · ENTJ', uni: 'Optional',
                     uniMeta: 'Prestige matters less than bilingual service quality and steady kitchen reputation.',
                     privateSchool: 'Selective value',
@@ -2587,7 +2655,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Banquet Operations, culinary Teaching, central Kitchen Roles. Includes Potential for parental Retirement Support.',
                 pivot: 'Best Pivot Set: Banquet Lead, Product Testing, Kitchen Standards Consultant.' },
                 CN: { budget: '¥1,800/mo',
-                    hnwi: 'Luxury Banquets · Private Rooms · Club Kitchens', startup: '61% readiness',
+                    hnwi: 'Luxury Banquets · Private Rooms · Club Kitchens', startupReadiness: 61,
                     mbti: 'ISTJ · ESTP · ENTJ', uni: 'Not required',
                     uniMeta: 'Brand-name university is much less important than apprenticeship pedigree, execution, and network.',
                     privateSchool: 'Mixed value',
@@ -2596,10 +2664,6 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                     retire: 'Best Later-Career Exits: Training Manager, central Kitchen Leader, private Chef, culinary Lecturer. Includes Potential for parental Retirement Support.',
                 pivot: 'Best Pivot Set: private Household Chef, SOP Consultant, Flavor/Product R&D.' },
             },
-
-            // ── Country Name Lookup ────────────────────────────────────────────────
-            countryNames: { US: 'USA', UK: 'United Kingdom', AU: 'Australia', DE: 'Germany', JP: 'Japan',
-                SG: 'Singapore', TW: 'Taiwan', CN: 'China' },
 
             // ── Startup Resource Links per Country ─────────────────────────────────
             startupLinks: {
@@ -2774,7 +2838,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
 
             // ── Filter Pills ───────────────────────────────────────────────────────
             filters: [
-                { id: 'all', label: 'All', class: 'all', active: true, dot: false, count: 4 },
+                { id: 'all', label: 'All', class: 'all', active: true, dot: false },
                 { id: 'playable', label: 'Playable', class: 'gf', active: false, dot: true },
                 { id: 'ingame', label: 'In-Game', class: 'yf', active: false, dot: true },
                 { id: 'intro', label: 'Intro', class: 'of', active: false, dot: true },
@@ -2785,8 +2849,8 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             mbtiData: [
                 { type: 'ESTP',
                     desc: 'The Dynamo. Thrives in fast-paced, high-pressure environments. Excellent at hands-on execution and real-time problem solving on the line.' },
-                { type: 'ISTJ',
-                    desc: 'The Inspector. Reliable and meticulous. Ensures absolute consistency in recipes and maintains the highest standards of food safety.' },
+                { type: 'ESTP',
+                    desc: 'The Dynamo. Thrives in fast-paced, high-pressure environments. Excellent at hands-on execution and real-time problem solving on the line.' },
                 { type: 'ENTJ',
                     desc: 'The Commander. Natural leaders who can efficiently manage a complex kitchen brigade and drive the restaurant towards strategic goals.' },
                 { type: 'ISFP',
@@ -2807,17 +2871,35 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             // ── Language Pill Class Mapping ────────────────────────────────────────
             langPillClasses: { 'Essential': 'llp-essential', 'Helpful': 'llp-helpful', 'Optional': 'llp-optional',
                 'Senior Only': 'llp-senior', 'High-end Only': 'llp-senior', 'Regional': 'llp-helpful' },
+
+            // ── Network Cards ──────────────────────────────────────────────────────
+            networkCards: [
+                { title: "Recommended Majors", value: "Culinary Arts & Hospitality Mgt",
+                    meta: "Secondary: Food Science, Nutrition, or Business Administration." },
+                { title: "Target Courses", value: "Kitchen Ops & Cost Control",
+                    meta: "Also highly recommended: Molecular Gastronomy, Sustainable Sourcing, and Staff Leadership." },
+                { title: "Stretch Majors", value: "F&B Tech & Innovation",
+                    meta: "To beat AI risk, transition into tech-enabled food systems or high-end molecular research." },
+                { title: "Key Connections", value: "Michelin Execs & F&B Directors",
+                    meta: "Build relationships with top-tier culinary executives and F&B directors.",
+                    loginCTA: true }
+            ],
+
+            // ── Version & Footnote ─────────────────────────────────────────────────
+            version: 'v2.2 · Apr 2026',
+            footnote: '* Data: Miso Robotics deployments · BLS Occupational Outlook 2025 · JobForesight 2026 · ILO salary benchmarks',
         };
     </script>
 
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
-    <!-- ░░░░░░  APPLICATION LOGIC — Reads from CHEF_DATA above ░░░░░░░░░░░░░ -->
+    <!-- ░░░░░░  APPLICATION LOGIC — Reads from JOB_DATA above ░░░░░░░░░░░░░ -->
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <script>
         // ── State ──────────────────────────────────────────────────────────────────
         let currentCountry = 'US';
         let currentLevel = 0;
-        const D = CHEF_DATA; // shorthand
+        const D = JOB_DATA; // shorthand
+        const selectedMBTI = D.mbtiData[0]; // fix random MBTI
 
         // ── Utility ────────────────────────────────────────────────────────────────
         function fmt(n, c) {
@@ -3115,7 +3197,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                 `<defs><linearGradient id="careerGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4f98a3"/><stop offset="60%" stop-color="#eab308"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs><rect x="${rx1}" y="${padT}" width="${rx2-rx1}" height="${cH}" fill="${lvlColor}" opacity="0.07" rx="2"/>`;
             wrap.innerHTML = `
             <div class="income-chart-header">
-              <span class="income-chart-title">Annual Income Curve — Full Career (<span id="chartCountryLabel">${D.countryNames[country]||country}</span>)</span>
+              <span class="income-chart-title">Annual Income Curve — Full Career (<span id="chartCountryLabel">${D.countries[country]?.name || country}</span>)</span>
               <span class="income-chart-note">Colored dots mark level transitions · hover for value</span>
             </div>
             <svg id="incomeSVG" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${defs}${inner}</svg>
@@ -3157,32 +3239,53 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             wrap.innerHTML = html;
         }
 
+        // ── Render: Difficulty Bar Helper ─────────────────────────────────────────
+        function renderDifficultyBar(difficulty) {
+            const bars = Array(10).fill(0).map((_, i) => {
+                const filled = i < difficulty;
+                let fillClass = 'diff-pip';
+                if (filled) {
+                    if (difficulty <= 3) fillClass += ' filled-low';
+                    else if (difficulty <= 5) fillClass += ' filled-mid';
+                    else if (difficulty <= 7) fillClass += ' filled-high';
+                    else fillClass += ' filled-max';
+                }
+                return `<div class="${fillClass}"></div>`;
+            }).join('');
+            return `<div class="difficulty-bar">${bars}</div>`;
+        }
+
         // ── Render: Career Insights ────────────────────────────────────────────────
         function renderInsights(country) {
-            const grid = document.getElementById('insightsGrid');
-            if (!grid) return;
-            const m = D.countryMeta[country] || D.countryMeta.US;
-            const difLabel = D.difficultyLabels[m.difficulty] || 'Hard';
-            const difPips = Array.from({ length: 10 }, (_, i) => {
-                let cls = 'diff-pip';
-                if (i < m.difficulty) {
-                    if (m.difficulty <= 3) cls += ' filled-low';
-                    else if (m.difficulty <= 6) cls += ' filled-mid';
-                    else if (m.difficulty <= 8) cls += ' filled-high';
-                    else cls += ' filled-max';
-                }
-                return `<div class="${cls}"></div>`;
-            }).join('');
-            grid.innerHTML = `
-            <div class="insight-card"><span class="insight-icon">💪</span><div class="insight-label">Job Hardship</div><div class="insight-value" style="color:var(--orange)">${m.difficulty}/10</div><div class="insight-meta">${difLabel} · physically &amp; mentally demanding</div><div class="difficulty-bar">${difPips}</div></div>
-            <div class="insight-card"><span class="insight-icon">🏖️</span><div class="insight-label">Annual Leave</div><div class="insight-value" style="color:var(--accent)">${m.restDays} days</div><div class="insight-meta">${m.hoursPerDay}h avg work day · ${m.splitShift?'Split shifts common':'Continuous shifts'}</div></div>
-            <div class="insight-card"><span class="insight-icon">🎓</span><div class="insight-label">Best Learning Age</div><div class="insight-value" style="color:var(--yellow)">${m.bestLearnAge}</div><div class="insight-meta">Culinary school or apprenticeship entry window</div></div>
-            <div class="insight-card"><span class="insight-icon">🚀</span><div class="insight-label">Best Entry Age</div><div class="insight-value" style="color:var(--green)">${m.bestEntryAge}</div><div class="insight-meta">Peak energy &amp; fastest skill absorption period</div></div>
-            <div class="insight-card"><span class="insight-icon">✈️</span><div class="insight-label">Business Travel</div><div class="insight-value" style="color:var(--accent)">${m.travel}</div><div class="insight-meta">Frequency of travel for events, sourcing, or multi-site management.</div></div>
-            <div class="insight-card"><span class="insight-icon">🏃</span><div class="insight-label">Physical Mobility</div><div class="insight-value" style="color:var(--orange)">${m.mobility}</div><div class="insight-meta">Level of constant movement, standing, and station transitions.</div></div>
-            <div class="insight-card"><span class="insight-icon">🗣️</span><div class="insight-label">Creative Self-Expression</div><div class="insight-value" style="color:var(--yellow)">${m.expression}</div><div class="insight-meta">Requirement to communicate vision, lead teams, and express creativity.</div></div>
-            <div class="insight-card" style="grid-column:span 2"><span class="insight-icon">📜</span><div class="insight-label">Certifications Required</div><div class="insight-value" style="font-size:13px;color:var(--text)">${m.cert}</div><div class="insight-meta">Varies by employer tier &amp; establishment type</div></div>
-          `;
+            const section = document.getElementById('insightsGrid');
+            if (!section) return;
+            const meta = D.countryMeta[country] || D.countryMeta.US;
+
+            section.innerHTML = `<div class="insights-grid">
+              ${D.insightCards.map(card => {
+                  const rawValue = meta[card.valueKey];
+                  const displayValue = card.valueTemplate.replace('{value}', rawValue);
+                  let metaText = card.metaTemplate;
+
+                  if (card.id === 'difficulty') {
+                      const diffLabel = D.difficultyLabels[meta.difficulty] || '';
+                      metaText = metaText.replace('{difficultyLabel}', diffLabel);
+                  }
+                  if (card.id === 'restDays') {
+                      metaText = metaText
+                          .replace('{hoursPerDay}', meta.hoursPerDay)
+                          .replace('{splitShiftLabel}', meta.splitShift ? 'common' : 'rare');
+                  }
+
+                  return `<div class="insight-card">
+                    <span class="insight-icon">${card.icon}</span>
+                    <div class="insight-label">${card.label}</div>
+                    <div class="insight-value">${displayValue}</div>
+                    <div class="insight-meta">${metaText}</div>
+                    ${card.id === 'difficulty' ? renderDifficultyBar(meta.difficulty) : ''}
+                  </div>`;
+              }).join('')}
+            </div>`;
         }
 
         // ── Render: Language Section ───────────────────────────────────────────────
@@ -3192,7 +3295,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             const langs = D.languages[country] || [];
             const pillClass = D.langPillClasses;
             section.innerHTML = `
-            <div class="section-label" style="margin-bottom:12px">Language Requirements — <span>${D.countryNames[country]||country}</span></div>
+            <div class="section-label" style="margin-bottom:12px">Language Requirements — <span>${D.countries[country]?.name || country}</span></div>
             <div class="lang-list">${langs.map(l=>`
               <div class="lang-row">
                 <div class="lang-name">${l.lang}</div>
@@ -3220,7 +3323,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                 if (pct < 0.5) { const t = pct * 2;
                     bg =
                     `rgba(${Math.round(239+(234-239)*t)},${Math.round(68+(179-68)*t)},${Math.round(68+(8-68)*t)},0.25)`; } else { const
-                        t = (pct - 0.5) * 2;
+                    t = (pct - 0.5) * 2;
                     bg =
                     `rgba(${Math.round(234+(34-234)*t)},${Math.round(179+(197-179)*t)},${Math.round(8+(94-8)*t)},0.25)`; }
                 const brd = pct < 0.33 ? 'var(--red)' : pct < 0.66 ? 'var(--yellow)' : 'var(--green)';
@@ -3228,7 +3331,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
                 return `<div class="city-card" style="background:${bg};border:1px solid ${brd}"><div class="city-name">${c.city}</div><div class="city-region">${c.region}</div><div class="city-salary">$${salK}</div><div class="city-cost">Cost Index: ${c.cost}</div></div>`;
             }).join('');
             section.innerHTML = `
-            <div class="heatmap-header"><span class="section-label" style="margin-bottom:0">City Income Heatmap — <span>${D.countryNames[country]||country}</span></span><span style="font-size:10px;color:var(--text-faint)">Avg. cook salary (local equiv. USD) · <span style="color:var(--text-muted)">cost index</span></span></div>
+            <div class="heatmap-header"><span class="section-label" style="margin-bottom:0">City Income Heatmap — <span>${D.countries[country]?.name || country}</span></span><span style="font-size:10px;color:var(--text-faint)">Avg. cook salary (local equiv. USD) · <span style="color:var(--text-muted)">cost index</span></span></div>
             <div class="heatmap-grid">${cards}</div>
             <div class="heatmap-scale"><div class="heatmap-scale-bar"><div class="hs-low"></div><div class="hs-mid"></div><div class="hs-high"></div></div><span style="font-size:9px;color:var(--text-faint)">Low → High income</span></div>`;
         }
@@ -3255,7 +3358,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             const linksHtml = links.map(l =>
                 `<a href="${l.url}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:10px;display:block;margin-top:4px">→ ${l.label}</a>`
                 ).join('');
-            const baseStartup = parseInt(meta.startup);
+            const baseStartup = meta.startupReadiness;
             const multipliers = [0, 5, 15, 25, 40];
             const dynamicStartup = Math.min(95, baseStartup + multipliers[currentLevel]);
             const startupColor = dynamicStartup >= 70 ? 'var(--green)' : dynamicStartup >= 40 ? 'var(--yellow)' :
@@ -3294,7 +3397,6 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             const section = document.getElementById('careerNotesSection');
             if (!section) return;
             const meta = D.extendedMeta[country] || D.extendedMeta.US;
-            const randomMBTI = D.mbtiData[Math.floor(Math.random() * D.mbtiData.length)];
             let retireMetaText =
                 "Your late-career exit options and personal retirement outlook.";
             if (D.filialPietyCountries.includes(country)) {
@@ -3305,7 +3407,7 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             section.innerHTML = `
             <div class="section-label">Education, Retirement &amp; Career Pivots</div>
             <div class="note-grid">
-              <div class="note-card"><div class="note-title">MBTI fit: ${randomMBTI.type}</div><div class="note-value" style="font-size:14px;color:var(--accent)">Highly Compatible</div><div class="note-meta">${randomMBTI.desc}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Log in to see how your own MBTI type fits this role.</div></div></div></div>
+              <div class="note-card"><div class="note-title">MBTI fit: ${selectedMBTI.type}</div><div class="note-value" style="font-size:14px;color:var(--accent)">Highly Compatible</div><div class="note-meta">${selectedMBTI.desc}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Log in to see how your own MBTI type fits this role.</div></div></div></div>
               <div class="note-card"><div class="note-title">Prestige University</div><div class="note-value">${meta.uni}</div><div class="note-meta">${meta.uniMeta}</div></div>
               <div class="note-card"><div class="note-title">Private Schooling Considerations</div><div class="note-value">${meta.privateSchool}</div><div class="note-meta">${meta.privateMeta}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px"><strong>Is it worth it for me?</strong> Login for a personalized ROI analysis.<br><strong>Can my income cover my child's tuition?</strong> Estimated by career level.</div></div></div></div>
               <div class="note-card"><div class="note-title">Recommended Schools</div><div class="note-value" style="font-size:13px">${meta.schools}</div><div class="note-meta"><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Login for a personalized school match based on your goals — or browse the most recognized programs listed above.</div></div></div></div>
@@ -3332,14 +3434,20 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             if (!section) return;
             const chefs = D.famousChefs[country] || D.famousChefs.US;
             const chefsHtml = chefs.map(c => `<strong>${c.name}</strong> (${c.netWorth})`).join(', ');
+            const networkCardsHtml = D.networkCards.map(card => `
+                <div class="note-card">
+                  <div class="note-title">${card.title}</div>
+                  <div class="note-value" style="font-size:14px">${card.value}</div>
+                  <div class="note-meta">${card.meta}
+                    ${card.loginCTA ? `<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Login to unlock your personalized key connection plan and step-by-step outreach strategy</div></div>` : ''}
+                  </div>
+                </div>
+            `).join('');
             section.innerHTML = `
             <div class="section-label">Academic & Networking Strategy</div>
             <div class="note-grid">
-              <div class="note-card"><div class="note-title">Recommended Majors</div><div class="note-value" style="font-size:14px">Culinary Arts & Hospitality Mgt</div><div class="note-meta">Secondary: Food Science, Nutrition, or Business Administration.</div></div>
-              <div class="note-card"><div class="note-title">Target Courses</div><div class="note-value" style="font-size:14px">Kitchen Ops & Cost Control</div><div class="note-meta">Also highly recommended: Molecular Gastronomy, Sustainable Sourcing, and Staff Leadership.</div></div>
-              <div class="note-card"><div class="note-title">Stretch Majors</div><div class="note-value" style="font-size:14px">F&B Tech & Innovation</div><div class="note-meta">To beat AI risk, transition into tech-enabled food systems or high-end molecular research.</div></div>
-              <div class="note-card"><div class="note-title">Key Connections</div><div class="note-value" style="font-size:14px">Michelin Execs & F&B Directors</div><div class="note-meta"><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:11px">Login to unlock your personalized key connection plan and step-by-step outreach strategy</div></div></div></div>
-              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${D.countryNames[country]||country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled by leveraging personal brand, media, and multi-venue empires rather than just line cooking.</div></div>
+              ${networkCardsHtml}
+              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${D.countries[country]?.name || country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled by leveraging personal brand, media, and multi-venue empires rather than just line cooking.</div></div>
             </div>`;
         }
 
@@ -3352,11 +3460,11 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             <div class="filters-left" role="group">
               ${D.filters.map(f=>`
                 <button class="filter-pill ${f.class}${f.active?' active':''}" data-filter="${f.id}">
-                  ${f.dot?'<span class="dot"></span> ':''}${f.label}${f.id==='all'?` <span style="opacity:.5;font-size:10px">${f.count}</span>`:''}
+                  ${f.dot?'<span class="dot"></span> ':''}${f.label}${f.id==='all'?` <span style="opacity:.5;font-size:10px">${D.tasks.length}</span>`:''}
                 </button>
               `).join('')}
             </div>
-            <div style="font-size:10px;color:var(--text-faint)">v2.2 · Apr 2026</div>`;
+            <div style="font-size:10px;color:var(--text-faint)">${D.version}</div>`;
             tableWrap.innerHTML = `
             <div class="table-scroll"><table aria-label="Job automation compatibility">
               <thead><tr><th>Action</th><th>Human Workflow</th><th>AI / Bot Workflow</th><th>Replace Ratio</th><th style="text-align:center">Node LTV</th><th style="text-align:center">ETA</th><th style="text-align:center">Status</th></tr></thead>
@@ -3399,7 +3507,6 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             renderCareerRecs(levelIndex);
             renderNetworkSection(countryCode);
             renderSummary(levelIndex);
-            // Update level tab percentages
             const maxSal = (D.levelUSD[countryCode] || D.levelUSD.US)[D.levels.length - 1];
             D.levels.forEach((_, i) => {
                 const el = document.getElementById('lpct-' + i);
@@ -3425,6 +3532,8 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
             renderAccessLinks();
             renderFiltersAndTable();
             renderAll(currentCountry, currentLevel, false);
+            const footnoteEl = document.getElementById('footnoteText');
+            if (footnoteEl) footnoteEl.textContent = D.footnote;
         }
 
         // ── Event: Country Tabs ────────────────────────────────────────────────────
@@ -3524,11 +3633,18 @@ This is a complete HTML document that rebuilds the Chef career intelligence dash
 </body>
 </html>
 ```
-### Data Structure
+### Dashboard Fixes
 
-Here’s a quick look at how the content is organized and can be edited. The page is built around a single `CHEF_DATA` object in the `<script>` tag, making it easy to update information without touching the HTML structure.
+We made four targeted changes to separate data from logic, improve reliability, and clean up the career insights interface. Here’s how each fix works:
 
-- **Country & Currency Settings**: Each country (like `US` or `JP`) has its own object with salary, risk age, car price, and currency symbol. Changing these values instantly updates the LTV calculations and car comparison.
-- **Career Levels & Promotion**: The `levels` and `promotions` arrays define job titles (Line Cook to Executive Chef), years of experience, and promotion timelines. The UI tabs and curve chart are generated directly from this data.
-- **Regional Insights**: `countryMeta`, `cities`, and `languages` arrays hold details like job difficulty, city salaries (for the heatmap), and language requirements. Editing these arrays will update the respective cards and lists.
-- **Automation Risks & Recommendations**: The `tasks` table and `careerRecs` arrays contain the four workflow actions (like "Frying & Grilling"), their automation percentages, and alternative job suggestions based on career level.
+**1. Startup field cleanup (extendedMeta fix)**
+The `startup` field now stores a clean number (`startupReadiness: 68`) across all 8 countries. The `renderExtraInsights` function reads this number directly and dynamically appends the `% readiness` label in the template, removing fragile string parsing.
+
+**2. Career insight cards as data (insightCards)**
+The 8 insight cards (Hardship, Annual Leave, etc.) are now defined in `D.insightCards`. The `renderInsights` function loops over this array, pulls values from `countryMeta` using `valueKey`, and handles special template placeholders (like `{difficultyLabel}` and `{splitShiftLabel}`). A helper `renderDifficultyBar` draws the visual strength pips.
+
+**3. Network Cards CTA extraction (quality fix)**
+The "Key Connections" card no longer embeds raw HTML in `meta`. It uses a clean description plus a `loginCTA: true` flag. The `renderNetworkSection` function checks this flag to inject the login prompt, keeping presentation logic out of data.
+
+**4. Dead MBTI alias removed (quality fix)**
+The redundant variable `const randomMBTI = selectedMBTI` is deleted. All template references inside `renderCareerNotes` now use `selectedMBTI` directly for the MBTI fit display.

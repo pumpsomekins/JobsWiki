@@ -1,0 +1,407 @@
+{
+  "meta": {
+    "job": "Chef / Cook",
+    "slug": "chef",
+    "incomeType": "salary",
+    "incomeLabel": "Annual Salary",
+    "calculatorInputs": ["annualSalary", "careerYears", "bonusRate"],
+    "ltv_formula": "annualSalary × careerYears × (1 + bonusRate)",
+    "automationThreat": "MID",
+    "platformNote": "W2 employee, benefits included, unionized in some markets"
+  },
+  "industries": [
+    { "id": "fb", "label": "Food & Beverage", "active": true },
+    { "id": "hosp", "label": "Hospitality", "active": false },
+    { "id": "qsr", "label": "QSR / Fast Food", "active": false },
+    { "id": "fine", "label": "Fine Dining", "active": false },
+    { "id": "cat", "label": "Catering", "active": false },
+    { "id": "inst", "label": "Institutional", "active": false }
+  ],
+  "countries": {
+    "US": {
+      "name": "United States",
+      "symbol": "$",
+      "annualUSD": 56000,
+      "annualLocal": 56000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Toyota Camry",
+      "carPriceUSD": 28000,
+      "riskAge": 47,
+      "startAge": 25,
+      "localDisplay": "$56,000/yr (USD)",
+      "flag": "🇺🇸",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "UK": {
+      "name": "United Kingdom",
+      "symbol": "£",
+      "annualUSD": 44000,
+      "annualLocal": 35000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Ford Focus",
+      "carPriceUSD": 26000,
+      "riskAge": 49,
+      "startAge": 25,
+      "localDisplay": "~£35K/yr (~$44K)",
+      "flag": "🇬🇧",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "AU": {
+      "name": "Australia",
+      "symbol": "A$",
+      "annualUSD": 42000,
+      "annualLocal": 65000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Toyota RAV4",
+      "carPriceUSD": 28000,
+      "riskAge": 48,
+      "startAge": 25,
+      "localDisplay": "~A$65K/yr (~$42K)",
+      "flag": "🇦🇺",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "DE": {
+      "name": "Germany",
+      "symbol": "€",
+      "annualUSD": 41000,
+      "annualLocal": 38000,
+      "career": 30,
+      "automationIdx": 35,
+      "carName": "VW Golf",
+      "carPriceUSD": 30000,
+      "riskAge": 50,
+      "startAge": 25,
+      "localDisplay": "~€38K/yr (~$41K)",
+      "flag": "🇩🇪",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "JP": {
+      "name": "Japan",
+      "symbol": "¥",
+      "annualUSD": 28000,
+      "annualLocal": 4200000,
+      "career": 30,
+      "automationIdx": 32,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 18000,
+      "riskAge": 52,
+      "startAge": 25,
+      "localDisplay": "~¥4.2M/yr (~$28K)",
+      "flag": "🇯🇵",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "SG": {
+      "name": "Singapore",
+      "symbol": "S$",
+      "annualUSD": 31000,
+      "annualLocal": 42000,
+      "career": 30,
+      "automationIdx": 42,
+      "carName": "Toyota Corolla*",
+      "carPriceUSD": 88000,
+      "riskAge": 46,
+      "startAge": 25,
+      "localDisplay": "~S$42K/yr (~$31K)",
+      "flag": "🇸🇬",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "TW": {
+      "name": "Taiwan",
+      "symbol": "NT$",
+      "annualUSD": 15000,
+      "annualLocal": 480000,
+      "career": 30,
+      "automationIdx": 40,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 22000,
+      "riskAge": 45,
+      "startAge": 25,
+      "localDisplay": "~NT$480K/yr (~$15K)",
+      "flag": "🇹🇼",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "CN": {
+      "name": "China",
+      "symbol": "¥",
+      "annualUSD": 12000,
+      "annualLocal": 86000,
+      "career": 30,
+      "automationIdx": 44,
+      "carName": "BYD Seagull",
+      "carPriceUSD": 12000,
+      "riskAge": 44,
+      "startAge": 25,
+      "localDisplay": "~¥86K/yr (~$12K)",
+      "flag": "🇨🇳",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    }
+  },
+  "levels": [
+    { "id": 0, "name": "Line Cook", "short": "Line", "yearsFrom": 0, "color": "#888888", "yearsLabel": "Entry · Yr 0" },
+    { "id": 1, "name": "Chef de Partie", "short": "CDP", "yearsFrom": 2, "color": "#4f98a3", "yearsLabel": "≈ 2–3 yrs" },
+    { "id": 2, "name": "Sous Chef", "short": "Sous", "yearsFrom": 5, "color": "#eab308", "yearsLabel": "≈ 5–6 yrs" },
+    { "id": 3, "name": "Head Chef", "short": "Head", "yearsFrom": 8, "color": "#f97316", "yearsLabel": "≈ 8–11 yrs" },
+    { "id": 4, "name": "Executive Chef", "short": "Exec", "yearsFrom": 16, "color": "#22c55e", "yearsLabel": "≈ 16–19 yrs" }
+  ],
+  "promotions": [
+    { "from": "Line Cook", "to": "Chef de Partie", "years": "2–3 yrs", "tip": "Station mastery required" },
+    { "from": "Chef de Partie", "to": "Sous Chef", "years": "2–3 yrs", "tip": "Performance + kitchen leadership" },
+    { "from": "Sous Chef", "to": "Head Chef", "years": "3–5 yrs", "tip": "Menu creation + team management" },
+    { "from": "Head Chef", "to": "Executive Chef", "years": "5–8 yrs", "tip": "Business acumen + reputation" }
+  ],
+  "levelUSD": {
+    "US": [32000, 48000, 55000, 72000, 95000],
+    "UK": [28000, 42000, 48000, 65000, 88000],
+    "AU": [33000, 45000, 50000, 68000, 90000],
+    "DE": [26000, 38000, 42000, 58000, 78000],
+    "JP": [25000, 35000, 40000, 55000, 73000],
+    "SG": [22000, 36000, 41000, 58000, 78000],
+    "TW": [13000, 18000, 20000, 28000, 37000],
+    "CN": [8000, 12000, 14000, 20000, 30000]
+  },
+  "levelLocal": {
+    "US": ["$32K", "$48K", "$55K", "$72K", "$95K"],
+    "UK": ["£22K", "£32K", "£37K", "£50K", "£68K"],
+    "AU": ["A$45K", "A$62K", "A$70K", "A$95K", "A$125K"],
+    "DE": ["€24K", "€35K", "€39K", "€54K", "€72K"],
+    "JP": ["¥3.2M", "¥4.5M", "¥5.1M", "¥7.0M", "¥9.3M"],
+    "SG": ["S$30K", "S$48K", "S$55K", "S$78K", "S$105K"],
+    "TW": ["NT$380K", "NT$520K", "NT$580K", "NT$820K", "NT$1.1M"],
+    "CN": ["¥50K", "¥72K", "¥85K", "¥120K", "¥180K"]
+  },
+  "languages": {
+    "US": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Spanish", "level": "Helpful", "score": 2 }],
+    "UK": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "AU": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "DE": [{ "lang": "German", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Helpful", "score": 2 }],
+    "JP": [{ "lang": "Japanese", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "SG": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Mandarin", "level": "Helpful", "score": 2 }, { "lang": "Malay", "level": "Optional", "score": 1 }],
+    "TW": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Taiwanese", "level": "Helpful", "score": 2 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "CN": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Dialect", "level": "Regional", "score": 2 }, { "lang": "English", "level": "High-end Only", "score": 3 }]
+  },
+  "langScoreLabels": { "1": "Elementary", "2": "Limited Working", "3": "Professional Working", "4": "Full Professional", "5": "Native / Bilingual" },
+  "cities": {
+    "US": [
+      { "city": "San Francisco", "region": "West", "salary": 72000, "cost": 105 },
+      { "city": "New York", "region": "Northeast", "salary": 68000, "cost": 103 },
+      { "city": "Boston", "region": "Northeast", "salary": 64000, "cost": 90 },
+      { "city": "Seattle", "region": "West", "salary": 62000, "cost": 88 },
+      { "city": "Los Angeles", "region": "West", "salary": 65000, "cost": 95 },
+      { "city": "Chicago", "region": "Midwest", "salary": 58000, "cost": 80 },
+      { "city": "Denver", "region": "Mountain", "salary": 55000, "cost": 78 },
+      { "city": "Miami", "region": "South", "salary": 52000, "cost": 75 },
+      { "city": "Dallas", "region": "South", "salary": 50000, "cost": 65 },
+      { "city": "Phoenix", "region": "Southwest", "salary": 48000, "cost": 60 }
+    ],
+    "UK": [
+      { "city": "London", "region": "England", "salary": 55000, "cost": 100 },
+      { "city": "Edinburgh", "region": "Scotland", "salary": 44000, "cost": 75 },
+      { "city": "Bristol", "region": "England", "salary": 43000, "cost": 73 },
+      { "city": "Manchester", "region": "England", "salary": 42000, "cost": 72 },
+      { "city": "Birmingham", "region": "England", "salary": 40000, "cost": 70 },
+      { "city": "Leeds", "region": "England", "salary": 39000, "cost": 68 }
+    ],
+    "AU": [
+      { "city": "Sydney", "region": "NSW", "salary": 88000, "cost": 100 },
+      { "city": "Melbourne", "region": "VIC", "salary": 82000, "cost": 92 },
+      { "city": "Canberra", "region": "ACT", "salary": 80000, "cost": 85 },
+      { "city": "Perth", "region": "WA", "salary": 78000, "cost": 82 },
+      { "city": "Brisbane", "region": "QLD", "salary": 75000, "cost": 80 },
+      { "city": "Gold Coast", "region": "QLD", "salary": 70000, "cost": 75 },
+      { "city": "Adelaide", "region": "SA", "salary": 68000, "cost": 72 }
+    ],
+    "DE": [
+      { "city": "Munich", "region": "Bavaria", "salary": 72000, "cost": 100 },
+      { "city": "Frankfurt", "region": "Hesse", "salary": 68000, "cost": 95 },
+      { "city": "Stuttgart", "region": "Baden-W.", "salary": 66000, "cost": 88 },
+      { "city": "Hamburg", "region": "Hamburg", "salary": 65000, "cost": 88 },
+      { "city": "Düsseldorf", "region": "NRW", "salary": 60000, "cost": 82 },
+      { "city": "Berlin", "region": "Berlin", "salary": 60000, "cost": 80 },
+      { "city": "Cologne", "region": "NRW", "salary": 58000, "cost": 78 }
+    ],
+    "JP": [
+      { "city": "Tokyo", "region": "Kanto", "salary": 68000, "cost": 100 },
+      { "city": "Yokohama", "region": "Kanto", "salary": 62000, "cost": 90 },
+      { "city": "Osaka", "region": "Kansai", "salary": 58000, "cost": 85 },
+      { "city": "Kyoto", "region": "Kansai", "salary": 55000, "cost": 82 },
+      { "city": "Nagoya", "region": "Chubu", "salary": 52000, "cost": 75 },
+      { "city": "Fukuoka", "region": "Kyushu", "salary": 47000, "cost": 70 },
+      { "city": "Sapporo", "region": "Hokkaido", "salary": 45000, "cost": 68 }
+    ],
+    "SG": [
+      { "city": "Orchard", "region": "Central", "salary": 82000, "cost": 103 },
+      { "city": "CBD / Marina", "region": "Central", "salary": 80000, "cost": 100 },
+      { "city": "Tampines", "region": "East", "salary": 64000, "cost": 80 },
+      { "city": "Jurong", "region": "West", "salary": 62000, "cost": 78 },
+      { "city": "Woodlands", "region": "North", "salary": 60000, "cost": 72 }
+    ],
+    "TW": [
+      { "city": "Taipei", "region": "Northern", "salary": 30000, "cost": 100 },
+      { "city": "Hsinchu", "region": "Northern", "salary": 28000, "cost": 82 },
+      { "city": "New Taipei", "region": "Northern", "salary": 27000, "cost": 88 },
+      { "city": "Taichung", "region": "Central", "salary": 24000, "cost": 72 },
+      { "city": "Kaohsiung", "region": "Southern", "salary": 23000, "cost": 68 },
+      { "city": "Tainan", "region": "Southern", "salary": 22000, "cost": 65 },
+      { "city": "Taitung", "region": "Eastern", "salary": 18000, "cost": 55 },
+      { "city": "Hualien", "region": "Eastern", "salary": 17000, "cost": 52 }
+    ],
+    "CN": [
+      { "city": "Shanghai", "region": "East", "salary": 30000, "cost": 105 },
+      { "city": "Beijing", "region": "North", "salary": 28000, "cost": 100 },
+      { "city": "Shenzhen", "region": "South", "salary": 28000, "cost": 98 },
+      { "city": "Guangzhou", "region": "South", "salary": 24000, "cost": 85 },
+      { "city": "Chengdu", "region": "Southwest", "salary": 18000, "cost": 65 },
+      { "city": "Chongqing", "region": "Southwest", "salary": 17000, "cost": 60 },
+      { "city": "Wuhan", "region": "Central", "salary": 16000, "cost": 58 },
+      { "city": "Xi'an", "region": "Northwest", "salary": 14000, "cost": 52 }
+    ]
+  },
+  "countryMeta": {
+    "US": { "difficulty": 8, "restDays": 10, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "ServSafe · CIA Degree Optional", "travel": "Low", "mobility": "High", "expression": "High" },
+    "UK": { "difficulty": 8, "restDays": 15, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "16–21", "bestEntryAge": "18–24", "cert": "Level 2/3 Food Safety · NVQ", "travel": "Low", "mobility": "High", "expression": "High" },
+    "AU": { "difficulty": 7, "restDays": 20, "hoursPerDay": 9.5, "splitShift": false, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "SITXFSA006 · Certificate III Hospitality", "travel": "Low", "mobility": "High", "expression": "High" },
+    "DE": { "difficulty": 7, "restDays": 25, "hoursPerDay": 9, "splitShift": false, "bestLearnAge": "16–20", "bestEntryAge": "18–23", "cert": "Ausbildung Koch (3 yrs IHK apprentice)", "travel": "Low", "mobility": "High", "expression": "Moderate" },
+    "JP": { "difficulty": 9, "restDays": 8, "hoursPerDay": 11, "splitShift": true, "bestLearnAge": "18–23", "bestEntryAge": "20–26", "cert": "調理師免許 (National Cook License)", "travel": "Very Low", "mobility": "Extreme", "expression": "Moderate" },
+    "SG": { "difficulty": 8, "restDays": 14, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "WSQ Food Safety · ITE Pastry/Culinary", "travel": "Low", "mobility": "High", "expression": "High" },
+    "TW": { "difficulty": 8, "restDays": 12, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "廚師證照 Level 1–3 · 餐飲管理學位", "travel": "Low", "mobility": "High", "expression": "Moderate" },
+    "CN": { "difficulty": 9, "restDays": 7, "hoursPerDay": 11.5, "splitShift": true, "bestLearnAge": "16–21", "bestEntryAge": "18–24", "cert": "中式烹飪師 (初/中/高級) · 廚師職業資格証", "travel": "Low", "mobility": "High", "expression": "High" }
+  },
+  "difficultyLabels": ["", "", "Very Easy", "Easy", "Below Avg", "Average", "Above Avg", "Hard", "Very Hard", "Brutal", "Extreme"],
+  "insightCards": [
+    { "id": "difficulty", "icon": "💪", "label": "Job Hardship", "valueKey": "difficulty", "valueTemplate": "{value}/10", "metaTemplate": "{difficultyLabel} · physically & mentally demanding", "colorMode": "gradient-bad" },
+    { "id": "restDays", "icon": "🏖️", "label": "Annual Leave", "valueKey": "restDays", "valueTemplate": "{value} days", "metaTemplate": "{hoursPerDay}h avg work day · Split shifts {splitShiftLabel}", "colorMode": "gradient-good" },
+    { "id": "bestLearnAge", "icon": "🎓", "label": "Best Learning Age", "valueKey": "bestLearnAge", "valueTemplate": "{value}", "metaTemplate": "Culinary school or apprenticeship entry window", "colorMode": "accent" },
+    { "id": "bestEntryAge", "icon": "🚀", "label": "Best Entry Age", "valueKey": "bestEntryAge", "valueTemplate": "{value}", "metaTemplate": "Peak energy & fastest skill absorption period", "colorMode": "accent" },
+    { "id": "travel", "icon": "✈️", "label": "Business Travel", "valueKey": "travel", "valueTemplate": "{value}", "metaTemplate": "Frequency of travel for events, sourcing, or multi-site management.", "colorMode": "accent" },
+    { "id": "mobility", "icon": "🏃", "label": "Physical Mobility", "valueKey": "mobility", "valueTemplate": "{value}", "metaTemplate": "Level of constant movement, standing, and station transitions.", "colorMode": "accent" },
+    { "id": "expression", "icon": "🗣️", "label": "Creative Self-Expression", "valueKey": "expression", "valueTemplate": "{value}", "metaTemplate": "Requirement to communicate vision, lead teams, and express creativity.", "colorMode": "accent" },
+    { "id": "cert", "icon": "📜", "label": "Certifications Required", "valueKey": "cert", "valueTemplate": "{value}", "metaTemplate": "Varies by employer tier & establishment type", "spanFull": true, "colorMode": "neutral" }
+  ],
+  "extendedMeta": {
+    "US": { "budget": "$450/mo", "hnwi": "Private Clubs · Resort Dining · Estate Chef Ladder", "startupReadiness": 68, "mbti": "ESTP · ISTJ · ENTJ", "uni": "Not required", "uniMeta": "Prestige helps less than Michelin-grade references.", "privateSchool": "Useful but debt-sensitive", "privateMeta": "Line experience still wins.", "schools": "CIA · Johnson & Wales · Kendall", "retire": "Corporate Dining Leadership, Instructor Roles, Private Chef.", "pivot": "Estate Chef, Kitchen Ops Consultant, Content/Demo Chef." },
+    "UK": { "budget": "£260/mo", "hnwi": "Hotels · Members Clubs · Private Events", "startupReadiness": 54, "mbti": "ISTJ · ESTJ · ENTJ", "uni": "Optional", "uniMeta": "References and practical output dominate.", "privateSchool": "Helpful for placement", "privateMeta": "Apprenticeship kitchens carry more weight.", "schools": "Westminster Kingsway · Le Cordon Bleu London · UCB", "retire": "Hotel Training, F&B Management, Consultancy.", "pivot": "Members-Club Chef, Luxury Catering Lead, Compliance Trainer." },
+    "AU": { "budget": "A$420/mo", "hnwi": "Resorts · Wine Regions · Premium Tourism", "startupReadiness": 72, "mbti": "ESTP · ENTJ · ISTJ", "uni": "Optional", "uniMeta": "TAFE and real kitchen output matter more.", "privateSchool": "Often practical", "privateMeta": "Live service volume is key.", "schools": "Le Cordon Bleu Melbourne · William Angliss · TAFE NSW", "retire": "Catering Operator, Venue Manager, Hospitality Trainer.", "pivot": "Private Dining Operator, Venue Consultant, Regional Trainer." },
+    "DE": { "budget": "€220/mo", "hnwi": "Luxury Hotels · Old-money Dining · Cruise / Resort", "startupReadiness": 49, "mbti": "ISTJ · INTJ · ESTJ", "uni": "Usually not required", "uniMeta": "Formal training structure matters more.", "privateSchool": "Apprenticeship stronger", "privateMeta": "Apprenticeship route is more trusted.", "schools": "IHK tracks · Hotelfachschule Heidelberg · DHBW", "retire": "Training Kitchens, Hotel Operations, Procurement.", "pivot": "Food Safety Lead, Hotel Trainer, Procurement Specialist." },
+    "JP": { "budget": "¥45,000/mo", "hnwi": "Omakase · Ryokan · Private Invitation Dining", "startupReadiness": 46, "mbti": "ISTJ · INTJ · ISFJ", "uni": "Not required", "uniMeta": "Lineage and master-apprentice credibility matter more.", "privateSchool": "Can help, lineage stronger", "privateMeta": "Hierarchy and apprenticeship quality remain stronger.", "schools": "Tsuji Culinary Institute · Hattori Nutrition College · Tokyo Seika", "retire": "Teaching, Quality Control, Supplier Advisory, Small-Format Dining.", "pivot": "Luxury Counter Chef, QA/Standards Lead, Craft Instructor." },
+    "SG": { "budget": "S$420/mo", "hnwi": "Luxury Hotels · Expat Clients · Regional Events", "startupReadiness": 76, "mbti": "ENTJ · ESTJ · ESTP", "uni": "Useful but optional", "uniMeta": "Multilingual polish and operational discipline matter more.", "privateSchool": "Useful if placement-led", "privateMeta": "Brand-name hotel placement and language advantage.", "schools": "At-Sunrice · SHATEC · Temasek hospitality tracks", "retire": "Consulting, Regional Training, Private Dining.", "pivot": "Cloud-Kitchen Founder, Private Dining Operator, Regional Trainer." },
+    "TW": { "budget": "NT$8,000/mo", "hnwi": "Private Banquets · Boutique Hospitality · Luxury Clubs", "startupReadiness": 57, "mbti": "ISTJ · ESTP · ENTJ", "uni": "Optional", "uniMeta": "Bilingual service quality and steady kitchen reputation.", "privateSchool": "Selective value", "privateMeta": "Consistent kitchen output remains strongest signal.", "schools": "國立高雄餐旅大學 · 景文科大餐飲系 · 實踐大學", "retire": "Banquet Operations, Culinary Teaching, Central Kitchen Roles.", "pivot": "Banquet Lead, Product Testing, Kitchen Standards Consultant." },
+    "CN": { "budget": "¥1,800/mo", "hnwi": "Luxury Banquets · Private Rooms · Club Kitchens", "startupReadiness": 61, "mbti": "ISTJ · ESTP · ENTJ", "uni": "Not required", "uniMeta": "Apprenticeship pedigree and execution matter more.", "privateSchool": "Mixed value", "privateMeta": "Live kitchen references outrank tuition branding.", "schools": "Le Cordon Bleu Shanghai · SICA · Shanghai Business & Tourism", "retire": "Training Manager, Central Kitchen Leader, Private Chef.", "pivot": "Private Household Chef, SOP Consultant, Flavor/Product R&D." }
+  },
+  "startupLinks": {
+    "US": [{ "label": "SBA Grants", "url": "https://www.sba.gov" }, { "label": "CloudKitchens", "url": "https://cloudkitchens.com" }],
+    "UK": [{ "label": "Gov Business Support", "url": "https://www.gov.uk/business-finance-support" }, { "label": "Kitchen United", "url": "https://www.kitchenunited.com" }],
+    "AU": [{ "label": "Business.gov.au", "url": "https://business.gov.au" }, { "label": "FoodStars", "url": "https://foodstars.com.au" }],
+    "DE": [{ "label": "KfW Start-ups", "url": "https://www.kfw.de" }, { "label": "KitchenTown Berlin", "url": "https://www.kitchentown.de" }],
+    "JP": [{ "label": "J-Net21", "url": "https://j-net21.smrj.go.jp" }, { "label": "Cloud Kitchen Japan", "url": "https://cloudkitchens.com/jp/" }],
+    "SG": [{ "label": "Enterprise SG", "url": "https://www.enterprisesg.gov.sg" }, { "label": "Smart City Kitchens", "url": "https://smartcitykitchens.com" }],
+    "TW": [{ "label": "SMEA Grants", "url": "https://www.smea.gov.tw" }, { "label": "Cloud Kitchen Taiwan", "url": "https://www.cloudkitchens.com.tw" }],
+    "CN": [{ "label": "China Business Registry", "url": "http://www.gsxt.gov.cn" }, { "label": "Meituan Cloud Kitchen", "url": "https://kd.meituan.com" }]
+  },
+  "famousChefs": {
+    "US": [{ "name": "Alan Wong", "netWorth": "$1.1B" }, { "name": "Wolfgang Puck", "netWorth": "$120M" }],
+    "UK": [{ "name": "Gordon Ramsay", "netWorth": "$220M" }, { "name": "Jamie Oliver", "netWorth": "$200M" }],
+    "AU": [{ "name": "Curtis Stone", "netWorth": "$25M" }, { "name": "Neil Perry", "netWorth": "$25M" }],
+    "DE": [{ "name": "Tim Mälzer", "netWorth": "$10M" }, { "name": "Eckart Witzigmann", "netWorth": "$5M" }],
+    "JP": [{ "name": "Nobu Matsuhisa", "netWorth": "$200M" }, { "name": "Masaharu Morimoto", "netWorth": "$18M" }],
+    "SG": [{ "name": "Sam Leong", "netWorth": "$5M" }, { "name": "Janice Wong", "netWorth": "$3M" }],
+    "TW": [{ "name": "André Chiang", "netWorth": "$10M" }, { "name": "Lanshu Chen", "netWorth": "$5M" }],
+    "CN": [{ "name": "Da Dong", "netWorth": "$50M" }, { "name": "Wang Gang", "netWorth": "$2M" }]
+  },
+  "accessLinks": [
+    { "title": "Training & Courses", "desc": "Online platforms and culinary schools." },
+    { "title": "Certifications & Credentials", "desc": "Food safety, HACCP, Red Seal, and licensing." },
+    { "title": "Job Search & Placement", "desc": "LinkedIn, Culinary Agents, hotel career pages." },
+    { "title": "Freelance & Side Work", "desc": "Banquet staffing, private events, pop-ups." },
+    { "title": "Your Portfolio & Referrals", "desc": "Link to your own portfolio and referral network." },
+    { "title": "Find a Mentor", "desc": "Connect with a master chef or senior sifu." }
+  ],
+  "careerRecs": [
+    [
+      { "title": "Kitchen Quality Monitor", "match": "76%", "color": "var(--green)", "desc": "Inspect food prep standards and safety compliance.", "skills": ["Food Safety", "Temperature Control"] },
+      { "title": "Catering Production Staff", "match": "71%", "color": "var(--yellow)", "desc": "Execute large-batch food production.", "skills": ["Station Management", "Speed"] },
+      { "title": "Food Prep Trainer", "match": "65%", "color": "var(--orange)", "desc": "Onboard new kitchen staff.", "skills": ["Knife Skills", "Ingredient Handling"] }
+    ],
+    [
+      { "title": "Recipe Testing Technician", "match": "83%", "color": "var(--green)", "desc": "Support R&D teams testing dishes.", "skills": ["Sensory Evaluation", "Mise en Place"] },
+      { "title": "Catering Supervisor", "match": "78%", "color": "var(--yellow)", "desc": "Lead a team for events.", "skills": ["Team Coordination", "Quality Awareness"] },
+      { "title": "Production Kitchen Lead", "match": "72%", "color": "var(--orange)", "desc": "Oversee batch production.", "skills": ["Station Leadership", "Time Management"] }
+    ],
+    [
+      { "title": "Food Technologist (R&D)", "match": "88%", "color": "var(--green)", "desc": "Sensory evaluation and recipe scaling.", "skills": ["Recipe Development", "Quality Control"] },
+      { "title": "Event Operations Manager", "match": "82%", "color": "var(--yellow)", "desc": "High-pressure coordination.", "skills": ["Staff Supervision", "Cost Management"] },
+      { "title": "F&B Procurement Analyst", "match": "76%", "color": "var(--orange)", "desc": "Ingredient quality and yield management.", "skills": ["Inventory Control", "Supplier Knowledge"] }
+    ],
+    [
+      { "title": "F&B Operations Manager", "match": "90%", "color": "var(--green)", "desc": "Oversee multi-venue operations.", "skills": ["Budget Control", "Team Management"] },
+      { "title": "Event Operations Manager", "match": "85%", "color": "var(--yellow)", "desc": "Crisis management and event logistics.", "skills": ["Crisis Management", "Logistics"] },
+      { "title": "F&B Procurement Specialist", "match": "80%", "color": "var(--orange)", "desc": "Supplier and ingredient quality.", "skills": ["Supply Chain", "Negotiation"] }
+    ],
+    [
+      { "title": "F&B Director", "match": "93%", "color": "var(--green)", "desc": "Lead entire F&B strategy.", "skills": ["Strategic Planning", "Brand Building"] },
+      { "title": "Food Innovation Consultant", "match": "88%", "color": "var(--yellow)", "desc": "Advise on menu trends and innovation.", "skills": ["Culinary Expertise", "Market Analysis"] },
+      { "title": "Culinary Program Director", "match": "82%", "color": "var(--orange)", "desc": "Lead culinary school or training.", "skills": ["Training Design", "Leadership"] }
+    ]
+  ],
+  "survivalStrategy": [
+    "As a <strong>Line Cook</strong>, master speed, knife precision, and food safety — skills no robot fully replicates at your pace.",
+    "As a <strong>Chef de Partie</strong>, double down on station mastery and specialty depth.",
+    "As a <strong>Sous Chef</strong>, recipe development and people management are your armor.",
+    "As a <strong>Head Chef</strong>, focus on menu creation, brand identity, and team culture.",
+    "As an <strong>Executive Chef</strong>, leverage brand, vision, and business relationships."
+  ],
+  "hazards": [
+    { "icon": "🔥", "name": "Burns & Scalds", "levelClass": "haz-5", "width": "100%", "desc": "Critical · open flame" },
+    { "icon": "🌡️", "name": "Heat Exhaustion", "levelClass": "haz-5", "width": "100%", "desc": "Critical · 38–50°C kitchens" },
+    { "icon": "🔪", "name": "Cuts & Lacerations", "levelClass": "haz-4", "width": "80%", "desc": "High · daily knife work" },
+    { "icon": "💪", "name": "Musculoskeletal Strain", "levelClass": "haz-4", "width": "80%", "desc": "High · 8–12 hrs standing" },
+    { "icon": "🧠", "name": "Mental Fatigue", "levelClass": "haz-4", "width": "75%", "desc": "High · burnout 40–60%" },
+    { "icon": "🚿", "name": "Slip & Fall", "levelClass": "haz-3", "width": "55%", "desc": "Medium · wet floors" },
+    { "icon": "⚗️", "name": "Chemical Exposure", "levelClass": "haz-3", "width": "50%", "desc": "Medium · cleaning agents" },
+    { "icon": "👂", "name": "Noise Exposure", "levelClass": "haz-2", "width": "35%", "desc": "Low-Med · fans" },
+    { "icon": "🫁", "name": "Smoke & Fumes", "levelClass": "haz-3", "width": "45%", "desc": "Medium · ventilation" }
+  ],
+  "filters": [
+    { "id": "all", "label": "All", "class": "all", "active": true, "dot": false },
+    { "id": "replaceable", "label": "Replaceable", "class": "gf", "active": false, "dot": true },
+    { "id": "indanger", "label": "In-Danger", "class": "yf", "active": false, "dot": true },
+    { "id": "intro", "label": "Intro", "class": "of", "active": false, "dot": true },
+    { "id": "nothing", "label": "Nothing", "class": "rf", "active": false, "dot": true }
+  ],
+  "mbtiData": [
+    { "type": "ESTP", "desc": "The Dynamo. Thrives in fast-paced, high-pressure environments." },
+    { "type": "ENTJ", "desc": "The Commander. Natural leaders who manage complex brigades." },
+    { "type": "ISFP", "desc": "The Artist. Passionate about culinary aesthetics." },
+    { "type": "ESFJ", "desc": "The Provider. Fosters collaborative kitchen culture." },
+    { "type": "INTJ", "desc": "The Architect. Strategic kitchen optimization thinkers." }
+  ],
+  "filialPietyCountries": ["CN", "TW", "SG", "JP"],
+  "ltvMethodology": "BLS 2025 median salary × 30-year career horizon. AI Risk weighted.",
+  "highestThreat": "Inventory & Ordering is the most vulnerable node.",
+  "langPillClasses": {
+    "Essential": "llp-essential",
+    "Helpful": "llp-helpful",
+    "Optional": "llp-optional",
+    "Senior Only": "llp-senior",
+    "High-end Only": "llp-senior",
+    "Regional": "llp-helpful"
+  },
+  "networkCards": [
+    { "title": "Recommended Majors", "value": "Culinary Arts & Hospitality Mgt", "meta": "Secondary: Food Science, Nutrition, or Business Administration." },
+    { "title": "Target Courses", "value": "Kitchen Ops & Cost Control", "meta": "Also: Molecular Gastronomy, Sustainable Sourcing, Staff Leadership." },
+    { "title": "Stretch Majors", "value": "F&B Tech & Innovation", "meta": "Transition into tech-enabled food systems." },
+    { "title": "Key Connections", "value": "Michelin Execs & F&B Directors", "meta": "Build relationships with top-tier culinary executives.", "loginCTA": true }
+  ],
+  "version": "v2.4 · Apr 2026",
+  "footnote": "* Data: Miso Robotics · BLS 2025 · JobForesight 2026 · ILO benchmarks"
+}

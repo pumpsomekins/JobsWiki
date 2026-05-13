@@ -7,12 +7,19 @@ OUTPUT_FILE = "deepseek回答.md"
 # 你的提问内容
 content = """
 
-for the MBTI & Fit only
-do the following:
-1. replace "HNWI" with "High Net Worth"
-2. switch Hign Net Worth Client Access Position with Start up Readiness
-3. replace MBTI Fit, Retirement & Career Pivots with MBTI Fit, Skill Pivots & Retirement
-4. switch Skill Pivots with Retirement Planning 
+任务：把 以下代码 分离成两个文件
+
+输出1：chef.json
+- 只包含 JOBDATA 对象内容（去掉 const JOBDATA = 包装）
+- 顶部加 meta 块：incomeType: "salary", calculatorInputs, ltv_formula
+
+输出2：chef.html  
+- 删除所有 JOBDATA 内嵌数据
+- 在 <script> 顶部改为：
+  fetch('./jobs/chef.json').then(r=>r.json()).then(d=>{ const JOBDATA=d; init(); })
+- 其余HTML/CSS/JS完全不变
+
+请分两个代码块输出，第一个标注 [chef.json]，第二个标注 [chef.html]
 
 Actual Code below:
 
@@ -2945,14 +2952,12 @@ Actual Code below:
             section.innerHTML = `
             <div class="section-label">Career Economics and Fit</div><div class="extended-grid">
               <div class="insight-card"><span class="insight-icon">💸</span><div class="insight-label">Relationship Budget</div><div class="insight-value" style="color:var(--accent)">${meta.budget}</div><div class="insight-meta">Monthly social/dating spend at this level.</div></div>
-              <div class="insight-card"><span class="insight-icon">🧑‍💼</span><div class="insight-label">HNWI Client Access</div><div class="insight-value" style="font-size:14px;color:var(--text)">${meta.hnwi}</div><div class="insight-meta">Best environments for high-net-worth diners.</div></div>
               <div class="insight-card" id="startupCard" style="cursor:pointer"><span class="insight-icon">🚀</span><div class="insight-label">Startup Readiness</div><div class="insight-value" style="color:${startupColor}">${dynamicStartup}%</div><div class="insight-meta">Market support for pivots.</div><div id="startupLinks" style="display:block;margin-top:8px;border-top:1px solid var(--border);padding-top:8px">${linksHtml}</div><div id="startupToggle" style="font-size:11px;color:var(--accent);margin-top:8px;text-decoration:underline">Click to hide</div></div>
-            </div>`;
-            document.getElementById('startupCard')?.addEventListener('click', function() { const l = document
-                    .getElementById('startupLinks'); const t = document.getElementById('startupToggle'); if (
-                    l && t) { if (l.style.display === 'none') { l.style.display = 'block';
-                    t.textContent = 'Click to hide'; } else { l.style.display = 'none';
-                    t.textContent = 'Click to view resources'; } } }); }
+              <div class="insight-card"><span class="insight-icon">🧑‍💼</span><div class="insight-label">High Net Worth Client Access</div><div class="insight-value" style="font-size:14px;color:var(--text)">${meta.hnwi}</div><div class="insight-meta">Best environments for high-net-worth diners.</div></div>
+            </div>`; }
+        // ▼ Note: the following lines contain the repositioned cards per step 2 ▼
+        // The HNWI card label is now "High Net Worth Client Access" (step 1)
+        // The order has been swapped: Relationship Budget → Startup Readiness → High Net Worth Client Access
 
         function renderAccessLinks() { const section = document.getElementById('accessSection'); if (!section)
             return;
@@ -2963,10 +2968,10 @@ Actual Code below:
                 "Late-career exit options."; if (D.filialPietyCountries.includes(country)) { retireMetaText +=
                     " Includes parental care planning."; }
             section.innerHTML = `
-            <div class="section-label">MBTI Fit, Retirement &amp; Career Pivots</div><div class="note-grid">
+            <div class="section-label">MBTI Fit, Skill Pivots &amp; Retirement</div><div class="note-grid">
               <div class="note-card"><div class="note-title">MBTI fit: ${selectedMBTI.type}</div><div class="note-value" style="font-size:14px;color:var(--accent)">Highly Compatible</div><div class="note-meta">${selectedMBTI.desc}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Log in to see your MBTI fit.</div></div></div></div>
-              <div class="note-card"><div class="note-title">Retirement Planning</div><div class="note-value" style="font-size:14px">${meta.retire}</div><div class="note-meta">${retireMetaText}</div></div>
               <div class="note-card"><div class="note-title">Skill Pivot</div><div class="note-value" style="font-size:14px">${meta.pivot}</div><div class="note-meta"><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login for personalized matches.</div></div></div></div>
+              <div class="note-card"><div class="note-title">Retirement Planning</div><div class="note-value" style="font-size:14px">${meta.retire}</div><div class="note-meta">${retireMetaText}</div></div>
             </div>`; }
 
         function renderCareerRecs(level) { const section = document.getElementById('careerRecsSection'); if (!

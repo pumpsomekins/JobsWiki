@@ -1,12 +1,415 @@
-Below is the fully updated HTML — the four requested edits are applied inside the JavaScript functions `renderExtraInsights` and `renderCareerNotes`:
+[chef.json]
+```json
+{
+  "meta": {
+    "job": "Chef / Cook",
+    "slug": "chef",
+    "incomeType": "salary",
+    "incomeLabel": "Annual Salary",
+    "calculatorInputs": ["annualSalary", "careerYears", "bonusRate"],
+    "ltv_formula": "annualSalary × careerYears × (1 + bonusRate)",
+    "automationThreat": "MID",
+    "platformNote": "W2 employee, benefits included, unionized in some markets"
+  },
+  "industries": [
+    { "id": "fb", "label": "Food & Beverage", "active": true },
+    { "id": "hosp", "label": "Hospitality", "active": false },
+    { "id": "qsr", "label": "QSR / Fast Food", "active": false },
+    { "id": "fine", "label": "Fine Dining", "active": false },
+    { "id": "cat", "label": "Catering", "active": false },
+    { "id": "inst", "label": "Institutional", "active": false }
+  ],
+  "countries": {
+    "US": {
+      "name": "United States",
+      "symbol": "$",
+      "annualUSD": 56000,
+      "annualLocal": 56000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Toyota Camry",
+      "carPriceUSD": 28000,
+      "riskAge": 47,
+      "startAge": 25,
+      "localDisplay": "$56,000/yr (USD)",
+      "flag": "🇺🇸",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "UK": {
+      "name": "United Kingdom",
+      "symbol": "£",
+      "annualUSD": 44000,
+      "annualLocal": 35000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Ford Focus",
+      "carPriceUSD": 26000,
+      "riskAge": 49,
+      "startAge": 25,
+      "localDisplay": "~£35K/yr (~$44K)",
+      "flag": "🇬🇧",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "AU": {
+      "name": "Australia",
+      "symbol": "A$",
+      "annualUSD": 42000,
+      "annualLocal": 65000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Toyota RAV4",
+      "carPriceUSD": 28000,
+      "riskAge": 48,
+      "startAge": 25,
+      "localDisplay": "~A$65K/yr (~$42K)",
+      "flag": "🇦🇺",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "DE": {
+      "name": "Germany",
+      "symbol": "€",
+      "annualUSD": 41000,
+      "annualLocal": 38000,
+      "career": 30,
+      "automationIdx": 35,
+      "carName": "VW Golf",
+      "carPriceUSD": 30000,
+      "riskAge": 50,
+      "startAge": 25,
+      "localDisplay": "~€38K/yr (~$41K)",
+      "flag": "🇩🇪",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "JP": {
+      "name": "Japan",
+      "symbol": "¥",
+      "annualUSD": 28000,
+      "annualLocal": 4200000,
+      "career": 30,
+      "automationIdx": 32,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 18000,
+      "riskAge": 52,
+      "startAge": 25,
+      "localDisplay": "~¥4.2M/yr (~$28K)",
+      "flag": "🇯🇵",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "SG": {
+      "name": "Singapore",
+      "symbol": "S$",
+      "annualUSD": 31000,
+      "annualLocal": 42000,
+      "career": 30,
+      "automationIdx": 42,
+      "carName": "Toyota Corolla*",
+      "carPriceUSD": 88000,
+      "riskAge": 46,
+      "startAge": 25,
+      "localDisplay": "~S$42K/yr (~$31K)",
+      "flag": "🇸🇬",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "TW": {
+      "name": "Taiwan",
+      "symbol": "NT$",
+      "annualUSD": 15000,
+      "annualLocal": 480000,
+      "career": 30,
+      "automationIdx": 40,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 22000,
+      "riskAge": 45,
+      "startAge": 25,
+      "localDisplay": "~NT$480K/yr (~$15K)",
+      "flag": "🇹🇼",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "CN": {
+      "name": "China",
+      "symbol": "¥",
+      "annualUSD": 12000,
+      "annualLocal": 86000,
+      "career": 30,
+      "automationIdx": 44,
+      "carName": "BYD Seagull",
+      "carPriceUSD": 12000,
+      "riskAge": 44,
+      "startAge": 25,
+      "localDisplay": "~¥86K/yr (~$12K)",
+      "flag": "🇨🇳",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    }
+  },
+  "levels": [
+    { "id": 0, "name": "Line Cook", "short": "Line", "yearsFrom": 0, "color": "#888888", "yearsLabel": "Entry · Yr 0" },
+    { "id": 1, "name": "Chef de Partie", "short": "CDP", "yearsFrom": 2, "color": "#4f98a3", "yearsLabel": "≈ 2–3 yrs" },
+    { "id": 2, "name": "Sous Chef", "short": "Sous", "yearsFrom": 5, "color": "#eab308", "yearsLabel": "≈ 5–6 yrs" },
+    { "id": 3, "name": "Head Chef", "short": "Head", "yearsFrom": 8, "color": "#f97316", "yearsLabel": "≈ 8–11 yrs" },
+    { "id": 4, "name": "Executive Chef", "short": "Exec", "yearsFrom": 16, "color": "#22c55e", "yearsLabel": "≈ 16–19 yrs" }
+  ],
+  "promotions": [
+    { "from": "Line Cook", "to": "Chef de Partie", "years": "2–3 yrs", "tip": "Station mastery required" },
+    { "from": "Chef de Partie", "to": "Sous Chef", "years": "2–3 yrs", "tip": "Performance + kitchen leadership" },
+    { "from": "Sous Chef", "to": "Head Chef", "years": "3–5 yrs", "tip": "Menu creation + team management" },
+    { "from": "Head Chef", "to": "Executive Chef", "years": "5–8 yrs", "tip": "Business acumen + reputation" }
+  ],
+  "levelUSD": {
+    "US": [32000, 48000, 55000, 72000, 95000],
+    "UK": [28000, 42000, 48000, 65000, 88000],
+    "AU": [33000, 45000, 50000, 68000, 90000],
+    "DE": [26000, 38000, 42000, 58000, 78000],
+    "JP": [25000, 35000, 40000, 55000, 73000],
+    "SG": [22000, 36000, 41000, 58000, 78000],
+    "TW": [13000, 18000, 20000, 28000, 37000],
+    "CN": [8000, 12000, 14000, 20000, 30000]
+  },
+  "levelLocal": {
+    "US": ["$32K", "$48K", "$55K", "$72K", "$95K"],
+    "UK": ["£22K", "£32K", "£37K", "£50K", "£68K"],
+    "AU": ["A$45K", "A$62K", "A$70K", "A$95K", "A$125K"],
+    "DE": ["€24K", "€35K", "€39K", "€54K", "€72K"],
+    "JP": ["¥3.2M", "¥4.5M", "¥5.1M", "¥7.0M", "¥9.3M"],
+    "SG": ["S$30K", "S$48K", "S$55K", "S$78K", "S$105K"],
+    "TW": ["NT$380K", "NT$520K", "NT$580K", "NT$820K", "NT$1.1M"],
+    "CN": ["¥50K", "¥72K", "¥85K", "¥120K", "¥180K"]
+  },
+  "languages": {
+    "US": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Spanish", "level": "Helpful", "score": 2 }],
+    "UK": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "AU": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "DE": [{ "lang": "German", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Helpful", "score": 2 }],
+    "JP": [{ "lang": "Japanese", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "SG": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Mandarin", "level": "Helpful", "score": 2 }, { "lang": "Malay", "level": "Optional", "score": 1 }],
+    "TW": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Taiwanese", "level": "Helpful", "score": 2 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "CN": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Dialect", "level": "Regional", "score": 2 }, { "lang": "English", "level": "High-end Only", "score": 3 }]
+  },
+  "langScoreLabels": { "1": "Elementary", "2": "Limited Working", "3": "Professional Working", "4": "Full Professional", "5": "Native / Bilingual" },
+  "cities": {
+    "US": [
+      { "city": "San Francisco", "region": "West", "salary": 72000, "cost": 105 },
+      { "city": "New York", "region": "Northeast", "salary": 68000, "cost": 103 },
+      { "city": "Boston", "region": "Northeast", "salary": 64000, "cost": 90 },
+      { "city": "Seattle", "region": "West", "salary": 62000, "cost": 88 },
+      { "city": "Los Angeles", "region": "West", "salary": 65000, "cost": 95 },
+      { "city": "Chicago", "region": "Midwest", "salary": 58000, "cost": 80 },
+      { "city": "Denver", "region": "Mountain", "salary": 55000, "cost": 78 },
+      { "city": "Miami", "region": "South", "salary": 52000, "cost": 75 },
+      { "city": "Dallas", "region": "South", "salary": 50000, "cost": 65 },
+      { "city": "Phoenix", "region": "Southwest", "salary": 48000, "cost": 60 }
+    ],
+    "UK": [
+      { "city": "London", "region": "England", "salary": 55000, "cost": 100 },
+      { "city": "Edinburgh", "region": "Scotland", "salary": 44000, "cost": 75 },
+      { "city": "Bristol", "region": "England", "salary": 43000, "cost": 73 },
+      { "city": "Manchester", "region": "England", "salary": 42000, "cost": 72 },
+      { "city": "Birmingham", "region": "England", "salary": 40000, "cost": 70 },
+      { "city": "Leeds", "region": "England", "salary": 39000, "cost": 68 }
+    ],
+    "AU": [
+      { "city": "Sydney", "region": "NSW", "salary": 88000, "cost": 100 },
+      { "city": "Melbourne", "region": "VIC", "salary": 82000, "cost": 92 },
+      { "city": "Canberra", "region": "ACT", "salary": 80000, "cost": 85 },
+      { "city": "Perth", "region": "WA", "salary": 78000, "cost": 82 },
+      { "city": "Brisbane", "region": "QLD", "salary": 75000, "cost": 80 },
+      { "city": "Gold Coast", "region": "QLD", "salary": 70000, "cost": 75 },
+      { "city": "Adelaide", "region": "SA", "salary": 68000, "cost": 72 }
+    ],
+    "DE": [
+      { "city": "Munich", "region": "Bavaria", "salary": 72000, "cost": 100 },
+      { "city": "Frankfurt", "region": "Hesse", "salary": 68000, "cost": 95 },
+      { "city": "Stuttgart", "region": "Baden-W.", "salary": 66000, "cost": 88 },
+      { "city": "Hamburg", "region": "Hamburg", "salary": 65000, "cost": 88 },
+      { "city": "Düsseldorf", "region": "NRW", "salary": 60000, "cost": 82 },
+      { "city": "Berlin", "region": "Berlin", "salary": 60000, "cost": 80 },
+      { "city": "Cologne", "region": "NRW", "salary": 58000, "cost": 78 }
+    ],
+    "JP": [
+      { "city": "Tokyo", "region": "Kanto", "salary": 68000, "cost": 100 },
+      { "city": "Yokohama", "region": "Kanto", "salary": 62000, "cost": 90 },
+      { "city": "Osaka", "region": "Kansai", "salary": 58000, "cost": 85 },
+      { "city": "Kyoto", "region": "Kansai", "salary": 55000, "cost": 82 },
+      { "city": "Nagoya", "region": "Chubu", "salary": 52000, "cost": 75 },
+      { "city": "Fukuoka", "region": "Kyushu", "salary": 47000, "cost": 70 },
+      { "city": "Sapporo", "region": "Hokkaido", "salary": 45000, "cost": 68 }
+    ],
+    "SG": [
+      { "city": "Orchard", "region": "Central", "salary": 82000, "cost": 103 },
+      { "city": "CBD / Marina", "region": "Central", "salary": 80000, "cost": 100 },
+      { "city": "Tampines", "region": "East", "salary": 64000, "cost": 80 },
+      { "city": "Jurong", "region": "West", "salary": 62000, "cost": 78 },
+      { "city": "Woodlands", "region": "North", "salary": 60000, "cost": 72 }
+    ],
+    "TW": [
+      { "city": "Taipei", "region": "Northern", "salary": 30000, "cost": 100 },
+      { "city": "Hsinchu", "region": "Northern", "salary": 28000, "cost": 82 },
+      { "city": "New Taipei", "region": "Northern", "salary": 27000, "cost": 88 },
+      { "city": "Taichung", "region": "Central", "salary": 24000, "cost": 72 },
+      { "city": "Kaohsiung", "region": "Southern", "salary": 23000, "cost": 68 },
+      { "city": "Tainan", "region": "Southern", "salary": 22000, "cost": 65 },
+      { "city": "Taitung", "region": "Eastern", "salary": 18000, "cost": 55 },
+      { "city": "Hualien", "region": "Eastern", "salary": 17000, "cost": 52 }
+    ],
+    "CN": [
+      { "city": "Shanghai", "region": "East", "salary": 30000, "cost": 105 },
+      { "city": "Beijing", "region": "North", "salary": 28000, "cost": 100 },
+      { "city": "Shenzhen", "region": "South", "salary": 28000, "cost": 98 },
+      { "city": "Guangzhou", "region": "South", "salary": 24000, "cost": 85 },
+      { "city": "Chengdu", "region": "Southwest", "salary": 18000, "cost": 65 },
+      { "city": "Chongqing", "region": "Southwest", "salary": 17000, "cost": 60 },
+      { "city": "Wuhan", "region": "Central", "salary": 16000, "cost": 58 },
+      { "city": "Xi'an", "region": "Northwest", "salary": 14000, "cost": 52 }
+    ]
+  },
+  "countryMeta": {
+    "US": { "difficulty": 8, "restDays": 10, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "ServSafe · CIA Degree Optional", "travel": "Low", "mobility": "High", "expression": "High" },
+    "UK": { "difficulty": 8, "restDays": 15, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "16–21", "bestEntryAge": "18–24", "cert": "Level 2/3 Food Safety · NVQ", "travel": "Low", "mobility": "High", "expression": "High" },
+    "AU": { "difficulty": 7, "restDays": 20, "hoursPerDay": 9.5, "splitShift": false, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "SITXFSA006 · Certificate III Hospitality", "travel": "Low", "mobility": "High", "expression": "High" },
+    "DE": { "difficulty": 7, "restDays": 25, "hoursPerDay": 9, "splitShift": false, "bestLearnAge": "16–20", "bestEntryAge": "18–23", "cert": "Ausbildung Koch (3 yrs IHK apprentice)", "travel": "Low", "mobility": "High", "expression": "Moderate" },
+    "JP": { "difficulty": 9, "restDays": 8, "hoursPerDay": 11, "splitShift": true, "bestLearnAge": "18–23", "bestEntryAge": "20–26", "cert": "調理師免許 (National Cook License)", "travel": "Very Low", "mobility": "Extreme", "expression": "Moderate" },
+    "SG": { "difficulty": 8, "restDays": 14, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "WSQ Food Safety · ITE Pastry/Culinary", "travel": "Low", "mobility": "High", "expression": "High" },
+    "TW": { "difficulty": 8, "restDays": 12, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "廚師證照 Level 1–3 · 餐飲管理學位", "travel": "Low", "mobility": "High", "expression": "Moderate" },
+    "CN": { "difficulty": 9, "restDays": 7, "hoursPerDay": 11.5, "splitShift": true, "bestLearnAge": "16–21", "bestEntryAge": "18–24", "cert": "中式烹飪師 (初/中/高級) · 廚師職業資格証", "travel": "Low", "mobility": "High", "expression": "High" }
+  },
+  "difficultyLabels": ["", "", "Very Easy", "Easy", "Below Avg", "Average", "Above Avg", "Hard", "Very Hard", "Brutal", "Extreme"],
+  "insightCards": [
+    { "id": "difficulty", "icon": "💪", "label": "Job Hardship", "valueKey": "difficulty", "valueTemplate": "{value}/10", "metaTemplate": "{difficultyLabel} · physically & mentally demanding", "colorMode": "gradient-bad" },
+    { "id": "restDays", "icon": "🏖️", "label": "Annual Leave", "valueKey": "restDays", "valueTemplate": "{value} days", "metaTemplate": "{hoursPerDay}h avg work day · Split shifts {splitShiftLabel}", "colorMode": "gradient-good" },
+    { "id": "bestLearnAge", "icon": "🎓", "label": "Best Learning Age", "valueKey": "bestLearnAge", "valueTemplate": "{value}", "metaTemplate": "Culinary school or apprenticeship entry window", "colorMode": "accent" },
+    { "id": "bestEntryAge", "icon": "🚀", "label": "Best Entry Age", "valueKey": "bestEntryAge", "valueTemplate": "{value}", "metaTemplate": "Peak energy & fastest skill absorption period", "colorMode": "accent" },
+    { "id": "travel", "icon": "✈️", "label": "Business Travel", "valueKey": "travel", "valueTemplate": "{value}", "metaTemplate": "Frequency of travel for events, sourcing, or multi-site management.", "colorMode": "accent" },
+    { "id": "mobility", "icon": "🏃", "label": "Physical Mobility", "valueKey": "mobility", "valueTemplate": "{value}", "metaTemplate": "Level of constant movement, standing, and station transitions.", "colorMode": "accent" },
+    { "id": "expression", "icon": "🗣️", "label": "Creative Self-Expression", "valueKey": "expression", "valueTemplate": "{value}", "metaTemplate": "Requirement to communicate vision, lead teams, and express creativity.", "colorMode": "accent" },
+    { "id": "cert", "icon": "📜", "label": "Certifications Required", "valueKey": "cert", "valueTemplate": "{value}", "metaTemplate": "Varies by employer tier & establishment type", "spanFull": true, "colorMode": "neutral" }
+  ],
+  "extendedMeta": {
+    "US": { "budget": "$450/mo", "hnwi": "Private Clubs · Resort Dining · Estate Chef Ladder", "startupReadiness": 68, "mbti": "ESTP · ISTJ · ENTJ", "uni": "Not required", "uniMeta": "Prestige helps less than Michelin-grade references.", "privateSchool": "Useful but debt-sensitive", "privateMeta": "Line experience still wins.", "schools": "CIA · Johnson & Wales · Kendall", "retire": "Corporate Dining Leadership, Instructor Roles, Private Chef.", "pivot": "Estate Chef, Kitchen Ops Consultant, Content/Demo Chef." },
+    "UK": { "budget": "£260/mo", "hnwi": "Hotels · Members Clubs · Private Events", "startupReadiness": 54, "mbti": "ISTJ · ESTJ · ENTJ", "uni": "Optional", "uniMeta": "References and practical output dominate.", "privateSchool": "Helpful for placement", "privateMeta": "Apprenticeship kitchens carry more weight.", "schools": "Westminster Kingsway · Le Cordon Bleu London · UCB", "retire": "Hotel Training, F&B Management, Consultancy.", "pivot": "Members-Club Chef, Luxury Catering Lead, Compliance Trainer." },
+    "AU": { "budget": "A$420/mo", "hnwi": "Resorts · Wine Regions · Premium Tourism", "startupReadiness": 72, "mbti": "ESTP · ENTJ · ISTJ", "uni": "Optional", "uniMeta": "TAFE and real kitchen output matter more.", "privateSchool": "Often practical", "privateMeta": "Live service volume is key.", "schools": "Le Cordon Bleu Melbourne · William Angliss · TAFE NSW", "retire": "Catering Operator, Venue Manager, Hospitality Trainer.", "pivot": "Private Dining Operator, Venue Consultant, Regional Trainer." },
+    "DE": { "budget": "€220/mo", "hnwi": "Luxury Hotels · Old-money Dining · Cruise / Resort", "startupReadiness": 49, "mbti": "ISTJ · INTJ · ESTJ", "uni": "Usually not required", "uniMeta": "Formal training structure matters more.", "privateSchool": "Apprenticeship stronger", "privateMeta": "Apprenticeship route is more trusted.", "schools": "IHK tracks · Hotelfachschule Heidelberg · DHBW", "retire": "Training Kitchens, Hotel Operations, Procurement.", "pivot": "Food Safety Lead, Hotel Trainer, Procurement Specialist." },
+    "JP": { "budget": "¥45,000/mo", "hnwi": "Omakase · Ryokan · Private Invitation Dining", "startupReadiness": 46, "mbti": "ISTJ · INTJ · ISFJ", "uni": "Not required", "uniMeta": "Lineage and master-apprentice credibility matter more.", "privateSchool": "Can help, lineage stronger", "privateMeta": "Hierarchy and apprenticeship quality remain stronger.", "schools": "Tsuji Culinary Institute · Hattori Nutrition College · Tokyo Seika", "retire": "Teaching, Quality Control, Supplier Advisory, Small-Format Dining.", "pivot": "Luxury Counter Chef, QA/Standards Lead, Craft Instructor." },
+    "SG": { "budget": "S$420/mo", "hnwi": "Luxury Hotels · Expat Clients · Regional Events", "startupReadiness": 76, "mbti": "ENTJ · ESTJ · ESTP", "uni": "Useful but optional", "uniMeta": "Multilingual polish and operational discipline matter more.", "privateSchool": "Useful if placement-led", "privateMeta": "Brand-name hotel placement and language advantage.", "schools": "At-Sunrice · SHATEC · Temasek hospitality tracks", "retire": "Consulting, Regional Training, Private Dining.", "pivot": "Cloud-Kitchen Founder, Private Dining Operator, Regional Trainer." },
+    "TW": { "budget": "NT$8,000/mo", "hnwi": "Private Banquets · Boutique Hospitality · Luxury Clubs", "startupReadiness": 57, "mbti": "ISTJ · ESTP · ENTJ", "uni": "Optional", "uniMeta": "Bilingual service quality and steady kitchen reputation.", "privateSchool": "Selective value", "privateMeta": "Consistent kitchen output remains strongest signal.", "schools": "國立高雄餐旅大學 · 景文科大餐飲系 · 實踐大學", "retire": "Banquet Operations, Culinary Teaching, Central Kitchen Roles.", "pivot": "Banquet Lead, Product Testing, Kitchen Standards Consultant." },
+    "CN": { "budget": "¥1,800/mo", "hnwi": "Luxury Banquets · Private Rooms · Club Kitchens", "startupReadiness": 61, "mbti": "ISTJ · ESTP · ENTJ", "uni": "Not required", "uniMeta": "Apprenticeship pedigree and execution matter more.", "privateSchool": "Mixed value", "privateMeta": "Live kitchen references outrank tuition branding.", "schools": "Le Cordon Bleu Shanghai · SICA · Shanghai Business & Tourism", "retire": "Training Manager, Central Kitchen Leader, Private Chef.", "pivot": "Private Household Chef, SOP Consultant, Flavor/Product R&D." }
+  },
+  "startupLinks": {
+    "US": [{ "label": "SBA Grants", "url": "https://www.sba.gov" }, { "label": "CloudKitchens", "url": "https://cloudkitchens.com" }],
+    "UK": [{ "label": "Gov Business Support", "url": "https://www.gov.uk/business-finance-support" }, { "label": "Kitchen United", "url": "https://www.kitchenunited.com" }],
+    "AU": [{ "label": "Business.gov.au", "url": "https://business.gov.au" }, { "label": "FoodStars", "url": "https://foodstars.com.au" }],
+    "DE": [{ "label": "KfW Start-ups", "url": "https://www.kfw.de" }, { "label": "KitchenTown Berlin", "url": "https://www.kitchentown.de" }],
+    "JP": [{ "label": "J-Net21", "url": "https://j-net21.smrj.go.jp" }, { "label": "Cloud Kitchen Japan", "url": "https://cloudkitchens.com/jp/" }],
+    "SG": [{ "label": "Enterprise SG", "url": "https://www.enterprisesg.gov.sg" }, { "label": "Smart City Kitchens", "url": "https://smartcitykitchens.com" }],
+    "TW": [{ "label": "SMEA Grants", "url": "https://www.smea.gov.tw" }, { "label": "Cloud Kitchen Taiwan", "url": "https://www.cloudkitchens.com.tw" }],
+    "CN": [{ "label": "China Business Registry", "url": "http://www.gsxt.gov.cn" }, { "label": "Meituan Cloud Kitchen", "url": "https://kd.meituan.com" }]
+  },
+  "famousChefs": {
+    "US": [{ "name": "Alan Wong", "netWorth": "$1.1B" }, { "name": "Wolfgang Puck", "netWorth": "$120M" }],
+    "UK": [{ "name": "Gordon Ramsay", "netWorth": "$220M" }, { "name": "Jamie Oliver", "netWorth": "$200M" }],
+    "AU": [{ "name": "Curtis Stone", "netWorth": "$25M" }, { "name": "Neil Perry", "netWorth": "$25M" }],
+    "DE": [{ "name": "Tim Mälzer", "netWorth": "$10M" }, { "name": "Eckart Witzigmann", "netWorth": "$5M" }],
+    "JP": [{ "name": "Nobu Matsuhisa", "netWorth": "$200M" }, { "name": "Masaharu Morimoto", "netWorth": "$18M" }],
+    "SG": [{ "name": "Sam Leong", "netWorth": "$5M" }, { "name": "Janice Wong", "netWorth": "$3M" }],
+    "TW": [{ "name": "André Chiang", "netWorth": "$10M" }, { "name": "Lanshu Chen", "netWorth": "$5M" }],
+    "CN": [{ "name": "Da Dong", "netWorth": "$50M" }, { "name": "Wang Gang", "netWorth": "$2M" }]
+  },
+  "accessLinks": [
+    { "title": "Training & Courses", "desc": "Online platforms and culinary schools." },
+    { "title": "Certifications & Credentials", "desc": "Food safety, HACCP, Red Seal, and licensing." },
+    { "title": "Job Search & Placement", "desc": "LinkedIn, Culinary Agents, hotel career pages." },
+    { "title": "Freelance & Side Work", "desc": "Banquet staffing, private events, pop-ups." },
+    { "title": "Your Portfolio & Referrals", "desc": "Link to your own portfolio and referral network." },
+    { "title": "Find a Mentor", "desc": "Connect with a master chef or senior sifu." }
+  ],
+  "careerRecs": [
+    [
+      { "title": "Kitchen Quality Monitor", "match": "76%", "color": "var(--green)", "desc": "Inspect food prep standards and safety compliance.", "skills": ["Food Safety", "Temperature Control"] },
+      { "title": "Catering Production Staff", "match": "71%", "color": "var(--yellow)", "desc": "Execute large-batch food production.", "skills": ["Station Management", "Speed"] },
+      { "title": "Food Prep Trainer", "match": "65%", "color": "var(--orange)", "desc": "Onboard new kitchen staff.", "skills": ["Knife Skills", "Ingredient Handling"] }
+    ],
+    [
+      { "title": "Recipe Testing Technician", "match": "83%", "color": "var(--green)", "desc": "Support R&D teams testing dishes.", "skills": ["Sensory Evaluation", "Mise en Place"] },
+      { "title": "Catering Supervisor", "match": "78%", "color": "var(--yellow)", "desc": "Lead a team for events.", "skills": ["Team Coordination", "Quality Awareness"] },
+      { "title": "Production Kitchen Lead", "match": "72%", "color": "var(--orange)", "desc": "Oversee batch production.", "skills": ["Station Leadership", "Time Management"] }
+    ],
+    [
+      { "title": "Food Technologist (R&D)", "match": "88%", "color": "var(--green)", "desc": "Sensory evaluation and recipe scaling.", "skills": ["Recipe Development", "Quality Control"] },
+      { "title": "Event Operations Manager", "match": "82%", "color": "var(--yellow)", "desc": "High-pressure coordination.", "skills": ["Staff Supervision", "Cost Management"] },
+      { "title": "F&B Procurement Analyst", "match": "76%", "color": "var(--orange)", "desc": "Ingredient quality and yield management.", "skills": ["Inventory Control", "Supplier Knowledge"] }
+    ],
+    [
+      { "title": "F&B Operations Manager", "match": "90%", "color": "var(--green)", "desc": "Oversee multi-venue operations.", "skills": ["Budget Control", "Team Management"] },
+      { "title": "Event Operations Manager", "match": "85%", "color": "var(--yellow)", "desc": "Crisis management and event logistics.", "skills": ["Crisis Management", "Logistics"] },
+      { "title": "F&B Procurement Specialist", "match": "80%", "color": "var(--orange)", "desc": "Supplier and ingredient quality.", "skills": ["Supply Chain", "Negotiation"] }
+    ],
+    [
+      { "title": "F&B Director", "match": "93%", "color": "var(--green)", "desc": "Lead entire F&B strategy.", "skills": ["Strategic Planning", "Brand Building"] },
+      { "title": "Food Innovation Consultant", "match": "88%", "color": "var(--yellow)", "desc": "Advise on menu trends and innovation.", "skills": ["Culinary Expertise", "Market Analysis"] },
+      { "title": "Culinary Program Director", "match": "82%", "color": "var(--orange)", "desc": "Lead culinary school or training.", "skills": ["Training Design", "Leadership"] }
+    ]
+  ],
+  "survivalStrategy": [
+    "As a <strong>Line Cook</strong>, master speed, knife precision, and food safety — skills no robot fully replicates at your pace.",
+    "As a <strong>Chef de Partie</strong>, double down on station mastery and specialty depth.",
+    "As a <strong>Sous Chef</strong>, recipe development and people management are your armor.",
+    "As a <strong>Head Chef</strong>, focus on menu creation, brand identity, and team culture.",
+    "As an <strong>Executive Chef</strong>, leverage brand, vision, and business relationships."
+  ],
+  "hazards": [
+    { "icon": "🔥", "name": "Burns & Scalds", "levelClass": "haz-5", "width": "100%", "desc": "Critical · open flame" },
+    { "icon": "🌡️", "name": "Heat Exhaustion", "levelClass": "haz-5", "width": "100%", "desc": "Critical · 38–50°C kitchens" },
+    { "icon": "🔪", "name": "Cuts & Lacerations", "levelClass": "haz-4", "width": "80%", "desc": "High · daily knife work" },
+    { "icon": "💪", "name": "Musculoskeletal Strain", "levelClass": "haz-4", "width": "80%", "desc": "High · 8–12 hrs standing" },
+    { "icon": "🧠", "name": "Mental Fatigue", "levelClass": "haz-4", "width": "75%", "desc": "High · burnout 40–60%" },
+    { "icon": "🚿", "name": "Slip & Fall", "levelClass": "haz-3", "width": "55%", "desc": "Medium · wet floors" },
+    { "icon": "⚗️", "name": "Chemical Exposure", "levelClass": "haz-3", "width": "50%", "desc": "Medium · cleaning agents" },
+    { "icon": "👂", "name": "Noise Exposure", "levelClass": "haz-2", "width": "35%", "desc": "Low-Med · fans" },
+    { "icon": "🫁", "name": "Smoke & Fumes", "levelClass": "haz-3", "width": "45%", "desc": "Medium · ventilation" }
+  ],
+  "filters": [
+    { "id": "all", "label": "All", "class": "all", "active": true, "dot": false },
+    { "id": "replaceable", "label": "Replaceable", "class": "gf", "active": false, "dot": true },
+    { "id": "indanger", "label": "In-Danger", "class": "yf", "active": false, "dot": true },
+    { "id": "intro", "label": "Intro", "class": "of", "active": false, "dot": true },
+    { "id": "nothing", "label": "Nothing", "class": "rf", "active": false, "dot": true }
+  ],
+  "mbtiData": [
+    { "type": "ESTP", "desc": "The Dynamo. Thrives in fast-paced, high-pressure environments." },
+    { "type": "ENTJ", "desc": "The Commander. Natural leaders who manage complex brigades." },
+    { "type": "ISFP", "desc": "The Artist. Passionate about culinary aesthetics." },
+    { "type": "ESFJ", "desc": "The Provider. Fosters collaborative kitchen culture." },
+    { "type": "INTJ", "desc": "The Architect. Strategic kitchen optimization thinkers." }
+  ],
+  "filialPietyCountries": ["CN", "TW", "SG", "JP"],
+  "ltvMethodology": "BLS 2025 median salary × 30-year career horizon. AI Risk weighted.",
+  "highestThreat": "Inventory & Ordering is the most vulnerable node.",
+  "langPillClasses": {
+    "Essential": "llp-essential",
+    "Helpful": "llp-helpful",
+    "Optional": "llp-optional",
+    "Senior Only": "llp-senior",
+    "High-end Only": "llp-senior",
+    "Regional": "llp-helpful"
+  },
+  "networkCards": [
+    { "title": "Recommended Majors", "value": "Culinary Arts & Hospitality Mgt", "meta": "Secondary: Food Science, Nutrition, or Business Administration." },
+    { "title": "Target Courses", "value": "Kitchen Ops & Cost Control", "meta": "Also: Molecular Gastronomy, Sustainable Sourcing, Staff Leadership." },
+    { "title": "Stretch Majors", "value": "F&B Tech & Innovation", "meta": "Transition into tech-enabled food systems." },
+    { "title": "Key Connections", "value": "Michelin Execs & F&B Directors", "meta": "Build relationships with top-tier culinary executives.", "loginCTA": true }
+  ],
+  "version": "v2.4 · Apr 2026",
+  "footnote": "* Data: Miso Robotics · BLS 2025 · JobForesight 2026 · ILO benchmarks"
+}
+```
 
-1. The label “HNWI Client Access” is changed to “High Net Worth Client Access”.  
-2. The order of that card and the “Startup Readiness” card is swapped.  
-3. The section heading “MBTI Fit, Retirement & Career Pivots” is changed to “MBTI Fit, Skill Pivots & Retirement”.  
-4. The two cards “Retirement Planning” and “Skill Pivot” are swapped to match the new heading.
-
-No other part of the document is altered.
-
+[chef.html]
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -2139,410 +2542,18 @@ No other part of the document is altered.
     </div>
     <div id="home-blank-page"><h2 style="color:var(--text);font-family:var(--font-display);font-weight:800;font-size:24px">🏠 Home</h2><p style="color:var(--text-muted);font-size:14px">Welcome back. Select a career path to continue.</p><span class="home-back-hint" id="homeBackBtn">← Back to Cook Lifecycle</span></div>
     <script>
-        const JOB_DATA = {
-            industries: [
-                { id: 'fb', label: 'Food & Beverage', active: true }, { id: 'hosp', label: 'Hospitality',
-                active: false }, { id: 'qsr', label: 'QSR / Fast Food', active: false }, { id: 'fine',
-                    label: 'Fine Dining', active: false }, { id: 'cat', label: 'Catering', active: false },
-                { id: 'inst', label: 'Institutional', active: false },
-            ],
-            countries: {
-                US: { name: 'United States', symbol: '$', annualUSD: 56000, annualLocal: 56000, career: 30,
-                    automationIdx: 37, carName: 'Toyota Camry', carPriceUSD: 28000, riskAge: 47, startAge: 25,
-                    localDisplay: '$56,000/yr (USD)', flag: '🇺🇸', riskLabel: 'MID', riskClass: 'mid' },
-                UK: { name: 'United Kingdom', symbol: '£', annualUSD: 44000, annualLocal: 35000, career: 30,
-                    automationIdx: 37, carName: 'Ford Focus', carPriceUSD: 26000, riskAge: 49, startAge: 25,
-                    localDisplay: '~£35K/yr (~$44K)', flag: '🇬🇧', riskLabel: 'MID', riskClass: 'mid' },
-                AU: { name: 'Australia', symbol: 'A$', annualUSD: 42000, annualLocal: 65000, career: 30,
-                    automationIdx: 37, carName: 'Toyota RAV4', carPriceUSD: 28000, riskAge: 48, startAge: 25,
-                    localDisplay: '~A$65K/yr (~$42K)', flag: '🇦🇺', riskLabel: 'MID', riskClass: 'mid' },
-                DE: { name: 'Germany', symbol: '€', annualUSD: 41000, annualLocal: 38000, career: 30,
-                    automationIdx: 35, carName: 'VW Golf', carPriceUSD: 30000, riskAge: 50, startAge: 25,
-                    localDisplay: '~€38K/yr (~$41K)', flag: '🇩🇪', riskLabel: 'SLOW', riskClass: 'slow' },
-                JP: { name: 'Japan', symbol: '¥', annualUSD: 28000, annualLocal: 4200000, career: 30,
-                    automationIdx: 32, carName: 'Toyota Corolla', carPriceUSD: 18000, riskAge: 52,
-                startAge: 25, localDisplay: '~¥4.2M/yr (~$28K)', flag: '🇯🇵', riskLabel: 'SLOW',
-                    riskClass: 'slow' },
-                SG: { name: 'Singapore', symbol: 'S$', annualUSD: 31000, annualLocal: 42000, career: 30,
-                    automationIdx: 42, carName: 'Toyota Corolla*', carPriceUSD: 88000, riskAge: 46,
-                startAge: 25, localDisplay: '~S$42K/yr (~$31K)', flag: '🇸🇬', riskLabel: 'FAST',
-                    riskClass: 'fast' },
-                TW: { name: 'Taiwan', symbol: 'NT$', annualUSD: 15000, annualLocal: 480000, career: 30,
-                    automationIdx: 40, carName: 'Toyota Corolla', carPriceUSD: 22000, riskAge: 45,
-                startAge: 25, localDisplay: '~NT$480K/yr (~$15K)', flag: '🇹🇼', riskLabel: 'FAST',
-                    riskClass: 'fast' },
-                CN: { name: 'China', symbol: '¥', annualUSD: 12000, annualLocal: 86000, career: 30,
-                    automationIdx: 44, carName: 'BYD Seagull', carPriceUSD: 12000, riskAge: 44, startAge: 25,
-                    localDisplay: '~¥86K/yr (~$12K)', flag: '🇨🇳', riskLabel: 'FAST', riskClass: 'fast' },
-            },
-            levels: [
-                { id: 0, name: 'Line Cook', short: 'Line', yearsFrom: 0, color: '#888888',
-                yearsLabel: 'Entry · Yr 0' },
-                { id: 1, name: 'Chef de Partie', short: 'CDP', yearsFrom: 2, color: '#4f98a3',
-                    yearsLabel: '≈ 2–3 yrs' },
-                { id: 2, name: 'Sous Chef', short: 'Sous', yearsFrom: 5, color: '#eab308',
-                yearsLabel: '≈ 5–6 yrs' },
-                { id: 3, name: 'Head Chef', short: 'Head', yearsFrom: 8, color: '#f97316',
-                yearsLabel: '≈ 8–11 yrs' },
-                { id: 4, name: 'Executive Chef', short: 'Exec', yearsFrom: 16, color: '#22c55e',
-                    yearsLabel: '≈ 16–19 yrs' },
-            ],
-            promotions: [
-                { from: 'Line Cook', to: 'Chef de Partie', years: '2–3 yrs',
-                tip: 'Station mastery required' },
-                { from: 'Chef de Partie', to: 'Sous Chef', years: '2–3 yrs',
-                    tip: 'Performance + kitchen leadership' },
-                { from: 'Sous Chef', to: 'Head Chef', years: '3–5 yrs',
-                tip: 'Menu creation + team management' },
-                { from: 'Head Chef', to: 'Executive Chef', years: '5–8 yrs',
-                    tip: 'Business acumen + reputation' },
-            ],
-            levelUSD: { US: [32000, 48000, 55000, 72000, 95000], UK: [28000, 42000, 48000, 65000, 88000],
-                AU: [33000, 45000, 50000, 68000, 90000], DE: [26000, 38000, 42000, 58000, 78000],
-                JP: [25000, 35000, 40000, 55000, 73000], SG: [22000, 36000, 41000, 58000, 78000],
-                TW: [13000, 18000, 20000, 28000, 37000], CN: [8000, 12000, 14000, 20000, 30000], },
-            levelLocal: { US: ['$32K', '$48K', '$55K', '$72K', '$95K'], UK: ['£22K', '£32K', '£37K', '£50K',
-                    '£68K'
-                ], AU: ['A$45K', 'A$62K', 'A$70K', 'A$95K', 'A$125K'], DE: ['€24K', '€35K', '€39K', '€54K',
-                    '€72K'
-                ], JP: ['¥3.2M', '¥4.5M', '¥5.1M', '¥7.0M', '¥9.3M'], SG: ['S$30K', 'S$48K', 'S$55K',
-                    'S$78K', 'S$105K'
-                ], TW: ['NT$380K', 'NT$520K', 'NT$580K', 'NT$820K', 'NT$1.1M'], CN: ['¥50K', '¥72K', '¥85K',
-                    '¥120K', '¥180K'
-                ], },
-            languages: {
-                US: [{ lang: 'English', level: 'Essential', score: 5 }, { lang: 'Spanish', level: 'Helpful',
-                    score: 2 }],
-                UK: [{ lang: 'English', level: 'Essential', score: 5 }],
-                AU: [{ lang: 'English', level: 'Essential', score: 5 }],
-                DE: [{ lang: 'German', level: 'Essential', score: 5 }, { lang: 'English', level: 'Helpful',
-                    score: 2 }],
-                JP: [{ lang: 'Japanese', level: 'Essential', score: 5 }, { lang: 'English',
-                    level: 'Senior Only', score: 3 }],
-                SG: [{ lang: 'English', level: 'Essential', score: 5 }, { lang: 'Mandarin', level: 'Helpful',
-                    score: 2 }, { lang: 'Malay', level: 'Optional', score: 1 }],
-                TW: [{ lang: 'Mandarin', level: 'Essential', score: 5 }, { lang: 'Taiwanese',
-                    level: 'Helpful', score: 2 }, { lang: 'English', level: 'Senior Only', score: 3 }],
-                CN: [{ lang: 'Mandarin', level: 'Essential', score: 5 }, { lang: 'Dialect', level: 'Regional',
-                    score: 2 }, { lang: 'English', level: 'High-end Only', score: 3 }],
-            },
-            langScoreLabels: { 1: 'Elementary', 2: 'Limited Working', 3: 'Professional Working',
-            4: 'Full Professional', 5: 'Native / Bilingual' },
-            cities: {
-                US: [{ city: 'San Francisco', region: 'West', salary: 72000, cost: 105 }, { city: 'New York',
-                        region: 'Northeast', salary: 68000, cost: 103 }, { city: 'Boston',
-                        region: 'Northeast', salary: 64000, cost: 90 }, { city: 'Seattle', region: 'West',
-                        salary: 62000, cost: 88 }, { city: 'Los Angeles', region: 'West', salary: 65000,
-                        cost: 95 }, { city: 'Chicago', region: 'Midwest', salary: 58000, cost: 80 },
-                    { city: 'Denver', region: 'Mountain', salary: 55000, cost: 78 }, { city: 'Miami',
-                        region: 'South', salary: 52000, cost: 75 }, { city: 'Dallas', region: 'South',
-                        salary: 50000, cost: 65 }, { city: 'Phoenix', region: 'Southwest', salary: 48000,
-                        cost: 60 },
-                ],
-                UK: [{ city: 'London', region: 'England', salary: 55000, cost: 100 }, { city: 'Edinburgh',
-                        region: 'Scotland', salary: 44000, cost: 75 }, { city: 'Bristol', region: 'England',
-                        salary: 43000, cost: 73 }, { city: 'Manchester', region: 'England', salary: 42000,
-                        cost: 72 }, { city: 'Birmingham', region: 'England', salary: 40000, cost: 70 },
-                    { city: 'Leeds', region: 'England', salary: 39000, cost: 68 },
-                ],
-                AU: [{ city: 'Sydney', region: 'NSW', salary: 88000, cost: 100 }, { city: 'Melbourne',
-                        region: 'VIC', salary: 82000, cost: 92 }, { city: 'Canberra', region: 'ACT',
-                        salary: 80000, cost: 85 }, { city: 'Perth', region: 'WA', salary: 78000, cost: 82 },
-                    { city: 'Brisbane', region: 'QLD', salary: 75000, cost: 80 }, { city: 'Gold Coast',
-                        region: 'QLD', salary: 70000, cost: 75 }, { city: 'Adelaide', region: 'SA',
-                        salary: 68000, cost: 72 },
-                ],
-                DE: [{ city: 'Munich', region: 'Bavaria', salary: 72000, cost: 100 }, { city: 'Frankfurt',
-                        region: 'Hesse', salary: 68000, cost: 95 }, { city: 'Stuttgart',
-                    region: 'Baden-W.', salary: 66000, cost: 88 }, { city: 'Hamburg', region: 'Hamburg',
-                        salary: 65000, cost: 88 }, { city: 'Düsseldorf', region: 'NRW', salary: 60000,
-                        cost: 82 }, { city: 'Berlin', region: 'Berlin', salary: 60000, cost: 80 },
-                    { city: 'Cologne', region: 'NRW', salary: 58000, cost: 78 },
-                ],
-                JP: [{ city: 'Tokyo', region: 'Kanto', salary: 68000, cost: 100 }, { city: 'Yokohama',
-                        region: 'Kanto', salary: 62000, cost: 90 }, { city: 'Osaka', region: 'Kansai',
-                        salary: 58000, cost: 85 }, { city: 'Kyoto', region: 'Kansai', salary: 55000,
-                        cost: 82 }, { city: 'Nagoya', region: 'Chubu', salary: 52000, cost: 75 },
-                    { city: 'Fukuoka', region: 'Kyushu', salary: 47000, cost: 70 }, { city: 'Sapporo',
-                        region: 'Hokkaido', salary: 45000, cost: 68 },
-                ],
-                SG: [{ city: 'Orchard', region: 'Central', salary: 82000, cost: 103 }, { city: 'CBD / Marina',
-                        region: 'Central', salary: 80000, cost: 100 }, { city: 'Tampines', region: 'East',
-                        salary: 64000, cost: 80 }, { city: 'Jurong', region: 'West', salary: 62000,
-                        cost: 78 }, { city: 'Woodlands', region: 'North', salary: 60000, cost: 72 },
-                ],
-                TW: [{ city: 'Taipei', region: 'Northern', salary: 30000, cost: 100 }, { city: 'Hsinchu',
-                        region: 'Northern', salary: 28000, cost: 82 }, { city: 'New Taipei',
-                    region: 'Northern', salary: 27000, cost: 88 }, { city: 'Taichung', region: 'Central',
-                        salary: 24000, cost: 72 }, { city: 'Kaohsiung', region: 'Southern', salary: 23000,
-                        cost: 68 }, { city: 'Tainan', region: 'Southern', salary: 22000, cost: 65 },
-                    { city: 'Taitung', region: 'Eastern', salary: 18000, cost: 55 }, { city: 'Hualien',
-                        region: 'Eastern', salary: 17000, cost: 52 },
-                ],
-                CN: [{ city: 'Shanghai', region: 'East', salary: 30000, cost: 105 }, { city: 'Beijing',
-                        region: 'North', salary: 28000, cost: 100 }, { city: 'Shenzhen', region: 'South',
-                        salary: 28000, cost: 98 }, { city: 'Guangzhou', region: 'South', salary: 24000,
-                        cost: 85 }, { city: 'Chengdu', region: 'Southwest', salary: 18000, cost: 65 },
-                    { city: 'Chongqing', region: 'Southwest', salary: 17000, cost: 60 }, { city: 'Wuhan',
-                        region: 'Central', salary: 16000, cost: 58 }, { city: "Xi'an", region: 'Northwest',
-                        salary: 14000, cost: 52 },
-                ],
-            },
-            countryMeta: {
-                US: { difficulty: 8, restDays: 10, hoursPerDay: 10.5, splitShift: true,
-                bestLearnAge: '17–22', bestEntryAge: '19–25', cert: 'ServSafe · CIA Degree Optional',
-                    travel: 'Low', mobility: 'High', expression: 'High' },
-                UK: { difficulty: 8, restDays: 15, hoursPerDay: 10, splitShift: true, bestLearnAge: '16–21',
-                    bestEntryAge: '18–24', cert: 'Level 2/3 Food Safety · NVQ', travel: 'Low',
-                    mobility: 'High', expression: 'High' },
-                AU: { difficulty: 7, restDays: 20, hoursPerDay: 9.5, splitShift: false,
-                bestLearnAge: '17–22', bestEntryAge: '19–25', cert: 'SITXFSA006 · Certificate III Hospitality',
-                    travel: 'Low', mobility: 'High', expression: 'High' },
-                DE: { difficulty: 7, restDays: 25, hoursPerDay: 9, splitShift: false, bestLearnAge: '16–20',
-                    bestEntryAge: '18–23', cert: 'Ausbildung Koch (3 yrs IHK apprentice)', travel: 'Low',
-                    mobility: 'High', expression: 'Moderate' },
-                JP: { difficulty: 9, restDays: 8, hoursPerDay: 11, splitShift: true, bestLearnAge: '18–23',
-                    bestEntryAge: '20–26', cert: '調理師免許 (National Cook License)', travel: 'Very Low',
-                    mobility: 'Extreme', expression: 'Moderate' },
-                SG: { difficulty: 8, restDays: 14, hoursPerDay: 10.5, splitShift: true,
-                bestLearnAge: '17–22', bestEntryAge: '19–25', cert: 'WSQ Food Safety · ITE Pastry/Culinary',
-                    travel: 'Low', mobility: 'High', expression: 'High' },
-                TW: { difficulty: 8, restDays: 12, hoursPerDay: 10, splitShift: true, bestLearnAge: '17–22',
-                    bestEntryAge: '19–25', cert: '廚師證照 Level 1–3 · 餐飲管理學位', travel: 'Low',
-                    mobility: 'High', expression: 'Moderate' },
-                CN: { difficulty: 9, restDays: 7, hoursPerDay: 11.5, splitShift: true,
-                bestLearnAge: '16–21', bestEntryAge: '18–24', cert: '中式烹飪師 (初/中/高級) · 廚師職業資格証',
-                    travel: 'Low', mobility: 'High', expression: 'High' },
-            },
-            difficultyLabels: ['', '', 'Very Easy', 'Easy', 'Below Avg', 'Average', 'Above Avg', 'Hard',
-                'Very Hard', 'Brutal', 'Extreme'
-            ],
-            insightCards: [
-                { id: 'difficulty', icon: '💪', label: 'Job Hardship', valueKey: 'difficulty',
-                    valueTemplate: '{value}/10',
-                    metaTemplate: '{difficultyLabel} · physically & mentally demanding',
-                colorMode: 'gradient-bad' }, { id: 'restDays', icon: '🏖️', label: 'Annual Leave',
-                    valueKey: 'restDays', valueTemplate: '{value} days',
-                    metaTemplate: '{hoursPerDay}h avg work day · Split shifts {splitShiftLabel}',
-                colorMode: 'gradient-good' }, { id: 'bestLearnAge', icon: '🎓',
-                    label: 'Best Learning Age', valueKey: 'bestLearnAge', valueTemplate: '{value}',
-                    metaTemplate: 'Culinary school or apprenticeship entry window', colorMode: 'accent' },
-                { id: 'bestEntryAge', icon: '🚀', label: 'Best Entry Age', valueKey: 'bestEntryAge',
-                    valueTemplate: '{value}',
-                    metaTemplate: 'Peak energy & fastest skill absorption period', colorMode: 'accent' },
-                { id: 'travel', icon: '✈️', label: 'Business Travel', valueKey: 'travel',
-                    valueTemplate: '{value}',
-                    metaTemplate: 'Frequency of travel for events, sourcing, or multi-site management.',
-                    colorMode: 'accent' }, { id: 'mobility', icon: '🏃', label: 'Physical Mobility',
-                    valueKey: 'mobility', valueTemplate: '{value}',
-                    metaTemplate: 'Level of constant movement, standing, and station transitions.',
-                    colorMode: 'accent' }, { id: 'expression', icon: '🗣️',
-                    label: 'Creative Self-Expression', valueKey: 'expression', valueTemplate: '{value}',
-                    metaTemplate: 'Requirement to communicate vision, lead teams, and express creativity.',
-                    colorMode: 'accent' }, { id: 'cert', icon: '📜', label: 'Certifications Required',
-                    valueKey: 'cert', valueTemplate: '{value}',
-                    metaTemplate: 'Varies by employer tier & establishment type', spanFull: true,
-                    colorMode: 'neutral' },
-            ],
-            extendedMeta: {
-                US: { budget: '$450/mo', hnwi: 'Private Clubs · Resort Dining · Estate Chef Ladder',
-                    startupReadiness: 68, mbti: 'ESTP · ISTJ · ENTJ', uni: 'Not required',
-                    uniMeta: 'Prestige helps less than Michelin-grade references.',
-                privateSchool: 'Useful but debt-sensitive', privateMeta: 'Line experience still wins.',
-                    schools: 'CIA · Johnson & Wales · Kendall',
-                    retire: 'Corporate Dining Leadership, Instructor Roles, Private Chef.',
-                pivot: 'Estate Chef, Kitchen Ops Consultant, Content/Demo Chef.' },
-                UK: { budget: '£260/mo', hnwi: 'Hotels · Members Clubs · Private Events',
-                startupReadiness: 54, mbti: 'ISTJ · ESTJ · ENTJ', uni: 'Optional',
-                    uniMeta: 'References and practical output dominate.', privateSchool: 'Helpful for placement',
-                    privateMeta: 'Apprenticeship kitchens carry more weight.',
-                    schools: 'Westminster Kingsway · Le Cordon Bleu London · UCB',
-                    retire: 'Hotel Training, F&B Management, Consultancy.',
-                pivot: 'Members-Club Chef, Luxury Catering Lead, Compliance Trainer.' },
-                AU: { budget: 'A$420/mo', hnwi: 'Resorts · Wine Regions · Premium Tourism',
-                startupReadiness: 72, mbti: 'ESTP · ENTJ · ISTJ', uni: 'Optional',
-                    uniMeta: 'TAFE and real kitchen output matter more.', privateSchool: 'Often practical',
-                    privateMeta: 'Live service volume is key.',
-                    schools: 'Le Cordon Bleu Melbourne · William Angliss · TAFE NSW',
-                    retire: 'Catering Operator, Venue Manager, Hospitality Trainer.',
-                pivot: 'Private Dining Operator, Venue Consultant, Regional Trainer.' },
-                DE: { budget: '€220/mo', hnwi: 'Luxury Hotels · Old-money Dining · Cruise / Resort',
-                    startupReadiness: 49, mbti: 'ISTJ · INTJ · ESTJ', uni: 'Usually not required',
-                    uniMeta: 'Formal training structure matters more.', privateSchool: 'Apprenticeship stronger',
-                    privateMeta: 'Apprenticeship route is more trusted.',
-                    schools: 'IHK tracks · Hotelfachschule Heidelberg · DHBW',
-                    retire: 'Training Kitchens, Hotel Operations, Procurement.',
-                pivot: 'Food Safety Lead, Hotel Trainer, Procurement Specialist.' },
-                JP: { budget: '¥45,000/mo', hnwi: 'Omakase · Ryokan · Private Invitation Dining',
-                    startupReadiness: 46, mbti: 'ISTJ · INTJ · ISFJ', uni: 'Not required',
-                    uniMeta: 'Lineage and master-apprentice credibility matter more.',
-                    privateSchool: 'Can help, lineage stronger',
-                    privateMeta: 'Hierarchy and apprenticeship quality remain stronger.',
-                    schools: 'Tsuji Culinary Institute · Hattori Nutrition College · Tokyo Seika',
-                    retire: 'Teaching, Quality Control, Supplier Advisory, Small-Format Dining.',
-                pivot: 'Luxury Counter Chef, QA/Standards Lead, Craft Instructor.' },
-                SG: { budget: 'S$420/mo', hnwi: 'Luxury Hotels · Expat Clients · Regional Events',
-                    startupReadiness: 76, mbti: 'ENTJ · ESTJ · ESTP', uni: 'Useful but optional',
-                    uniMeta: 'Multilingual polish and operational discipline matter more.',
-                    privateSchool: 'Useful if placement-led',
-                    privateMeta: 'Brand-name hotel placement and language advantage.',
-                    schools: 'At-Sunrice · SHATEC · Temasek hospitality tracks',
-                    retire: 'Consulting, Regional Training, Private Dining.',
-                pivot: 'Cloud-Kitchen Founder, Private Dining Operator, Regional Trainer.' },
-                TW: { budget: 'NT$8,000/mo', hnwi: 'Private Banquets · Boutique Hospitality · Luxury Clubs',
-                    startupReadiness: 57, mbti: 'ISTJ · ESTP · ENTJ', uni: 'Optional',
-                    uniMeta: 'Bilingual service quality and steady kitchen reputation.',
-                    privateSchool: 'Selective value',
-                    privateMeta: 'Consistent kitchen output remains strongest signal.',
-                    schools: '國立高雄餐旅大學 · 景文科大餐飲系 · 實踐大學',
-                    retire: 'Banquet Operations, Culinary Teaching, Central Kitchen Roles.',
-                pivot: 'Banquet Lead, Product Testing, Kitchen Standards Consultant.' },
-                CN: { budget: '¥1,800/mo', hnwi: 'Luxury Banquets · Private Rooms · Club Kitchens',
-                    startupReadiness: 61, mbti: 'ISTJ · ESTP · ENTJ', uni: 'Not required',
-                    uniMeta: 'Apprenticeship pedigree and execution matter more.',
-                    privateSchool: 'Mixed value',
-                    privateMeta: 'Live kitchen references outrank tuition branding.',
-                    schools: 'Le Cordon Bleu Shanghai · SICA · Shanghai Business & Tourism',
-                    retire: 'Training Manager, Central Kitchen Leader, Private Chef.',
-                pivot: 'Private Household Chef, SOP Consultant, Flavor/Product R&D.' },
-            },
-            startupLinks: {
-                US: [{ label: 'SBA Grants', url: 'https://www.sba.gov' }, { label: 'CloudKitchens',
-                    url: 'https://cloudkitchens.com' }],
-                UK: [{ label: 'Gov Business Support', url: 'https://www.gov.uk/business-finance-support' },
-                    { label: 'Kitchen United', url: 'https://www.kitchenunited.com' }],
-                AU: [{ label: 'Business.gov.au', url: 'https://business.gov.au' }, { label: 'FoodStars',
-                    url: 'https://foodstars.com.au' }],
-                DE: [{ label: 'KfW Start-ups', url: 'https://www.kfw.de' }, { label: 'KitchenTown Berlin',
-                    url: 'https://www.kitchentown.de' }],
-                JP: [{ label: 'J-Net21', url: 'https://j-net21.smrj.go.jp' }, { label: 'Cloud Kitchen Japan',
-                    url: 'https://cloudkitchens.com/jp/' }],
-                SG: [{ label: 'Enterprise SG', url: 'https://www.enterprisesg.gov.sg' },
-                    { label: 'Smart City Kitchens', url: 'https://smartcitykitchens.com' }],
-                TW: [{ label: 'SMEA Grants', url: 'https://www.smea.gov.tw' }, { label: 'Cloud Kitchen Taiwan',
-                    url: 'https://www.cloudkitchens.com.tw' }],
-                CN: [{ label: 'China Business Registry', url: 'http://www.gsxt.gov.cn' },
-                    { label: 'Meituan Cloud Kitchen', url: 'https://kd.meituan.com' }],
-            },
-            famousChefs: {
-                US: [{ name: 'Alan Wong', netWorth: '$1.1B' }, { name: 'Wolfgang Puck',
-                netWorth: '$120M' }],
-                UK: [{ name: 'Gordon Ramsay', netWorth: '$220M' }, { name: 'Jamie Oliver',
-                netWorth: '$200M' }],
-                AU: [{ name: 'Curtis Stone', netWorth: '$25M' }, { name: 'Neil Perry', netWorth: '$25M' }],
-                DE: [{ name: 'Tim Mälzer', netWorth: '$10M' }, { name: 'Eckart Witzigmann',
-                netWorth: '$5M' }],
-                JP: [{ name: 'Nobu Matsuhisa', netWorth: '$200M' }, { name: 'Masaharu Morimoto',
-                    netWorth: '$18M' }],
-                SG: [{ name: 'Sam Leong', netWorth: '$5M' }, { name: 'Janice Wong', netWorth: '$3M' }],
-                TW: [{ name: 'André Chiang', netWorth: '$10M' }, { name: 'Lanshu Chen', netWorth: '$5M' }],
-                CN: [{ name: 'Da Dong', netWorth: '$50M' }, { name: 'Wang Gang', netWorth: '$2M' }],
-            },
-            accessLinks: [
-                { title: 'Training & Courses', desc: 'Online platforms and culinary schools.' },
-                { title: 'Certifications & Credentials', desc: 'Food safety, HACCP, Red Seal, and licensing.' },
-                { title: 'Job Search & Placement', desc: 'LinkedIn, Culinary Agents, hotel career pages.' },
-                { title: 'Freelance & Side Work', desc: 'Banquet staffing, private events, pop-ups.' },
-                { title: 'Your Portfolio & Referrals', desc: 'Link to your own portfolio and referral network.' },
-                { title: 'Find a Mentor', desc: 'Connect with a master chef or senior sifu.' },
-            ],
-            careerRecs: [
-                [{ title: 'Kitchen Quality Monitor', match: '76%', color: 'var(--green)',
-                    desc: 'Inspect food prep standards and safety compliance.',
-                skills: ['Food Safety', 'Temperature Control'] }, { title: 'Catering Production Staff',
-                        match: '71%', color: 'var(--yellow)', desc: 'Execute large-batch food production.',
-                    skills: ['Station Management', 'Speed'] }, { title: 'Food Prep Trainer', match: '65%',
-                        color: 'var(--orange)', desc: 'Onboard new kitchen staff.',
-                    skills: ['Knife Skills', 'Ingredient Handling'] }, ],
-                [{ title: 'Recipe Testing Technician', match: '83%', color: 'var(--green)',
-                    desc: 'Support R&D teams testing dishes.', skills: ['Sensory Evaluation',
-                        'Mise en Place'
-                    ] }, { title: 'Catering Supervisor', match: '78%', color: 'var(--yellow)',
-                        desc: 'Lead a team for events.', skills: ['Team Coordination', 'Quality Awareness'] },
-                    { title: 'Production Kitchen Lead', match: '72%', color: 'var(--orange)',
-                        desc: 'Oversee batch production.', skills: ['Station Leadership', 'Time Management'] },
-                ],
-                [{ title: 'Food Technologist (R&D)', match: '88%', color: 'var(--green)',
-                    desc: 'Sensory evaluation and recipe scaling.', skills: ['Recipe Development',
-                        'Quality Control'
-                    ] }, { title: 'Event Operations Manager', match: '82%', color: 'var(--yellow)',
-                        desc: 'High-pressure coordination.', skills: ['Staff Supervision',
-                        'Cost Management'] }, { title: 'F&B Procurement Analyst', match: '76%',
-                        color: 'var(--orange)', desc: 'Ingredient quality and yield management.',
-                    skills: ['Inventory Control', 'Supplier Knowledge'] }, ],
-                [{ title: 'F&B Operations Manager', match: '90%', color: 'var(--green)',
-                    desc: 'Oversee multi-venue operations.', skills: ['Budget Control',
-                    'Team Management'] }, { title: 'Event Operations Manager', match: '85%',
-                        color: 'var(--yellow)', desc: 'Crisis management and event logistics.',
-                    skills: ['Crisis Management', 'Logistics'] }, { title: 'F&B Procurement Specialist',
-                        match: '80%', color: 'var(--orange)', desc: 'Supplier and ingredient quality.',
-                    skills: ['Supply Chain', 'Negotiation'] }, ],
-                [{ title: 'F&B Director', match: '93%', color: 'var(--green)',
-                    desc: 'Lead entire F&B strategy.', skills: ['Strategic Planning',
-                    'Brand Building'] }, { title: 'Food Innovation Consultant', match: '88%',
-                        color: 'var(--yellow)', desc: 'Advise on menu trends and innovation.',
-                    skills: ['Culinary Expertise', 'Market Analysis'] }, { title: 'Culinary Program Director',
-                        match: '82%', color: 'var(--orange)', desc: 'Lead culinary school or training.',
-                    skills: ['Training Design', 'Leadership'] }, ],
-            ],
-            survivalStrategy: [
-                'As a <strong>Line Cook</strong>, master speed, knife precision, and food safety — skills no robot fully replicates at your pace.',
-                'As a <strong>Chef de Partie</strong>, double down on station mastery and specialty depth.',
-                'As a <strong>Sous Chef</strong>, recipe development and people management are your armor.',
-                'As a <strong>Head Chef</strong>, focus on menu creation, brand identity, and team culture.',
-                'As an <strong>Executive Chef</strong>, leverage brand, vision, and business relationships.',
-            ],
-            hazards: [
-                { icon: '🔥', name: 'Burns & Scalds', levelClass: 'haz-5', width: '100%',
-                desc: 'Critical · open flame' }, { icon: '🌡️', name: 'Heat Exhaustion',
-                    levelClass: 'haz-5', width: '100%', desc: 'Critical · 38–50°C kitchens' },
-                { icon: '🔪', name: 'Cuts & Lacerations', levelClass: 'haz-4', width: '80%',
-                desc: 'High · daily knife work' }, { icon: '💪', name: 'Musculoskeletal Strain',
-                    levelClass: 'haz-4', width: '80%', desc: 'High · 8–12 hrs standing' },
-                { icon: '🧠', name: 'Mental Fatigue', levelClass: 'haz-4', width: '75%',
-                desc: 'High · burnout 40–60%' }, { icon: '🚿', name: 'Slip & Fall',
-                    levelClass: 'haz-3', width: '55%', desc: 'Medium · wet floors' },
-                { icon: '⚗️', name: 'Chemical Exposure', levelClass: 'haz-3', width: '50%',
-                desc: 'Medium · cleaning agents' }, { icon: '👂', name: 'Noise Exposure',
-                    levelClass: 'haz-2', width: '35%', desc: 'Low-Med · fans' },
-                { icon: '🫁', name: 'Smoke & Fumes', levelClass: 'haz-3', width: '45%',
-                desc: 'Medium · ventilation' },
-            ],
-            filters: [
-                { id: 'all', label: 'All', class: 'all', active: true, dot: false },
-                { id: 'replaceable', label: 'Replaceable', class: 'gf', active: false, dot: true },
-                { id: 'indanger', label: 'In-Danger', class: 'yf', active: false, dot: true },
-                { id: 'intro', label: 'Intro', class: 'of', active: false, dot: true },
-                { id: 'nothing', label: 'Nothing', class: 'rf', active: false, dot: true },
-            ],
-            mbtiData: [
-                { type: 'ESTP', desc: 'The Dynamo. Thrives in fast-paced, high-pressure environments.' },
-                { type: 'ENTJ', desc: 'The Commander. Natural leaders who manage complex brigades.' },
-                { type: 'ISFP', desc: 'The Artist. Passionate about culinary aesthetics.' },
-                { type: 'ESFJ', desc: 'The Provider. Fosters collaborative kitchen culture.' },
-                { type: 'INTJ', desc: 'The Architect. Strategic kitchen optimization thinkers.' },
-            ],
-            filialPietyCountries: ['CN', 'TW', 'SG', 'JP'],
-            ltvMethodology: 'BLS 2025 median salary × 30-year career horizon. AI Risk weighted.',
-            highestThreat: 'Inventory & Ordering is the most vulnerable node.',
-            langPillClasses: { 'Essential': 'llp-essential', 'Helpful': 'llp-helpful', 'Optional': 'llp-optional',
-                'Senior Only': 'llp-senior', 'High-end Only': 'llp-senior', 'Regional': 'llp-helpful' },
-            networkCards: [
-                { title: "Recommended Majors", value: "Culinary Arts & Hospitality Mgt",
-                    meta: "Secondary: Food Science, Nutrition, or Business Administration." },
-                { title: "Target Courses", value: "Kitchen Ops & Cost Control",
-                    meta: "Also: Molecular Gastronomy, Sustainable Sourcing, Staff Leadership." },
-                { title: "Stretch Majors", value: "F&B Tech & Innovation",
-                    meta: "Transition into tech-enabled food systems." },
-                { title: "Key Connections", value: "Michelin Execs & F&B Directors",
-                    meta: "Build relationships with top-tier culinary executives.", loginCTA: true }
-            ],
-            version: 'v2.4 · Apr 2026',
-            footnote: '* Data: Miso Robotics · BLS 2025 · JobForesight 2026 · ILO benchmarks',
-        };
+        // ── fetch job data from external JSON ──
+        let JOB_DATA;
+        let D;
+        fetch('./jobs/chef.json')
+            .then(r => r.json())
+            .then(d => {
+                JOB_DATA = d;
+                D = JOB_DATA;
+                initAll();
+            });
 
         // ─── Level & Country specific tasks ───
-        // Each level has 5–7 tasks with time percentages summing to 100%
         const _baseTasksByLevel = {
             0: [{ action: 'Food Preparation (Mise en Place)', human: 'Wash, peel, chop vegetables; portion proteins; measure dry goods per station specs.',
                     ai: 'Suzumo robotic vegetable cutters & automated portioning systems handle bulk prep.',
@@ -2699,16 +2710,12 @@ No other part of the document is altered.
         function getTasksForLevelCountry(level, country) {
             const base = (_baseTasksByLevel[level] || _baseTasksByLevel[0]).map(t => ({ ...t }));
             const mod = getCountryTaskMods(country);
-            // Adjust automation ratios and cost ratios based on country
             base.forEach(t => {
                 const origRatio = t.ratio;
                 t.ratio = Math.min(95, Math.round(origRatio * mod.techAdoption));
-                t.costRatio = parseFloat((t.costRatio * mod.laborCost / Math.max(0.3, mod.aiSpeed))
-                .toFixed(2));
-                // Adjust ETA slightly
+                t.costRatio = parseFloat((t.costRatio * mod.laborCost / Math.max(0.3, mod.aiSpeed)).toFixed(2));
                 if (t.etaClass === 'eta-soon' && mod.aiSpeed < 0.9) t.eta = '~2.5 yrs';
                 if (t.etaClass === 'eta-mid' && mod.aiSpeed > 1.0) t.eta = '2–4 yrs';
-                // Update ratio color
                 if (t.ratio >= 70) t.ratioColor = 'var(--red)';
                 else if (t.ratio >= 40) t.ratioColor = 'var(--orange)';
                 else if (t.ratio >= 25) t.ratioColor = 'var(--yellow)';
@@ -2719,70 +2726,30 @@ No other part of the document is altered.
 
         let currentCountry = 'US';
         let currentLevel = 0;
-        const D = JOB_DATA;
-        const selectedMBTI = D.mbtiData[0];
+        const selectedMBTI = { type: 'ESTP', desc: 'The Dynamo. Thrives in fast-paced, high-pressure environments.' }; // placeholder from original D
 
-        function fmt(n, c) { const sym = (D.countries[c] || D.countries.US).symbol || '$'; return sym + n
-            .toLocaleString('en-US'); }
+        function fmt(n, c) { const sym = (JOB_DATA.countries[c] || JOB_DATA.countries.US).symbol || '$'; return sym + n.toLocaleString('en-US'); }
+        function fmtK(n, c) { const sym = (JOB_DATA.countries[c] || JOB_DATA.countries.US).symbol || '$'; return n >= 1000000 ? sym + (n / 1000000).toFixed(2) + 'M' : fmt(n, c); }
 
-        function fmtK(n, c) { const sym = (D.countries[c] || D.countries.US).symbol || '$'; return n >= 1000000 ? sym +
-                (n / 1000000).toFixed(2) + 'M' : fmt(n, c); }
+        function calcLTV(c) { const ltv = c.annualUSD * c.career; const safe = Math.round(ltv * (1 - c.automationIdx / 100)); const risk = ltv - safe; const carCount = Math.round(ltv / c.carPriceUSD); const safeCarCount = Math.round(safe / c.carPriceUSD); const riskCarCount = carCount - safeCarCount; const safeYears = c.riskAge - c.startAge; const totalWorkYears = 55 - c.startAge; return { ltv, safe, risk, carCount, safeCarCount, riskCarCount, safeYears, totalWorkYears }; }
 
-        function calcLTV(c) { const ltv = c.annualUSD * c.career; const safe = Math.round(ltv * (1 - c
-                .automationIdx / 100)); const risk = ltv - safe; const carCount = Math.round(ltv / c
-            .carPriceUSD); const safeCarCount = Math.round(safe / c.carPriceUSD); const riskCarCount =
-                carCount - safeCarCount; const safeYears = c.riskAge - c.startAge; const totalWorkYears = 55 - c
-                .startAge; return { ltv, safe, risk, carCount, safeCarCount, riskCarCount, safeYears,
-                    totalWorkYears }; }
-
-        function buildCarGrid(safeCount, riskCount) { const grid = document.getElementById('carGrid'); if (!grid)
-                return; const total = safeCount + riskCount;
-            grid.innerHTML = ''; for (let i = 0; i < total; i++) { const svg = document.createElementNS(
-                    'http://www.w3.org/2000/svg', 'svg');
-                svg.setAttribute('width', '38');
-                svg.setAttribute('height', '22');
-                svg.setAttribute('viewBox', '0 0 38 22');
-                svg.setAttribute('role', 'img');
-                svg.setAttribute('aria-label', i < safeCount ? 'Safe earnings car' : 'At-risk earnings car');
-                svg.classList.add('car-icon', i < safeCount ? 'safe-car' : 'risk-car');
-                svg.style.opacity = '0';
-                svg.style.transform = 'scale(.7)'; const use = document.createElementNS(
-                    'http://www.w3.org/2000/svg', 'use');
-                use.setAttribute('href', '#car');
-                svg.appendChild(use);
-                grid.appendChild(svg); const delay = i * 28;
-                setTimeout(() => { svg.style.transition = `opacity .25s ${delay}ms, transform .3s ${delay}ms`;
-                    svg.style.opacity = '';
-                    svg.style.transform = ''; }, 60); } }
+        function buildCarGrid(safeCount, riskCount) { const grid = document.getElementById('carGrid'); if (!grid) return; const total = safeCount + riskCount;
+            grid.innerHTML = ''; for (let i = 0; i < total; i++) { const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', '38'); svg.setAttribute('height', '22'); svg.setAttribute('viewBox', '0 0 38 22'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', i < safeCount ? 'Safe earnings car' : 'At-risk earnings car');
+                svg.classList.add('car-icon', i < safeCount ? 'safe-car' : 'risk-car'); svg.style.opacity = '0'; svg.style.transform = 'scale(.7)'; const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                use.setAttribute('href', '#car'); svg.appendChild(use); grid.appendChild(svg); const delay = i * 28;
+                setTimeout(() => { svg.style.transition = `opacity .25s ${delay}ms, transform .3s ${delay}ms`; svg.style.opacity = ''; svg.style.transform = ''; }, 60); } }
         const riskOrder = { fast: 0, mid: 1, slow: 2 };
 
-        function renderCountryDropdown() { const dd = document.getElementById('countryDropdown'); if (!dd)
-            return; const sorted = Object.entries(D.countries).sort(([, a], [, b]) => riskOrder[a.riskClass] -
-                riskOrder[b.riskClass]);
-            dd.innerHTML =
-                `<div class="cdd-header">&#9660; Risk: Highest to Lowest</div>` + sorted.map(([code, c]) => `
-                <button class="cdd-item${code===currentCountry?' active':''}" data-country="${code}"><span class="cdd-flag">${c.flag}</span><span class="cdd-name">${c.name}</span><span class="cdd-risk ${c.riskClass}">${c.riskLabel}</span></button>`
-                    ).join(''); }
+        function renderCountryDropdown() { const dd = document.getElementById('countryDropdown'); if (!dd) return; const sorted = Object.entries(JOB_DATA.countries).sort(([, a], [, b]) => riskOrder[a.riskClass] - riskOrder[b.riskClass]);
+            dd.innerHTML = `<div class="cdd-header">&#9660; Risk: Highest to Lowest</div>` + sorted.map(([code, c]) => `
+                <button class="cdd-item${code===currentCountry?' active':''}" data-country="${code}"><span class="cdd-flag">${c.flag}</span><span class="cdd-name">${c.name}</span><span class="cdd-risk ${c.riskClass}">${c.riskLabel}</span></button>`).join(''); }
 
-        function renderLevelTabs() { const container = document.getElementById('levelTabs'); if (!container)
-            return; const maxSal = D.levelUSD[currentCountry] ? D.levelUSD[currentCountry][D.levels.length -
-                1] : D.levelUSD.US[D.levels.length - 1];
-            container.innerHTML = D.levels.map((lvl, i) => { const salaries = D.levelUSD[currentCountry] || D
-                    .levelUSD.US; const pct = Math.round(salaries[i] / maxSal * 100); const pctText = i === D
-                    .levels.length - 1 ? 'Peak LTV' : pct + '% of peak LTV'; return `
-              <button class="ltab${i===currentLevel?' active':''}" data-level="${i}" style="--ldot:${lvl.color}"><span class="lcolor-dot"></span>${lvl.name}<span class="lyears">${lvl.yearsLabel}</span><span class="lpct">${pctText}</span></button>`; }
-                ).join(''); }
+        function renderLevelTabs() { const container = document.getElementById('levelTabs'); if (!container) return; const maxSal = JOB_DATA.levelUSD[currentCountry] ? JOB_DATA.levelUSD[currentCountry][JOB_DATA.levels.length - 1] : JOB_DATA.levelUSD.US[JOB_DATA.levels.length - 1];
+            container.innerHTML = JOB_DATA.levels.map((lvl, i) => { const salaries = JOB_DATA.levelUSD[currentCountry] || JOB_DATA.levelUSD.US; const pct = Math.round(salaries[i] / maxSal * 100); const pctText = i === JOB_DATA.levels.length - 1 ? 'Peak LTV' : pct + '% of peak LTV'; return `
+              <button class="ltab${i===currentLevel?' active':''}" data-level="${i}" style="--ldot:${lvl.color}"><span class="lcolor-dot"></span>${lvl.name}<span class="lyears">${lvl.yearsLabel}</span><span class="lpct">${pctText}</span></button>`; }).join(''); }
 
-        function renderLTVKpiCards(countryCode, levelIndex, animate = true) { const grid = document.getElementById(
-                'ltvKpiGrid'); if (!grid) return; const c = D.countries[countryCode] || D.countries.US; const
-            salaries = D.levelUSD[countryCode] || D.levelUSD.US; const salariesLocal = D.levelLocal[
-                countryCode] || D.levelLocal.US; const annualUSD = salaries[levelIndex]; const careerYrs = c
-                .career; const ltv = annualUSD * careerYrs; const maxUSD = salaries[D.levels.length - 1]; const
-            peakLTV = maxUSD * careerYrs; const ltvPct = Math.round((ltv / peakLTV) * 100); const safe = Math
-                .round(ltv * (1 - c.automationIdx / 100)); const risk = ltv - safe; const lvlName = D.levels[
-                levelIndex].name; const d = calcLTV(c); const totalSpan = 55 - c.startAge; const safeSpan = d
-                .safeYears;
-            const riskSpan = totalSpan - safeSpan;
+        function renderLTVKpiCards(countryCode, levelIndex, animate = true) { const grid = document.getElementById('ltvKpiGrid'); if (!grid) return; const c = JOB_DATA.countries[countryCode] || JOB_DATA.countries.US; const salaries = JOB_DATA.levelUSD[countryCode] || JOB_DATA.levelUSD.US; const salariesLocal = JOB_DATA.levelLocal[countryCode] || JOB_DATA.levelLocal.US; const annualUSD = salaries[levelIndex]; const careerYrs = c.career; const ltv = annualUSD * careerYrs; const maxUSD = salaries[JOB_DATA.levels.length - 1]; const peakLTV = maxUSD * careerYrs; const ltvPct = Math.round((ltv / peakLTV) * 100); const safe = Math.round(ltv * (1 - c.automationIdx / 100)); const risk = ltv - safe; const lvlName = JOB_DATA.levels[levelIndex].name; const d = calcLTV(c); const totalSpan = 55 - c.startAge; const safeSpan = d.safeYears; const riskSpan = totalSpan - safeSpan;
             grid.innerHTML = `
             <div class="ltv-card c-total"><div class="ltv-lbl">Career LTV</div><div class="ltv-val cl-total">${c.symbol}${ltv.toLocaleString('en-US')}</div><div class="ltv-meta">${careerYrs} yrs · ${salariesLocal[levelIndex]}/yr at ${lvlName}</div><div class="ltv-bar"><div class="ltv-bar-fill" style="width:${ltvPct}%;background:var(--accent)"></div></div></div>
             <div class="ltv-card c-safe"><div class="ltv-lbl">Human-Safe LTV</div><div class="ltv-val cl-safe">${c.symbol}${safe.toLocaleString('en-US')}</div><div class="ltv-meta">AI cannot replicate (${100-c.automationIdx}%)</div><div class="ltv-bar"><div class="ltv-bar-fill" style="width:${100-c.automationIdx}%;background:var(--green)"></div></div></div>
@@ -2790,13 +2757,7 @@ No other part of the document is altered.
             <div class="ltv-card c-idx"><div class="ltv-lbl">Automation Index</div><div class="ltv-val cl-idx">${c.automationIdx}%</div><div class="ltv-meta">Weighted across task nodes</div><div class="ltv-bar"><div class="ltv-bar-fill" style="width:${c.automationIdx}%;background:var(--yellow)"></div></div></div>
             <div class="ltv-card c-age"><div class="ltv-lbl">Peak Risk Age</div><div class="ltv-val cl-age">${c.riskAge}</div><div class="ltv-meta">Safe window: ${c.startAge} → ${c.riskAge} (${safeSpan} yrs)</div><div class="age-timeline"><div class="age-seg safe-seg" style="flex:${safeSpan}"></div><div class="age-seg risk-seg" style="flex:${riskSpan}"></div></div><div class="age-pins"><span class="age-pin">${c.startAge}</span><span class="age-pin risk-pin">${c.riskAge} ⚠</span><span class="age-pin">55</span></div></div>`; }
 
-        function renderCarViz(countryCode, levelIndex) { const wrap = document.getElementById('carVizWrap'); if (!
-                wrap) return; const c = D.countries[countryCode] || D.countries.US; const salaries = D
-                .levelUSD[countryCode] || D.levelUSD.US; const ltv = salaries[levelIndex] * c.career; const
-            safe = Math.round(ltv * (1 - c.automationIdx / 100)); const risk = ltv - safe; const carCount =
-                Math.round(ltv / c.carPriceUSD); const safeCarCount = Math.round(safe / c.carPriceUSD); const
-            riskCarCount = carCount - safeCarCount; const sgNote = countryCode === 'SG' ?
-                ' *COE-inclusive price applies' : '';
+        function renderCarViz(countryCode, levelIndex) { const wrap = document.getElementById('carVizWrap'); if (!wrap) return; const c = JOB_DATA.countries[countryCode] || JOB_DATA.countries.US; const salaries = JOB_DATA.levelUSD[countryCode] || JOB_DATA.levelUSD.US; const ltv = salaries[levelIndex] * c.career; const safe = Math.round(ltv * (1 - c.automationIdx / 100)); const risk = ltv - safe; const carCount = Math.round(ltv / c.carPriceUSD); const safeCarCount = Math.round(safe / c.carPriceUSD); const riskCarCount = carCount - safeCarCount; const sgNote = countryCode === 'SG' ? ' *COE-inclusive price applies' : '';
             wrap.innerHTML = `
             <div class="car-viz-header"><span class="car-viz-eq">Career LTV Equals</span><span class="car-viz-val"><span>${carCount}</span> <span style="color:var(--text-muted)">${c.carName}${carCount===1?'':'s'}</span></span></div>
             <div class="car-viz-sub">Based on $${c.carPriceUSD.toLocaleString('en-US')} (USD)/unit${sgNote} · 🟢 Safe · 🔴 At-risk</div>
@@ -2804,154 +2765,68 @@ No other part of the document is altered.
             <div class="car-legend"><div class="car-legend-item"><div class="car-legend-swatch safe"></div><span>${safeCarCount} cars = Human-Safe LTV</span></div><div class="car-legend-item"><div class="car-legend-swatch risk"></div><span>${riskCarCount} cars = At-Risk LTV</span></div></div>`;
             buildCarGrid(safeCarCount, riskCarCount); }
 
-        function buildIncomePoints(country) { const salaries = D.levelUSD[country] || D.levelUSD.US; const
-        transitions = D.levels.map(l => l.yearsFrom); const pts = []; for (let yr = 0; yr <= 30; yr++) { let
-                lvl = 0; for (let i = transitions.length - 1; i >= 0; i--) { if (yr >= transitions[i]) { lvl = i;
-                    break; } } const nextTrans = transitions[lvl + 1] || 30; const frac = lvl < 4 ? (yr -
-                transitions[lvl]) / (nextTrans - transitions[lvl]) : 1; const baseSal = salaries[lvl]; const
-                nextSal = lvl < 4 ? salaries[lvl + 1] : salaries[4] * 1.15; const sal = baseSal + (nextSal -
-                    baseSal) * frac * 0.4;
+        function buildIncomePoints(country) { const salaries = JOB_DATA.levelUSD[country] || JOB_DATA.levelUSD.US; const transitions = JOB_DATA.levels.map(l => l.yearsFrom); const pts = []; for (let yr = 0; yr <= 30; yr++) { let lvl = 0; for (let i = transitions.length - 1; i >= 0; i--) { if (yr >= transitions[i]) { lvl = i; break; } } const nextTrans = transitions[lvl + 1] || 30; const frac = lvl < 4 ? (yr - transitions[lvl]) / (nextTrans - transitions[lvl]) : 1; const baseSal = salaries[lvl]; const nextSal = lvl < 4 ? salaries[lvl + 1] : salaries[4] * 1.15; const sal = baseSal + (nextSal - baseSal) * frac * 0.4;
             pts.push({ yr, sal, lvl }); } return pts; }
 
-        function renderIncomeChart(country) { const wrap = document.getElementById('incomeChartWrap'); if (!wrap)
-            return; const pts = buildIncomePoints(country); const TOTAL_YRS = 30; const W = 900,
-                H = 240,
-                padL = 55,
-                padR = 30,
-                padT = 24,
-                padB = 38; const cW = W - padL - padR,
-                cH = H - padT - padB; const maxSal = Math.max(...pts.map(p => p.sal)) * 1.12; const minSal =
-                pts[0].sal * 0.75; const xOf = yr => padL + (yr / TOTAL_YRS) * cW; const yOf = sal => padT + cH -
-                ((sal - minSal) / (maxSal - minSal)) * cH; let inner = ''; for (let g = 0; g <= 4; g++) { const y =
-                    padT + (g / 4) * cH; const val = Math.round(maxSal - (g / 4) * (maxSal - minSal));
-            inner +=
-                `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#222" stroke-width="1"/><text x="${padL-5}" y="${y+4}" text-anchor="end" fill="#555" font-size="10">${val>=1000?'$'+(val/1000).toFixed(0)+'K':val}</text>`; } [0,
-                5, 10, 15, 20, 25, 30
-            ].forEach(yr => { inner +=
-                `<text x="${xOf(yr)}" y="${H-5}" text-anchor="middle" fill="#555" font-size="10">Yr ${yr}</text>`; });
-            inner +=
-                `<line x1="${xOf(30)}" y1="${padT}" x2="${xOf(30)}" y2="${H-padB}" stroke="#555" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+        function renderIncomeChart(country) { const wrap = document.getElementById('incomeChartWrap'); if (!wrap) return; const pts = buildIncomePoints(country); const TOTAL_YRS = 30; const W = 900, H = 240, padL = 55, padR = 30, padT = 24, padB = 38; const cW = W - padL - padR, cH = H - padT - padB; const maxSal = Math.max(...pts.map(p => p.sal)) * 1.12; const minSal = pts[0].sal * 0.75; const xOf = yr => padL + (yr / TOTAL_YRS) * cW; const yOf = sal => padT + cH - ((sal - minSal) / (maxSal - minSal)) * cH; let inner = ''; for (let g = 0; g <= 4; g++) { const y = padT + (g / 4) * cH; const val = Math.round(maxSal - (g / 4) * (maxSal - minSal));
+            inner += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#222" stroke-width="1"/><text x="${padL-5}" y="${y+4}" text-anchor="end" fill="#555" font-size="10">${val>=1000?'$'+(val/1000).toFixed(0)+'K':val}</text>`; } [0,5,10,15,20,25,30].forEach(yr => { inner += `<text x="${xOf(yr)}" y="${H-5}" text-anchor="middle" fill="#555" font-size="10">Yr ${yr}</text>`; });
+            inner += `<line x1="${xOf(30)}" y1="${padT}" x2="${xOf(30)}" y2="${H-padB}" stroke="#555" stroke-width="1.5" stroke-dasharray="4,3"/>`;
             let d = '';
-            pts.forEach((p, i) => { d += (i === 0 ? 'M' : 'L') + xOf(p.yr).toFixed(1) + ',' + yOf(p.sal)
-                .toFixed(1); });
-            inner += `<path d="${d}" fill="none" stroke="url(#careerGrad)" stroke-width="2.5"/>`; const lvlStart = D
-                .levels[currentLevel].yearsFrom; const currentSal = pts.find(p => p.yr === lvlStart)?.sal || (D
-                    .levelUSD[country] || D.levelUSD.US)[currentLevel]; const projX1 = xOf(lvlStart),
-                projX2 = xOf(30),
-                projY = yOf(currentSal);
-            inner +=
-                `<line x1="${projX1}" y1="${projY}" x2="${projX2}" y2="${projY}" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,3" opacity="0.8"/>`;
-            const transYears = [...D.levels.map(l => l.yearsFrom), 30];
-            transYears.forEach(yr => { const p = pts.find(pp => pp.yr === yr); if (!p) return; const col = D
-                    .levels[p.lvl].color;
-                inner +=
-                    `<circle cx="${xOf(p.yr)}" cy="${yOf(p.sal)}" r="5" fill="${col}" stroke="#0e0e0e" stroke-width="2"/>`; });
-            const lvlColor = D.levels[currentLevel].color; const lvlEnd = currentLevel < 4 ? D.levels[currentLevel +
-                1].yearsFrom : 30; const rx1 = xOf(lvlStart),
-                rx2 = xOf(lvlEnd); const defs =
-                `<defs><linearGradient id="careerGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4f98a3"/><stop offset="60%" stop-color="#eab308"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs><rect x="${rx1}" y="${padT}" width="${rx2-rx1}" height="${cH}" fill="${lvlColor}" opacity="0.07" rx="2"/>`;
+            pts.forEach((p, i) => { d += (i === 0 ? 'M' : 'L') + xOf(p.yr).toFixed(1) + ',' + yOf(p.sal).toFixed(1); });
+            inner += `<path d="${d}" fill="none" stroke="url(#careerGrad)" stroke-width="2.5"/>`; const lvlStart = JOB_DATA.levels[currentLevel].yearsFrom; const currentSal = pts.find(p => p.yr === lvlStart)?.sal || (JOB_DATA.levelUSD[country] || JOB_DATA.levelUSD.US)[currentLevel]; const projX1 = xOf(lvlStart), projX2 = xOf(30), projY = yOf(currentSal);
+            inner += `<line x1="${projX1}" y1="${projY}" x2="${projX2}" y2="${projY}" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,3" opacity="0.8"/>`;
+            const transYears = [...JOB_DATA.levels.map(l => l.yearsFrom), 30];
+            transYears.forEach(yr => { const p = pts.find(pp => pp.yr === yr); if (!p) return; const col = JOB_DATA.levels[p.lvl].color;
+                inner += `<circle cx="${xOf(p.yr)}" cy="${yOf(p.sal)}" r="5" fill="${col}" stroke="#0e0e0e" stroke-width="2"/>`; });
+            const lvlColor = JOB_DATA.levels[currentLevel].color; const lvlEnd = currentLevel < 4 ? JOB_DATA.levels[currentLevel + 1].yearsFrom : 30; const rx1 = xOf(lvlStart), rx2 = xOf(lvlEnd); const defs = `<defs><linearGradient id="careerGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#4f98a3"/><stop offset="60%" stop-color="#eab308"/><stop offset="100%" stop-color="#22c55e"/></linearGradient></defs><rect x="${rx1}" y="${padT}" width="${rx2-rx1}" height="${cH}" fill="${lvlColor}" opacity="0.07" rx="2"/>`;
             wrap.innerHTML = `
-            <div class="income-chart-header"><span class="income-chart-title">Annual Income Curve — ${D.countries[country]?.name||country}</span><span class="income-chart-note">Colored dots mark level transitions</span></div>
+            <div class="income-chart-header"><span class="income-chart-title">Annual Income Curve — ${JOB_DATA.countries[country]?.name||country}</span><span class="income-chart-note">Colored dots mark level transitions</span></div>
             <svg id="incomeSVG" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${defs}${inner}</svg>
-            <div class="level-legend">${D.levels.map(l=>`<div class="level-legend-item"><div class="level-legend-dot" style="background:${l.color}"></div>${l.name}</div>`).join('')}<div class="level-legend-item" style="margin-left:10px;border-left:1px solid #333;padding-left:10px"><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,3"/></svg><span style="color:var(--red)">Current → Career End</span></div></div>`; }
+            <div class="level-legend">${JOB_DATA.levels.map(l=>`<div class="level-legend-item"><div class="level-legend-dot" style="background:${l.color}"></div>${l.name}</div>`).join('')}<div class="level-legend-item" style="margin-left:10px;border-left:1px solid #333;padding-left:10px"><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,3"/></svg><span style="color:var(--red)">Current → Career End</span></div></div>`; }
 
-        function renderPromoFlow(country) { const wrap = document.getElementById('promoSectionWrap'); if (!wrap)
-            return; const salaries = D.levelLocal[country] || D.levelLocal.US; let html =
-                '<div class="section-label" style="margin-bottom:16px">Typical Promotion Timeline</div><div class="promo-flow">';
-            D.levels.forEach((lvl, i) => { const isActive = i === currentLevel;
-            html +=
-                `<div class="promo-node"><div class="promo-circle" style="border-color:${lvl.color};background:${isActive?lvl.color+'22':'transparent'};color:${lvl.color}"><span style="font-size:11px;text-align:center;padding:2px">${lvl.short}</span></div><div class="promo-label" style="color:${isActive?lvl.color:'var(--text)'}">${lvl.name}</div><div class="promo-salary" style="color:${isActive?'#fff':'var(--text-muted)'}">${salaries[i]}</div></div>`; if (i <
-                    D.levels.length - 1) { const tr = D.promotions[i];
-                html +=
-                    `<div class="promo-arrow"><div class="promo-arrow-line"></div><div class="promo-arrow-years">${tr.years}</div><div class="promo-arrow-sub">${tr.tip}</div></div>`; } });
+        function renderPromoFlow(country) { const wrap = document.getElementById('promoSectionWrap'); if (!wrap) return; const salaries = JOB_DATA.levelLocal[country] || JOB_DATA.levelLocal.US; let html = '<div class="section-label" style="margin-bottom:16px">Typical Promotion Timeline</div><div class="promo-flow">';
+            JOB_DATA.levels.forEach((lvl, i) => { const isActive = i === currentLevel;
+            html += `<div class="promo-node"><div class="promo-circle" style="border-color:${lvl.color};background:${isActive?lvl.color+'22':'transparent'};color:${lvl.color}"><span style="font-size:11px;text-align:center;padding:2px">${lvl.short}</span></div><div class="promo-label" style="color:${isActive?lvl.color:'var(--text)'}">${lvl.name}</div><div class="promo-salary" style="color:${isActive?'#fff':'var(--text-muted)'}">${salaries[i]}</div></div>`; if (i < JOB_DATA.levels.length - 1) { const tr = JOB_DATA.promotions[i];
+                html += `<div class="promo-arrow"><div class="promo-arrow-line"></div><div class="promo-arrow-years">${tr.years}</div><div class="promo-arrow-sub">${tr.tip}</div></div>`; } });
             html += '</div>';
             wrap.innerHTML = html; }
 
-        function renderDifficultyBar(difficulty) { const bars = Array(10).fill(0).map((_, i) => { const filled = i <
-                difficulty; let fillClass = 'diff-pip'; if (filled) { if (difficulty <= 3) fillClass +=
-                    ' filled-low'; else if (difficulty <= 5) fillClass += ' filled-mid'; else if (difficulty <=
-                    7) fillClass += ' filled-high'; else fillClass += ' filled-max'; } return `<div class="${fillClass}"></div>`; }
-                ).join(''); return `<div class="difficulty-bar">${bars}</div>`; }
+        function renderDifficultyBar(difficulty) { const bars = Array(10).fill(0).map((_, i) => { const filled = i < difficulty; let fillClass = 'diff-pip'; if (filled) { if (difficulty <= 3) fillClass += ' filled-low'; else if (difficulty <= 5) fillClass += ' filled-mid'; else if (difficulty <= 7) fillClass += ' filled-high'; else fillClass += ' filled-max'; } return `<div class="${fillClass}"></div>`; }).join(''); return `<div class="difficulty-bar">${bars}</div>`; }
 
-        function renderInsights(country) { const section = document.getElementById('insightsGrid'); if (!section)
-            return; const meta = D.countryMeta[country] || D.countryMeta.US; const gradientMinsMaxs = {};
-            D.insightCards.forEach(card => { if (card.colorMode && card.colorMode.startsWith('gradient')) { const key =
-                    card.valueKey; if (!gradientMinsMaxs[key]) { let min = Infinity,
-                        max = -Infinity; for (const c in D.countryMeta) { const val = D.countryMeta[c][key]; if (
-                            typeof val === 'number') { if (val < min) min = val; if (val > max) max = val; } }
+        function renderInsights(country) { const section = document.getElementById('insightsGrid'); if (!section) return; const meta = JOB_DATA.countryMeta[country] || JOB_DATA.countryMeta.US; const gradientMinsMaxs = {};
+            JOB_DATA.insightCards.forEach(card => { if (card.colorMode && card.colorMode.startsWith('gradient')) { const key = card.valueKey; if (!gradientMinsMaxs[key]) { let min = Infinity, max = -Infinity; for (const c in JOB_DATA.countryMeta) { const val = JOB_DATA.countryMeta[c][key]; if (typeof val === 'number') { if (val < min) min = val; if (val > max) max = val; } }
                     gradientMinsMaxs[key] = { min, max }; } } });
             section.className = 'insights-grid';
-            section.innerHTML = D.insightCards.map(card => { const rawValue = meta[card.valueKey]; const
-                    displayValue = card.valueTemplate.replace('{value}', rawValue); let metaText = card
-                    .metaTemplate; if (card.id === 'difficulty') { const diffLabel = D.difficultyLabels[meta
-                        .difficulty] || '';
-                    metaText = metaText.replace('{difficultyLabel}', diffLabel); } if (card.id ===
-                    'restDays') { metaText = metaText.replace('{hoursPerDay}', meta.hoursPerDay).replace(
-                        '{splitShiftLabel}', meta.splitShift ? 'common' : 'rare'); } let valueStyle = '';
-                const mode = card.colorMode || ''; if (mode === 'accent') { valueStyle =
-                    'color: var(--accent)'; } else if (mode.startsWith('gradient')) { const key = card
-                    .valueKey; const mm = gradientMinsMaxs[key]; if (mm && mm.max !== mm.min) { const val =
-                        parseFloat(rawValue); let hue; if (mode === 'gradient-bad') { hue = 120 * (mm.max -
-                        val) / (mm.max - mm.min); } else { hue = 120 * (val - mm.min) / (mm.max - mm
-                    .min); } hue = Math.max(0, Math.min(120, Math.round(hue)));
-                    valueStyle = `color: hsl(${hue}, 100%, 50%)`; } else { valueStyle =
-                        'color: hsl(120, 100%, 50%)'; } } return `<div class="insight-card"${card.spanFull?' style="grid-column:span 2"':''}><span class="insight-icon">${card.icon}</span><div class="insight-label">${card.label}</div><div class="insight-value"${valueStyle?` style="${valueStyle}"`:''}>${displayValue}</div><div class="insight-meta">${metaText}</div>${card.id==='difficulty'?renderDifficultyBar(meta.difficulty):''}</div>`; }
-                ).join(''); }
+            section.innerHTML = JOB_DATA.insightCards.map(card => { const rawValue = meta[card.valueKey]; const displayValue = card.valueTemplate.replace('{value}', rawValue); let metaText = card.metaTemplate; if (card.id === 'difficulty') { const diffLabel = JOB_DATA.difficultyLabels[meta.difficulty] || '';
+                    metaText = metaText.replace('{difficultyLabel}', diffLabel); } if (card.id === 'restDays') { metaText = metaText.replace('{hoursPerDay}', meta.hoursPerDay).replace('{splitShiftLabel}', meta.splitShift ? 'common' : 'rare'); } let valueStyle = ''; const mode = card.colorMode || ''; if (mode === 'accent') { valueStyle = 'color: var(--accent)'; } else if (mode.startsWith('gradient')) { const key = card.valueKey; const mm = gradientMinsMaxs[key]; if (mm && mm.max !== mm.min) { const val = parseFloat(rawValue); let hue; if (mode === 'gradient-bad') { hue = 120 * (mm.max - val) / (mm.max - mm.min); } else { hue = 120 * (val - mm.min) / (mm.max - mm.min); } hue = Math.max(0, Math.min(120, Math.round(hue)));
+                    valueStyle = `color: hsl(${hue}, 100%, 50%)`; } else { valueStyle = 'color: hsl(120, 100%, 50%)'; } } return `<div class="insight-card"${card.spanFull?' style="grid-column:span 2"':''}><span class="insight-icon">${card.icon}</span><div class="insight-label">${card.label}</div><div class="insight-value"${valueStyle?` style="${valueStyle}"`:''}>${displayValue}</div><div class="insight-meta">${metaText}</div>${card.id==='difficulty'?renderDifficultyBar(meta.difficulty):''}</div>`; }).join(''); }
 
-        function renderLang(country) { const section = document.getElementById('langSection'); if (!section)
-            return; const langs = D.languages[country] || []; const pillClass = D.langPillClasses;
+        function renderLang(country) { const section = document.getElementById('langSection'); if (!section) return; const langs = JOB_DATA.languages[country] || []; const pillClass = JOB_DATA.langPillClasses;
             section.innerHTML = `
-            <div class="section-label" style="margin-bottom:12px">Language Requirements — ${D.countries[country]?.name||country}</div>
-            <div class="lang-list">${langs.map(l=>`<div class="lang-row"><div class="lang-name">${l.lang}</div><span class="lang-level-pill ${pillClass[l.level]||'llp-optional'}">${l.level}</span><div class="lang-bar-wrap"><div class="lang-bar-track"><div class="lang-bar-fill" style="width:${l.score*20}%"></div></div></div><div style="font-size:12px;color:var(--text-muted);min-width:120px">${D.langScoreLabels[l.score]||l.score+'/5'}</div></div>`).join('')}</div>`; }
+            <div class="section-label" style="margin-bottom:12px">Language Requirements — ${JOB_DATA.countries[country]?.name||country}</div>
+            <div class="lang-list">${langs.map(l=>`<div class="lang-row"><div class="lang-name">${l.lang}</div><span class="lang-level-pill ${pillClass[l.level]||'llp-optional'}">${l.level}</span><div class="lang-bar-wrap"><div class="lang-bar-track"><div class="lang-bar-fill" style="width:${l.score*20}%"></div></div></div><div style="font-size:12px;color:var(--text-muted);min-width:120px">${JOB_DATA.langScoreLabels[l.score]||l.score+'/5'}</div></div>`).join('')}</div>`; }
 
-        function renderHeatmap(country) { const section = document.getElementById('heatmapSection'); if (!section)
-            return; const cities = D.cities[country] || []; if (!cities.length) { section.innerHTML =
-                '<div style="font-size:13px;color:var(--text-faint);padding:18px">No city data</div>'; return; }
-            const sorted = [...cities].sort((a, b) => b.salary - a.salary); const maxS = sorted[0].salary,
-                minS = sorted[sorted.length - 1].salary; const cards = sorted.map(c => { const pct = (c.salary -
-                    minS) / (maxS - minS || 1); let bg; if (pct < 0.5) { const t = pct * 2;
-                bg =
-                `rgba(${Math.round(239+(234-239)*t)},${Math.round(68+(179-68)*t)},${Math.round(68+(8-68)*t)},0.25)`; } else { const
-                    t = (pct - 0.5) * 2;
-                bg =
-                `rgba(${Math.round(234+(34-234)*t)},${Math.round(179+(197-179)*t)},${Math.round(8+(94-8)*t)},0.25)`; } const
-                    brd = pct < 0.33 ? 'var(--red)' : pct < 0.66 ? 'var(--yellow)' : 'var(--green)'; const salK =
-                    c.salary >= 1000 ? (c.salary / 1000).toFixed(0) + 'K' : c.salary; return `<div class="city-card" style="background:${bg};border:1px solid ${brd}"><div class="city-name">${c.city}</div><div class="city-region">${c.region}</div><div class="city-salary">$${salK}</div><div class="city-cost">Cost Index: ${c.cost}</div></div>`; }
-                ).join('');
+        function renderHeatmap(country) { const section = document.getElementById('heatmapSection'); if (!section) return; const cities = JOB_DATA.cities[country] || []; if (!cities.length) { section.innerHTML = '<div style="font-size:13px;color:var(--text-faint);padding:18px">No city data</div>'; return; } const sorted = [...cities].sort((a, b) => b.salary - a.salary); const maxS = sorted[0].salary, minS = sorted[sorted.length - 1].salary; const cards = sorted.map(c => { const pct = (c.salary - minS) / (maxS - minS || 1); let bg; if (pct < 0.5) { const t = pct * 2; bg = `rgba(${Math.round(239+(234-239)*t)},${Math.round(68+(179-68)*t)},${Math.round(68+(8-68)*t)},0.25)`; } else { const t = (pct - 0.5) * 2; bg = `rgba(${Math.round(234+(34-234)*t)},${Math.round(179+(197-179)*t)},${Math.round(8+(94-8)*t)},0.25)`; } const brd = pct < 0.33 ? 'var(--red)' : pct < 0.66 ? 'var(--yellow)' : 'var(--green)'; const salK = c.salary >= 1000 ? (c.salary / 1000).toFixed(0) + 'K' : c.salary; return `<div class="city-card" style="background:${bg};border:1px solid ${brd}"><div class="city-name">${c.city}</div><div class="city-region">${c.region}</div><div class="city-salary">$${salK}</div><div class="city-cost">Cost Index: ${c.cost}</div></div>`; }).join('');
             section.innerHTML = `
-            <div class="heatmap-header"><span class="section-label" style="margin-bottom:0">City Income Heatmap — ${D.countries[country]?.name||country}</span><span style="font-size:12px;color:var(--text-muted)">Avg. cook salary (USD equiv.)</span></div>
+            <div class="heatmap-header"><span class="section-label" style="margin-bottom:0">City Income Heatmap — ${JOB_DATA.countries[country]?.name||country}</span><span style="font-size:12px;color:var(--text-muted)">Avg. cook salary (USD equiv.)</span></div>
             <div class="heatmap-grid">${cards}</div>
             <div class="heatmap-scale"><div class="heatmap-scale-bar"><div class="hs-low"></div><div class="hs-mid"></div><div class="hs-high"></div></div><span style="font-size:11px;color:var(--text-muted)">Low → High income</span></div>`; }
 
-        function renderHazards() { const section = document.getElementById('hazardsSection'); if (!section)
-            return;
-            section.innerHTML = `<div class="section-label">Work Hazards</div><div class="hazards-grid">${D.hazards.map(h=>`<div class="hazard-card"><span class="hazard-icon">${h.icon}</span><div class="hazard-info"><div class="hazard-name">${h.name}</div><div class="hazard-bar-track"><div class="hazard-bar-fill ${h.levelClass}" style="width:${h.width}"></div></div><div class="hazard-level">${h.desc}</div></div></div>`).join('')}</div>`; }
+        function renderHazards() { const section = document.getElementById('hazardsSection'); if (!section) return;
+            section.innerHTML = `<div class="section-label">Work Hazards</div><div class="hazards-grid">${JOB_DATA.hazards.map(h=>`<div class="hazard-card"><span class="hazard-icon">${h.icon}</span><div class="hazard-info"><div class="hazard-name">${h.name}</div><div class="hazard-bar-track"><div class="hazard-bar-fill ${h.levelClass}" style="width:${h.width}"></div></div><div class="hazard-level">${h.desc}</div></div></div>`).join('')}</div>`; }
 
-        function renderExtraInsights(country) { const section = document.getElementById(
-            'extraInsightsSection'); if (!section) return; const meta = D.extendedMeta[country] || D
-            .extendedMeta.US; const links = D.startupLinks[country] || []; const linksHtml = links.map(l =>
-                `<a href="${l.url}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:12px;display:block;margin-top:4px">→ ${l.label}</a>`
-                ).join(''); const baseStartup = meta.startupReadiness; const multipliers = [0, 5, 15, 25, 40]; const
-            dynamicStartup = Math.min(95, baseStartup + multipliers[currentLevel]); const startupColor =
-                dynamicStartup >= 70 ? 'var(--green)' : dynamicStartup >= 40 ? 'var(--yellow)' : 'var(--red)';
+        function renderExtraInsights(country) { const section = document.getElementById('extraInsightsSection'); if (!section) return; const meta = JOB_DATA.extendedMeta[country] || JOB_DATA.extendedMeta.US; const links = JOB_DATA.startupLinks[country] || []; const linksHtml = links.map(l => `<a href="${l.url}" target="_blank" style="color:var(--accent);text-decoration:none;font-size:12px;display:block;margin-top:4px">→ ${l.label}</a>`).join(''); const baseStartup = meta.startupReadiness; const multipliers = [0, 5, 15, 25, 40]; const dynamicStartup = Math.min(95, baseStartup + multipliers[currentLevel]); const startupColor = dynamicStartup >= 70 ? 'var(--green)' : dynamicStartup >= 40 ? 'var(--yellow)' : 'var(--red)';
             section.innerHTML = `
             <div class="section-label">Career Economics and Fit</div><div class="extended-grid">
               <div class="insight-card"><span class="insight-icon">💸</span><div class="insight-label">Relationship Budget</div><div class="insight-value" style="color:var(--accent)">${meta.budget}</div><div class="insight-meta">Monthly social/dating spend at this level.</div></div>
               <div class="insight-card" id="startupCard" style="cursor:pointer"><span class="insight-icon">🚀</span><div class="insight-label">Startup Readiness</div><div class="insight-value" style="color:${startupColor}">${dynamicStartup}%</div><div class="insight-meta">Market support for pivots.</div><div id="startupLinks" style="display:block;margin-top:8px;border-top:1px solid var(--border);padding-top:8px">${linksHtml}</div><div id="startupToggle" style="font-size:11px;color:var(--accent);margin-top:8px;text-decoration:underline">Click to hide</div></div>
               <div class="insight-card"><span class="insight-icon">🧑‍💼</span><div class="insight-label">High Net Worth Client Access</div><div class="insight-value" style="font-size:14px;color:var(--text)">${meta.hnwi}</div><div class="insight-meta">Best environments for high-net-worth diners.</div></div>
             </div>`; }
-        // ▼ Note: the following lines contain the repositioned cards per step 2 ▼
-        // The HNWI card label is now "High Net Worth Client Access" (step 1)
-        // The order has been swapped: Relationship Budget → Startup Readiness → High Net Worth Client Access
 
-        function renderAccessLinks() { const section = document.getElementById('accessSection'); if (!section)
-            return;
-            section.innerHTML = `<div class="section-label">Pathways &amp; Access Points</div><div class="link-grid-extended">${D.accessLinks.map(item=>`<div class="link-card"><div class="link-card-title">${item.title}</div><div class="link-card-desc">${item.desc}</div></div>`).join('')}</div>`; }
+        function renderAccessLinks() { const section = document.getElementById('accessSection'); if (!section) return;
+            section.innerHTML = `<div class="section-label">Pathways &amp; Access Points</div><div class="link-grid-extended">${JOB_DATA.accessLinks.map(item=>`<div class="link-card"><div class="link-card-title">${item.title}</div><div class="link-card-desc">${item.desc}</div></div>`).join('')}</div>`; }
 
-        function renderCareerNotes(country) { const section = document.getElementById('careerNotesSection'); if (
-                !section) return; const meta = D.extendedMeta[country] || D.extendedMeta.US; let retireMetaText =
-                "Late-career exit options."; if (D.filialPietyCountries.includes(country)) { retireMetaText +=
-                    " Includes parental care planning."; }
+        function renderCareerNotes(country) { const section = document.getElementById('careerNotesSection'); if (!section) return; const meta = JOB_DATA.extendedMeta[country] || JOB_DATA.extendedMeta.US; let retireMetaText = "Late-career exit options."; if (JOB_DATA.filialPietyCountries.includes(country)) { retireMetaText += " Includes parental care planning."; }
             section.innerHTML = `
             <div class="section-label">MBTI Fit, Skill Pivots &amp; Retirement</div><div class="note-grid">
               <div class="note-card"><div class="note-title">MBTI fit: ${selectedMBTI.type}</div><div class="note-value" style="font-size:14px;color:var(--accent)">Highly Compatible</div><div class="note-meta">${selectedMBTI.desc}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Log in to see your MBTI fit.</div></div></div></div>
@@ -2959,51 +2834,35 @@ No other part of the document is altered.
               <div class="note-card"><div class="note-title">Retirement Planning</div><div class="note-value" style="font-size:14px">${meta.retire}</div><div class="note-meta">${retireMetaText}</div></div>
             </div>`; }
 
-        function renderCareerRecs(level) { const section = document.getElementById('careerRecsSection'); if (!
-                section) return; const recs = D.careerRecs[level] || D.careerRecs[0];
+        function renderCareerRecs(level) { const section = document.getElementById('careerRecsSection'); if (!section) return; const recs = JOB_DATA.careerRecs[level] || JOB_DATA.careerRecs[0];
             section.innerHTML = `<div class="section-label">Career Recommendations</div><div class="note-grid">${recs.map(r=>`<div class="note-card"><div class="note-title">${r.title}</div><div class="note-value" style="font-size:14px;color:${r.color}">${r.match} Match</div><div class="note-meta">${r.desc}<br><br><strong>Skills:</strong> ${r.skills.join(', ')}.</div></div>`).join('')}</div>`; }
 
-        function renderNetworkSection(country) { const section = document.getElementById('networkSection'); if (!
-                section) return; const meta = D.extendedMeta[country] || D.extendedMeta.US; const chefs = D
-            .famousChefs[country] || D.famousChefs.US; const chefsHtml = chefs.map(c =>
-                `<strong>${c.name}</strong> (${c.netWorth})`).join(', '); const networkCardsHtml = D.networkCards
-                .map(card => `<div class="note-card"><div class="note-title">${card.title}</div><div class="note-value" style="font-size:14px">${card.value}</div><div class="note-meta">${card.meta}${card.loginCTA?`<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login to unlock personalized connections.</div></div>`:''}</div></div>`)
-                    .join('');
+        function renderNetworkSection(country) { const section = document.getElementById('networkSection'); if (!section) return; const meta = JOB_DATA.extendedMeta[country] || JOB_DATA.extendedMeta.US; const chefs = JOB_DATA.famousChefs[country] || JOB_DATA.famousChefs.US; const chefsHtml = chefs.map(c => `<strong>${c.name}</strong> (${c.netWorth})`).join(', '); const networkCardsHtml = JOB_DATA.networkCards.map(card => `<div class="note-card"><div class="note-title">${card.title}</div><div class="note-value" style="font-size:14px">${card.value}</div><div class="note-meta">${card.meta}${card.loginCTA?`<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login to unlock personalized connections.</div></div>`:''}</div></div>`).join('');
             section.innerHTML = `
             <div class="section-label">Education &amp; Networking Strategy</div><div class="note-grid">
               <div class="note-card"><div class="note-title">Prestige University</div><div class="note-value">${meta.uni}</div><div class="note-meta">${meta.uniMeta}</div></div>
               <div class="note-card"><div class="note-title">Private Schooling</div><div class="note-value">${meta.privateSchool}</div><div class="note-meta">${meta.privateMeta}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login for personalized ROI analysis.</div></div></div></div>
               <div class="note-card"><div class="note-title">Recommended Schools</div><div class="note-value" style="font-size:14px">${meta.schools}</div><div class="note-meta"><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login for personalized school match.</div></div></div></div>
               ${networkCardsHtml}
-              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${D.countries[country]?.name||country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled via brand, media, and multi-venue empires.</div></div>
+              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${JOB_DATA.countries[country]?.name||country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled via brand, media, and multi-venue empires.</div></div>
             </div>`; }
 
-        // ─── UPDATED: Renders table with level/country-specific tasks, time%, and cost ratio ───
         function renderFiltersAndTable() {
-            const filtersRow = document.getElementById('filtersRow');
-            const tableWrap = document.getElementById('tableWrap');
-            if (!filtersRow || !tableWrap) return;
-            const tasks = getTasksForLevelCountry(currentLevel, currentCountry);
-            const timeSum = tasks.reduce((s, t) => s + t.timePct, 0);
+            const filtersRow = document.getElementById('filtersRow'); const tableWrap = document.getElementById('tableWrap'); if (!filtersRow || !tableWrap) return;
+            const tasks = getTasksForLevelCountry(currentLevel, currentCountry); const timeSum = tasks.reduce((s, t) => s + t.timePct, 0);
             filtersRow.innerHTML = `
             <div class="filters-left" role="group">
-              ${D.filters.map(f=>`<button class="filter-pill ${f.class}${f.active?' active':''}" data-filter="${f.id}">${f.dot?'<span class="dot"></span> ':''}${f.label}${f.id==='all'?` <span style="opacity:.5;font-size:12px">${tasks.length}</span>`:''}</button>`).join('')}
+              ${JOB_DATA.filters.map(f=>`<button class="filter-pill ${f.class}${f.active?' active':''}" data-filter="${f.id}">${f.dot?'<span class="dot"></span> ':''}${f.label}${f.id==='all'?` <span style="opacity:.5;font-size:12px">${tasks.length}</span>`:''}</button>`).join('')}
             </div>
-            <div style="font-size:12px;color:var(--text-faint);display:flex;align-items:center;gap:6px">${D.version} · <span class="time-sum-badge"><span class="ts-check">✓</span> ${timeSum}% workflow</span></div>`;
+            <div style="font-size:12px;color:var(--text-faint);display:flex;align-items:center;gap:6px">${JOB_DATA.version} · <span class="time-sum-badge"><span class="ts-check">✓</span> ${timeSum}% workflow</span></div>`;
             tableWrap.innerHTML = `
             <div class="table-scroll"><table aria-label="Job automation workflow">
               <thead><tr><th>Action</th><th>Human Workflow</th><th>AI / Bot Workflow</th><th>Automation Ratio</th><th>Cost Ratio</th><th style="text-align:center">ETA</th><th style="text-align:center">Status</th></tr></thead>
               <tbody>${tasks.map(t=>{
-                // Universal formula: costRatio = humanCost / aiCost
-                // human proportion = costRatio / (1 + costRatio)
-                // ai proportion = 1 / (1 + costRatio)
                 const humanPct = (t.costRatio / (1 + t.costRatio) * 100).toFixed(0);
                 const aiPct = (1 / (1 + t.costRatio) * 100).toFixed(0);
-                const ratioDisplay = t.costRatio >= 1
-                    ? `${t.costRatio.toFixed(1)}:1`
-                    : `1:${(1 / t.costRatio).toFixed(1)}`;
-                const humanLabel = 'Human';
-                const aiLabel = 'AI';
+                const ratioDisplay = t.costRatio >= 1 ? `${t.costRatio.toFixed(1)}:1` : `1:${(1 / t.costRatio).toFixed(1)}`;
+                const humanLabel = 'Human'; const aiLabel = 'AI';
                 return `
                 <tr data-status="${t.status}">
                   <td class="col-action">${t.action}<span class="time-pct">⏱ <strong>${t.timePct}%</strong> of daily workflow</span></td>
@@ -3018,114 +2877,50 @@ No other part of the document is altered.
             </table></div>`;
         }
 
-        function renderSummary(level) { const row = document.getElementById('summaryRow'); if (!row) return;
-            const tasks = getTasksForLevelCountry(currentLevel, currentCountry); const maxRiskTask = tasks.reduce(
-                (max, t) => t.ratio > max.ratio ? t : max, tasks[0]); const maxCostTask = tasks.reduce((max, t) =>
-                t.costRatio > max.costRatio ? t : max, tasks[0]);
+        function renderSummary(level) { const row = document.getElementById('summaryRow'); if (!row) return; const tasks = getTasksForLevelCountry(currentLevel, currentCountry); const maxRiskTask = tasks.reduce((max, t) => t.ratio > max.ratio ? t : max, tasks[0]); const maxCostTask = tasks.reduce((max, t) => t.costRatio > max.costRatio ? t : max, tasks[0]);
             row.innerHTML = `
-            <div class="summary-card"><strong>Survival Strategy</strong> ${D.survivalStrategy[level]||D.survivalStrategy[0]}</div>
+            <div class="summary-card"><strong>Survival Strategy</strong> ${JOB_DATA.survivalStrategy[level]||JOB_DATA.survivalStrategy[0]}</div>
             <div class="summary-card"><strong>Highest Threat</strong>${maxRiskTask.action} — ${maxRiskTask.ratio}% automatable (${maxRiskTask.statusLabel})</div>
             <div class="summary-card"><strong>Best Cost Ratio</strong>${maxCostTask.action} — Human costs <strong>${maxCostTask.costRatio.toFixed(1)}x</strong> more than AI/robot</div>`; }
 
         function renderAll(countryCode, levelIndex, animate = true) {
-            renderLTVKpiCards(countryCode, levelIndex, animate);
-            renderCarViz(countryCode, levelIndex);
-            renderIncomeChart(countryCode);
-            renderPromoFlow(countryCode);
-            renderInsights(countryCode);
-            renderLang(countryCode);
-            renderHeatmap(countryCode);
-            renderExtraInsights(countryCode);
-            renderCareerNotes(countryCode);
-            renderCareerRecs(levelIndex);
-            renderNetworkSection(countryCode);
-            renderFiltersAndTable();
-            renderSummary(levelIndex);
-            if (animate) { const sec = document.querySelector('.ltv-section'); if (sec) { sec.classList.remove(
-                        'ltv-fade');
-                    void sec.offsetWidth;
-                    sec.classList.add('ltv-fade'); } }
+            renderLTVKpiCards(countryCode, levelIndex, animate); renderCarViz(countryCode, levelIndex); renderIncomeChart(countryCode); renderPromoFlow(countryCode); renderInsights(countryCode); renderLang(countryCode); renderHeatmap(countryCode); renderExtraInsights(countryCode); renderCareerNotes(countryCode); renderCareerRecs(levelIndex); renderNetworkSection(countryCode); renderFiltersAndTable(); renderSummary(levelIndex);
+            if (animate) { const sec = document.querySelector('.ltv-section'); if (sec) { sec.classList.remove('ltv-fade'); void sec.offsetWidth; sec.classList.add('ltv-fade'); } }
         }
 
         function initAll() {
-            renderCountryDropdown();
-            renderLevelTabs();
-            renderHazards();
-            renderAccessLinks();
-            renderAll(currentCountry, currentLevel, false);
-            const footnoteEl = document.getElementById('footnoteText'); if (footnoteEl) footnoteEl.textContent = D
-                .footnote;
+            renderCountryDropdown(); renderLevelTabs(); renderHazards(); renderAccessLinks(); renderAll(currentCountry, currentLevel, false);
+            const footnoteEl = document.getElementById('footnoteText'); if (footnoteEl) footnoteEl.textContent = JOB_DATA.footnote;
         }
 
-        document.getElementById('countryDropdown')?.addEventListener('click', e => { const item = e.target.closest(
-                '.cdd-item'); if (!item) return;
-            currentCountry = item.dataset.country;
-            document.querySelectorAll('.cdd-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active'); const lbl = document.getElementById('countryPillLabel'); if (lbl) lbl
-                .textContent = currentCountry;
-            document.getElementById('countryDropdown')?.classList.remove('open');
-            renderAll(currentCountry, currentLevel, true); });
-        document.getElementById('countryToggleBtn')?.addEventListener('click', e => { e.stopPropagation();
-            renderCountryDropdown();
-            document.getElementById('countryDropdown')?.classList.toggle('open'); });
-        document.addEventListener('click', () => { document.getElementById('countryDropdown')?.classList.remove(
-            'open'); });
-        document.getElementById('homePart')?.addEventListener('click', e => { e.preventDefault();
-            document.getElementById('home-blank-page')?.classList.add('visible'); });
-        document.getElementById('homeBackBtn')?.addEventListener('click', () => { document.getElementById(
-            'home-blank-page')?.classList.remove('visible'); });
-        document.getElementById('levelTabs')?.addEventListener('click', e => { const tab = e.target.closest(
-            '.ltab'); if (!tab) return;
-            document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentLevel = parseInt(tab.dataset.level) || 0;
-            renderAll(currentCountry, currentLevel, true); });
-        document.getElementById('filtersRow')?.addEventListener('click', e => { const pill = e.target.closest(
-                '.filter-pill'); if (!pill) return;
-            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-            pill.classList.add('active'); const f = pill.dataset.filter;
-            document.querySelectorAll('tbody tr').forEach(r => { r.classList.toggle('hidden-row', f !== 'all' &&
-                    r.dataset.status !== f); }); });
+        document.getElementById('countryDropdown')?.addEventListener('click', e => { const item = e.target.closest('.cdd-item'); if (!item) return;
+            currentCountry = item.dataset.country; document.querySelectorAll('.cdd-item').forEach(i => i.classList.remove('active')); item.classList.add('active'); const lbl = document.getElementById('countryPillLabel'); if (lbl) lbl.textContent = currentCountry;
+            document.getElementById('countryDropdown')?.classList.remove('open'); renderAll(currentCountry, currentLevel, true); });
+        document.getElementById('countryToggleBtn')?.addEventListener('click', e => { e.stopPropagation(); renderCountryDropdown(); document.getElementById('countryDropdown')?.classList.toggle('open'); });
+        document.addEventListener('click', () => { document.getElementById('countryDropdown')?.classList.remove('open'); });
+        document.getElementById('homePart')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('home-blank-page')?.classList.add('visible'); });
+        document.getElementById('homeBackBtn')?.addEventListener('click', () => { document.getElementById('home-blank-page')?.classList.remove('visible'); });
+        document.getElementById('levelTabs')?.addEventListener('click', e => { const tab = e.target.closest('.ltab'); if (!tab) return;
+            document.querySelectorAll('.ltab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); currentLevel = parseInt(tab.dataset.level) || 0; renderAll(currentCountry, currentLevel, true); });
+        document.getElementById('filtersRow')?.addEventListener('click', e => { const pill = e.target.closest('.filter-pill'); if (!pill) return;
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active')); pill.classList.add('active'); const f = pill.dataset.filter;
+            document.querySelectorAll('tbody tr').forEach(r => { r.classList.toggle('hidden-row', f !== 'all' && r.dataset.status !== f); }); });
         const overlay = document.getElementById('modalOverlay');
         document.getElementById('openModal')?.addEventListener('click', () => overlay.classList.add('open'));
         document.getElementById('modalClose')?.addEventListener('click', () => overlay.classList.remove('open'));
         overlay?.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') overlay.classList.remove('open'); });
-        document.querySelectorAll('.modal-tag').forEach(t => t.addEventListener('click', () => t.classList.toggle(
-            'sel')));
-        document.getElementById('confirmBtn')?.addEventListener('click', () => { const email = document
-                .getElementById('emailInput').value.trim(); if (!email || !email.includes('@')) { const inp =
-                    document.getElementById('emailInput');
-                inp.style.borderColor = 'var(--red)';
-                inp.focus();
-                setTimeout(() => inp.style.borderColor = '', 1200); return; }
-            document.getElementById('modalForm').style.display = 'none';
-            document.getElementById('modalSuccess').style.display = 'block';
-            setTimeout(() => overlay.classList.remove('open'), 2200);
-            setTimeout(() => { document.getElementById('modalForm').style.display = 'block';
-                document.getElementById('modalSuccess').style.display = 'none';
-                document.getElementById('emailInput').value = ''; }, 2800); const toast = document.getElementById(
-                'toast');
-            document.getElementById('toastMsg').textContent = 'Subscribed · alerts enabled';
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3200); });
-        (function() { const btn = document.getElementById('themeToggle'); const lbl = document.getElementById(
-                'themeLabel'); if (!btn) return; let dark = true;
-            btn.addEventListener('click', () => { dark = !dark; if (dark) { document.documentElement
-                    .removeAttribute('data-theme');
-                    btn.querySelector('.th-icon').textContent = '☀️';
-                    lbl.textContent = 'Light'; } else { document.documentElement.setAttribute('data-theme',
-                    'light');
-                    btn.querySelector('.th-icon').textContent = '🌙';
-                    lbl.textContent = 'Dark'; } }); })();
-        initAll();
+        document.querySelectorAll('.modal-tag').forEach(t => t.addEventListener('click', () => t.classList.toggle('sel')));
+        document.getElementById('confirmBtn')?.addEventListener('click', () => { const email = document.getElementById('emailInput').value.trim(); if (!email || !email.includes('@')) { const inp = document.getElementById('emailInput'); inp.style.borderColor = 'var(--red)'; inp.focus(); setTimeout(() => inp.style.borderColor = '', 1200); return; }
+            document.getElementById('modalForm').style.display = 'none'; document.getElementById('modalSuccess').style.display = 'block'; setTimeout(() => overlay.classList.remove('open'), 2200);
+            setTimeout(() => { document.getElementById('modalForm').style.display = 'block'; document.getElementById('modalSuccess').style.display = 'none'; document.getElementById('emailInput').value = ''; }, 2800); const toast = document.getElementById('toast'); document.getElementById('toastMsg').textContent = 'Subscribed · alerts enabled'; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3200); });
+        (function() { const btn = document.getElementById('themeToggle'); const lbl = document.getElementById('themeLabel'); if (!btn) return; let dark = true;
+            btn.addEventListener('click', () => { dark = !dark; if (dark) { document.documentElement.removeAttribute('data-theme'); btn.querySelector('.th-icon').textContent = '☀️'; lbl.textContent = 'Light'; } else { document.documentElement.setAttribute('data-theme', 'light'); btn.querySelector('.th-icon').textContent = '🌙'; lbl.textContent = 'Dark'; } }); })();
+        // initAll is now called after fetch success
         (function() { const nav = document.getElementById('mainTabsNav'); if (!nav) return;
-            nav.addEventListener('click', function(e) { const btn = e.target.closest('.mtab'); if (!btn)
-                return; const target = btn.dataset.tab;
+            nav.addEventListener('click', function(e) { const btn = e.target.closest('.mtab'); if (!btn) return; const target = btn.dataset.tab;
                 nav.querySelectorAll('.mtab').forEach(b => b.classList.toggle('active', b === btn));
-                document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p
-                    .id === target)); if (target === 'tab-risk') { renderFiltersAndTable();
-                    renderSummary(currentLevel); } }); })();
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === target)); if (target === 'tab-risk') { renderFiltersAndTable(); renderSummary(currentLevel); } }); })();
     </script>
 </body>
 </html>

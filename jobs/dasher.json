@@ -1,0 +1,455 @@
+{
+  "meta": {
+    "job": "Food Delivery Courier",
+    "slug": "dasher",
+    "incomeType": "per_unit",
+    "incomeLabel": "Annual Income",
+    "calculatorInputs": ["deliveriesPerDay", "payPerDelivery", "tipsPerDelivery", "daysPerWeek"],
+    "ltv_formula": "(payPerDelivery + tipsPerDelivery) × deliveriesPerDay × daysPerWeek × 52 × careerYears",
+    "automationThreat": "FAST",
+    "platformNote": "Gig worker, no employer benefits, variable income, autonomous vehicle threat"
+  },
+  "industries": [
+    { "id": "ge", "label": "Gig Economy", "active": true },
+    { "id": "fd", "label": "Food Delivery", "active": false },
+    { "id": "lml", "label": "Last-Mile Logistics", "active": false },
+    { "id": "gd", "label": "Grocery Delivery", "active": false },
+    { "id": "b2b", "label": "B2B Courier", "active": false }
+  ],
+  "countries": {
+    "US": {
+      "name": "United States",
+      "symbol": "$",
+      "annualUSD": 35000,
+      "annualLocal": 35000,
+      "career": 30,
+      "automationIdx": 68,
+      "carName": "Honda PCX",
+      "carPriceUSD": 4000,
+      "riskAge": 42,
+      "startAge": 20,
+      "localDisplay": "$35,000/yr (USD)",
+      "flag": "🇺🇸",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "per_unit"
+    },
+    "UK": {
+      "name": "United Kingdom",
+      "symbol": "£",
+      "annualUSD": 28000,
+      "annualLocal": 22000,
+      "career": 30,
+      "automationIdx": 67,
+      "carName": "Yamaha NMAX",
+      "carPriceUSD": 3500,
+      "riskAge": 44,
+      "startAge": 20,
+      "localDisplay": "~£22K/yr (~$28K)",
+      "flag": "🇬🇧",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "hourly_min"
+    },
+    "AU": {
+      "name": "Australia",
+      "symbol": "A$",
+      "annualUSD": 32000,
+      "annualLocal": 48000,
+      "career": 30,
+      "automationIdx": 66,
+      "carName": "Honda PCX",
+      "carPriceUSD": 4200,
+      "riskAge": 43,
+      "startAge": 20,
+      "localDisplay": "~A$48K/yr (~$32K)",
+      "flag": "🇦🇺",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "hourly_min"
+    },
+    "DE": {
+      "name": "Germany",
+      "symbol": "€",
+      "annualUSD": 26000,
+      "annualLocal": 24000,
+      "career": 30,
+      "automationIdx": 64,
+      "carName": "Yamaha NMAX",
+      "carPriceUSD": 3800,
+      "riskAge": 45,
+      "startAge": 20,
+      "localDisplay": "~€24K/yr (~$26K)",
+      "flag": "🇩🇪",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "hourly_min"
+    },
+    "JP": {
+      "name": "Japan",
+      "symbol": "¥",
+      "annualUSD": 22000,
+      "annualLocal": 3000000,
+      "career": 30,
+      "automationIdx": 69,
+      "carName": "Honda PCX",
+      "carPriceUSD": 3500,
+      "riskAge": 44,
+      "startAge": 20,
+      "localDisplay": "~¥3M/yr (~$22K)",
+      "flag": "🇯🇵",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "per_unit"
+    },
+    "SG": {
+      "name": "Singapore",
+      "symbol": "S$",
+      "annualUSD": 20000,
+      "annualLocal": 27000,
+      "career": 30,
+      "automationIdx": 73,
+      "carName": "Yamaha NMAX",
+      "carPriceUSD": 5500,
+      "riskAge": 41,
+      "startAge": 20,
+      "localDisplay": "~S$27K/yr (~$20K)",
+      "flag": "🇸🇬",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "per_unit"
+    },
+    "TW": {
+      "name": "Taiwan",
+      "symbol": "NT$",
+      "annualUSD": 14000,
+      "annualLocal": 420000,
+      "career": 30,
+      "automationIdx": 70,
+      "carName": "Yamaha NMAX",
+      "carPriceUSD": 2500,
+      "riskAge": 40,
+      "startAge": 20,
+      "localDisplay": "~NT$420K/yr (~$14K)",
+      "flag": "🇹🇼",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "per_unit"
+    },
+    "CN": {
+      "name": "China",
+      "symbol": "¥",
+      "annualUSD": 10000,
+      "annualLocal": 72000,
+      "career": 30,
+      "automationIdx": 72,
+      "carName": "Yadea E8",
+      "carPriceUSD": 1000,
+      "riskAge": 39,
+      "startAge": 20,
+      "localDisplay": "~¥72K/yr (~$10K)",
+      "flag": "🇨🇳",
+      "riskLabel": "HIGH",
+      "riskClass": "high",
+      "incomeStructure": "base_plus_unit"
+    }
+  },
+  "levels": [
+    { "id": 0, "name": "New Dasher", "short": "New", "yearsFrom": 0, "color": "#888888", "yearsLabel": "Entry · Yr 0" },
+    { "id": 1, "name": "Regular Dasher", "short": "Regular", "yearsFrom": 0.5, "color": "#4f98a3", "yearsLabel": "≈ 6mo–1yr" },
+    { "id": 2, "name": "Top Dasher", "short": "Top", "yearsFrom": 1, "color": "#eab308", "yearsLabel": "≈ 1–2 yrs" },
+    { "id": 3, "name": "Multi-app Pro", "short": "Multi", "yearsFrom": 2, "color": "#f97316", "yearsLabel": "≈ 2–4 yrs" },
+    { "id": 4, "name": "Fleet Owner / Dispatcher", "short": "Fleet/Disp.", "yearsFrom": 4, "color": "#22c55e", "yearsLabel": "≈ 4+ yrs" }
+  ],
+  "promotions": [
+    { "from": "New Dasher", "to": "Regular Dasher", "years": "0.5–1 yr", "tip": "Complete 100 deliveries & maintain 4.7★ rating" },
+    { "from": "Regular Dasher", "to": "Top Dasher", "years": "1–2 yrs", "tip": "95%+ monthly completion rate  ·  Customer rating 4.8+" },
+    { "from": "Top Dasher", "to": "Multi-app Pro", "years": "2–3 yrs", "tip": "Juggle 2–3 platforms  ·  Optimize peak‑hour stacking" },
+    { "from": "Multi-app Pro", "to": "Fleet Owner / Dispatcher", "years": "3–4+ yrs", "tip": "Manage 3+ riders  ·  Build your own dispatch system" }
+  ],
+  "levelUSD": {
+    "US": [23000, 28000, 35000, 45000, 60000],
+    "UK": [18000, 22000, 28000, 36000, 48000],
+    "AU": [23000, 28000, 36000, 46000, 60000],
+    "DE": [16000, 20000, 25000, 32000, 42000],
+    "JP": [14000, 18000, 23000, 30000, 40000],
+    "SG": [13000, 17000, 22000, 28000, 36000],
+    "TW": [9000, 12000, 16000, 21000, 28000],
+    "CN": [5000, 7000, 10000, 14000, 19000]
+  },
+  "levelLocal": {
+    "US": ["$23K", "$28K", "$35K", "$45K", "$60K"],
+    "UK": ["£14K", "£18K", "£22K", "£28K", "£38K"],
+    "AU": ["A$35K", "A$42K", "A$54K", "A$69K", "A$90K"],
+    "DE": ["€15K", "€19K", "€23K", "€30K", "€39K"],
+    "JP": ["¥1.9M", "¥2.4M", "¥3.1M", "¥4M", "¥5.3M"],
+    "SG": ["S$18K", "S$23K", "S$29K", "S$37K", "S$48K"],
+    "TW": ["NT$270K", "NT$360K", "NT$480K", "NT$630K", "NT$840K"],
+    "CN": ["¥36K", "¥50K", "¥72K", "¥101K", "¥137K"]
+  },
+  "languages": {
+    "US": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Spanish", "level": "Helpful", "score": 2 }],
+    "UK": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "AU": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "DE": [{ "lang": "German", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Helpful", "score": 2 }],
+    "JP": [{ "lang": "Japanese", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Helpful", "score": 2 }],
+    "SG": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Mandarin", "level": "Helpful", "score": 2 }, { "lang": "Malay", "level": "Optional", "score": 1 }],
+    "TW": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Taiwanese", "level": "Helpful", "score": 2 }, { "lang": "English", "level": "Optional", "score": 1 }],
+    "CN": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Dialect", "level": "Regional", "score": 2 }, { "lang": "English", "level": "Optional", "score": 1 }]
+  },
+  "langScoreLabels": { "1": "Elementary", "2": "Limited Working", "3": "Professional Working", "4": "Full Professional", "5": "Native / Bilingual" },
+  "cities": {
+    "US": [
+      { "city": "San Francisco", "region": "West", "salary": 42000, "cost": 105 },
+      { "city": "New York", "region": "Northeast", "salary": 39000, "cost": 103 },
+      { "city": "Boston", "region": "Northeast", "salary": 37000, "cost": 90 },
+      { "city": "Seattle", "region": "West", "salary": 38000, "cost": 88 },
+      { "city": "Los Angeles", "region": "West", "salary": 40000, "cost": 95 },
+      { "city": "Chicago", "region": "Midwest", "salary": 35000, "cost": 80 },
+      { "city": "Denver", "region": "Mountain", "salary": 34000, "cost": 78 },
+      { "city": "Miami", "region": "South", "salary": 32000, "cost": 75 },
+      { "city": "Dallas", "region": "South", "salary": 31000, "cost": 65 },
+      { "city": "Phoenix", "region": "Southwest", "salary": 30000, "cost": 60 }
+    ],
+    "UK": [
+      { "city": "London", "region": "England", "salary": 32000, "cost": 100 },
+      { "city": "Edinburgh", "region": "Scotland", "salary": 26000, "cost": 75 },
+      { "city": "Bristol", "region": "England", "salary": 25000, "cost": 73 },
+      { "city": "Manchester", "region": "England", "salary": 24000, "cost": 72 },
+      { "city": "Birmingham", "region": "England", "salary": 23000, "cost": 70 },
+      { "city": "Leeds", "region": "England", "salary": 22000, "cost": 68 }
+    ],
+    "AU": [
+      { "city": "Sydney", "region": "NSW", "salary": 52000, "cost": 100 },
+      { "city": "Melbourne", "region": "VIC", "salary": 48000, "cost": 92 },
+      { "city": "Canberra", "region": "ACT", "salary": 47000, "cost": 85 },
+      { "city": "Perth", "region": "WA", "salary": 46000, "cost": 82 },
+      { "city": "Brisbane", "region": "QLD", "salary": 45000, "cost": 80 },
+      { "city": "Gold Coast", "region": "QLD", "salary": 42000, "cost": 75 },
+      { "city": "Adelaide", "region": "SA", "salary": 40000, "cost": 72 }
+    ],
+    "DE": [
+      { "city": "Munich", "region": "Bavaria", "salary": 42000, "cost": 100 },
+      { "city": "Frankfurt", "region": "Hesse", "salary": 40000, "cost": 95 },
+      { "city": "Stuttgart", "region": "Baden-W.", "salary": 38000, "cost": 88 },
+      { "city": "Hamburg", "region": "Hamburg", "salary": 37000, "cost": 88 },
+      { "city": "Düsseldorf", "region": "NRW", "salary": 35000, "cost": 82 },
+      { "city": "Berlin", "region": "Berlin", "salary": 34000, "cost": 80 },
+      { "city": "Cologne", "region": "NRW", "salary": 33000, "cost": 78 }
+    ],
+    "JP": [
+      { "city": "Tokyo", "region": "Kanto", "salary": 48000, "cost": 100 },
+      { "city": "Yokohama", "region": "Kanto", "salary": 43000, "cost": 90 },
+      { "city": "Osaka", "region": "Kansai", "salary": 40000, "cost": 85 },
+      { "city": "Kyoto", "region": "Kansai", "salary": 38000, "cost": 82 },
+      { "city": "Nagoya", "region": "Chubu", "salary": 36000, "cost": 75 },
+      { "city": "Fukuoka", "region": "Kyushu", "salary": 33000, "cost": 70 },
+      { "city": "Sapporo", "region": "Hokkaido", "salary": 32000, "cost": 68 }
+    ],
+    "SG": [
+      { "city": "Orchard", "region": "Central", "salary": 44000, "cost": 103 },
+      { "city": "CBD / Marina", "region": "Central", "salary": 42000, "cost": 100 },
+      { "city": "Tampines", "region": "East", "salary": 34000, "cost": 80 },
+      { "city": "Jurong", "region": "West", "salary": 32000, "cost": 78 },
+      { "city": "Woodlands", "region": "North", "salary": 31000, "cost": 72 }
+    ],
+    "TW": [
+      { "city": "Taipei", "region": "Northern", "salary": 24000, "cost": 100 },
+      { "city": "Hsinchu", "region": "Northern", "salary": 22000, "cost": 82 },
+      { "city": "New Taipei", "region": "Northern", "salary": 21500, "cost": 88 },
+      { "city": "Taichung", "region": "Central", "salary": 19000, "cost": 72 },
+      { "city": "Kaohsiung", "region": "Southern", "salary": 18500, "cost": 68 },
+      { "city": "Tainan", "region": "Southern", "salary": 17000, "cost": 65 },
+      { "city": "Taitung", "region": "Eastern", "salary": 14000, "cost": 55 },
+      { "city": "Hualien", "region": "Eastern", "salary": 13500, "cost": 52 }
+    ],
+    "CN": [
+      { "city": "Shanghai", "region": "East", "salary": 28000, "cost": 105 },
+      { "city": "Beijing", "region": "North", "salary": 26000, "cost": 100 },
+      { "city": "Shenzhen", "region": "South", "salary": 26000, "cost": 98 },
+      { "city": "Guangzhou", "region": "South", "salary": 22000, "cost": 85 },
+      { "city": "Chengdu", "region": "Southwest", "salary": 16000, "cost": 65 },
+      { "city": "Chongqing", "region": "Southwest", "salary": 15000, "cost": 60 },
+      { "city": "Wuhan", "region": "Central", "salary": 14000, "cost": 58 },
+      { "city": "Xi'an", "region": "Northwest", "salary": 12000, "cost": 52 }
+    ]
+  },
+  "countryMeta": {
+    "US": { "difficulty": 7, "restDays": 10, "hoursPerDay": 9, "splitShift": true, "bestLearnAge": "18–25", "bestEntryAge": "18–30", "cert": "Driver's License · Food Handler Card", "travel": "High", "mobility": "Extreme", "expression": "Low" },
+    "UK": { "difficulty": 7, "restDays": 12, "hoursPerDay": 8.5, "splitShift": true, "bestLearnAge": "18–25", "bestEntryAge": "18–28", "cert": "Provisional/full driving license · Food hygiene cert", "travel": "High", "mobility": "Extreme", "expression": "Low" },
+    "AU": { "difficulty": 7, "restDays": 15, "hoursPerDay": 8, "splitShift": true, "bestLearnAge": "18–24", "bestEntryAge": "18–28", "cert": "Australian driver's license · RSA for alcohol deliveries", "travel": "High", "mobility": "Extreme", "expression": "Low" },
+    "DE": { "difficulty": 7, "restDays": 20, "hoursPerDay": 8, "splitShift": true, "bestLearnAge": "18–25", "bestEntryAge": "18–28", "cert": "Führerschein Class B · Gewerbeerlaubnis may apply", "travel": "High", "mobility": "Extreme", "expression": "Low" },
+    "JP": { "difficulty": 9, "restDays": 8, "hoursPerDay": 9.5, "splitShift": true, "bestLearnAge": "18–25", "bestEntryAge": "18–30", "cert": "Japanese driver's license · 食品衛生責任者 (food safety)", "travel": "High", "mobility": "Extreme", "expression": "Very Low" },
+    "SG": { "difficulty": 8, "restDays": 14, "hoursPerDay": 9, "splitShift": true, "bestLearnAge": "18–23", "bestEntryAge": "18–28", "cert": "Class 3 driving license · Food safety course", "travel": "High", "mobility": "Extreme", "expression": "Low" },
+    "TW": { "difficulty": 8, "restDays": 12, "hoursPerDay": 9, "splitShift": true, "bestLearnAge": "18–25", "bestEntryAge": "18–28", "cert": "機車駕照 · 食品外送員登記", "travel": "High", "mobility": "Extreme", "expression": "Low" },
+    "CN": { "difficulty": 9, "restDays": 7, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "18–24", "bestEntryAge": "18–28", "cert": "電動車駕照 · 美团/饿了么注册认证", "travel": "High", "mobility": "Extreme", "expression": "Low" }
+  },
+  "difficultyLabels": ["", "", "Very Easy", "Easy", "Below Avg", "Average", "Above Avg", "Hard", "Very Hard", "Brutal", "Extreme"],
+  "insightCards": [
+    { "id": "difficulty", "icon": "💪", "label": "Job Hardship", "valueKey": "difficulty", "valueTemplate": "{value}/10", "metaTemplate": "{difficultyLabel} · physically demanding & weather-exposed", "colorMode": "gradient-bad" },
+    { "id": "restDays", "icon": "🏖️", "label": "Annual Leave", "valueKey": "restDays", "valueTemplate": "{value} days", "metaTemplate": "{hoursPerDay}h avg work day · split shifts common", "colorMode": "gradient-good" },
+    { "id": "bestLearnAge", "icon": "🎓", "label": "Best Learning Age", "valueKey": "bestLearnAge", "valueTemplate": "{value}", "metaTemplate": "Entry window for platform onboarding & route optimization skills", "colorMode": "accent" },
+    { "id": "bestEntryAge", "icon": "🚀", "label": "Best Entry Age", "valueKey": "bestEntryAge", "valueTemplate": "{value}", "metaTemplate": "Peak physical stamina & low family obligations", "colorMode": "accent" },
+    { "id": "travel", "icon": "🛵", "label": "Daily Distance", "valueKey": "travel", "valueTemplate": "{value}", "metaTemplate": "Constant travel across delivery zones.", "colorMode": "accent" },
+    { "id": "mobility", "icon": "🏃", "label": "Physical Endurance", "valueKey": "mobility", "valueTemplate": "{value}", "metaTemplate": "Walking, cycling, carrying loads throughout shifts. Strong endurance needed.", "colorMode": "accent" },
+    { "id": "expression", "icon": "⭐", "label": "Customer Rating", "valueKey": "expression", "valueTemplate": "{value}", "metaTemplate": "Ratings and reviews determine order priority and tips.", "colorMode": "accent" },
+    { "id": "cert", "icon": "📜", "label": "Certifications Required", "valueKey": "cert", "valueTemplate": "{value}", "metaTemplate": "Varies by country & platform requirements", "spanFull": true, "colorMode": "neutral" }
+  ],
+  "extendedMeta": {
+    "US": { "budget": "$350/mo (fuel/electric + maintenance)", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 62, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "Platform metrics and customer ratings outweigh formal education.", "privateSchool": "Not applicable", "privateMeta": "Experience and multi-apping skill are the main differentiators.", "schools": "None (platform onboarding)", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "UK": { "budget": "£250/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 60, "mbti": "ESTP · ISTP · ESFP", "uni": "Optional", "uniMeta": "Business acumen helps for fleet ownership, but not required.", "privateSchool": "N/A", "privateMeta": "Network and reliability ratings are key.", "schools": "Platform-specific onboarding", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "AU": { "budget": "A$400/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 63, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "Practical logistics knowledge beats degrees.", "privateSchool": "N/A", "privateMeta": "Heavy emphasis on safety record and efficiency.", "schools": "Platform-provided materials", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "DE": { "budget": "€200/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 58, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "German apprenticeship system may offer logistics pathways.", "privateSchool": "N/A", "privateMeta": "Reliability and compliance with Gewerbeordnung.", "schools": "On-the-job platform training", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "JP": { "budget": "¥40,000/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 55, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "Age and experience can be barriers; entry is open.", "privateSchool": "N/A", "privateMeta": "Manners and reliability are highly valued.", "schools": "Platform orientation", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "SG": { "budget": "S$400/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 65, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "Business registration skills help for fleet scaling.", "privateSchool": "N/A", "privateMeta": "Efficiency & language skills aid multi-apping.", "schools": "Platform training & safety courses", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "TW": { "budget": "NT$8,000/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 57, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "Flexibility and hard work drive upward mobility.", "privateSchool": "N/A", "privateMeta": "Scooter maintenance & navigation skills are critical.", "schools": "Platform onboarding & scooter handling", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" },
+    "CN": { "budget": "¥1,500/mo", "hnwi": "Luxury restaurant pickups, high-end residential deliveries, private club orders, corporate catering", "startupReadiness": 60, "mbti": "ESTP · ISTP · ESFP", "uni": "Not required", "uniMeta": "Guanxi and efficiency metrics determine success.", "privateSchool": "N/A", "privateMeta": "Speed and platform algorithm mastery are key.", "schools": "Meituan/Eleme onboarding", "retire": "Dispatchers, delivery company operations, logistics coordinators", "pivot": "Fleet ownership, local delivery startup, logistics SaaS sales" }
+  },
+  "startupLinks": {
+    "US": [{ "label": "U.S. Small Business Admin", "url": "https://www.sba.gov" }, { "label": "DoorDash Drive", "url": "https://get.doordash.com" }],
+    "UK": [{ "label": "UK Business Support", "url": "https://www.gov.uk/business-finance-support" }, { "label": "Deliveroo Fleet", "url": "https://deliveroo.co.uk" }],
+    "AU": [{ "label": "business.gov.au", "url": "https://business.gov.au" }, { "label": "Uber Eats Partners", "url": "https://www.ubereats.com/au" }],
+    "DE": [{ "label": "KfW Start-ups", "url": "https://www.kfw.de" }, { "label": "Lieferando Partner", "url": "https://www.lieferando.de" }],
+    "JP": [{ "label": "J-Net21", "url": "https://j-net21.smrj.go.jp" }, { "label": "Uber Eats Japan", "url": "https://www.ubereats.com/jp" }],
+    "SG": [{ "label": "Enterprise SG", "url": "https://www.enterprisesg.gov.sg" }, { "label": "GrabExpress", "url": "https://www.grab.com/sg" }],
+    "TW": [{ "label": "SMEA Grants", "url": "https://www.smea.gov.tw" }, { "label": "Foodpanda Taiwan", "url": "https://www.foodpanda.com.tw" }],
+    "CN": [{ "label": "China Business Registry", "url": "http://www.gsxt.gov.cn" }, { "label": "Meituan Peisong", "url": "https://peisong.meituan.com" }]
+  },
+  "famousDrivers": {
+    "US": [{ "name": "Tony Xu (DoorDash CEO)", "netWorth": "$1.2B" }, { "name": "Dara Khosrowshahi (Uber CEO)", "netWorth": "$170M" }],
+    "UK": [{ "name": "Will Shu (Deliveroo CEO)", "netWorth": "$200M" }, { "name": "James Caan (recruitment to food)", "netWorth": "$70M" }],
+    "AU": [{ "name": "Jodie Auster (Uber Eats ANZ)", "netWorth": "$5M" }, { "name": "Tim Fung (Airtasker)", "netWorth": "$35M" }],
+    "DE": [{ "name": "Niklas Östberg (Delivery Hero CEO)", "netWorth": "$1.0B" }, { "name": "Daniel Krauss (Flixbus/Flixmobility)", "netWorth": "$200M" }],
+    "JP": [{ "name": "Hiroki Takeuchi (Demae-can)", "netWorth": "$80M" }, { "name": "Yoshinori Fukushima (Menu)", "netWorth": "$5M" }],
+    "SG": [{ "name": "Anthony Tan (Grab CEO)", "netWorth": "$300M" }, { "name": "Hooi Ling Tan (Grab)", "netWorth": "$200M" }],
+    "TW": [{ "name": "Jeremy Lin (Foodpanda TW)", "netWorth": "$2M" }, { "name": "Kai Huang (Uber Eats TW)", "netWorth": "$1M" }],
+    "CN": [{ "name": "Wang Xing (Meituan CEO)", "netWorth": "$10B" }, { "name": "Zhang Xuhao (Ele.me founder)", "netWorth": "$1.5B" }]
+  },
+  "accessLinks": [
+    { "title": "Training & Courses", "desc": "Platform onboarding, safe riding, and food handling." },
+    { "title": "Certifications & Credentials", "desc": "Driver's license, food safety, vehicle registration." },
+    { "title": "Job Search & Placement", "desc": "Sign up on DoorDash, Uber Eats, Deliveroo, Grab, Foodpanda, Meituan." },
+    { "title": "Freelance & Side Work", "desc": "Multi-apping, grocery delivery, parcel courier gigs." },
+    { "title": "Your Portfolio & Referrals", "desc": "Build ratings, referral bonuses, and earnings track record." },
+    { "title": "Find a Mentor", "desc": "Connect with a top-rated dasher or fleet owner." }
+  ],
+  "careerRecs": [
+    [
+      { "title": "Warehouse Picker", "match": "78%", "color": "var(--green)", "desc": "Transfer speed & stamina to warehouse sorting.", "skills": ["Physical Endurance", "Time Management"] },
+      { "title": "Convenience Store Clerk", "match": "74%", "color": "var(--yellow)", "desc": "Customer service and retail tasks.", "skills": ["Communication", "Cash Handling"] },
+      { "title": "Parking Attendant", "match": "67%", "color": "var(--orange)", "desc": "Vehicle monitoring & lot management.", "skills": ["Attention to Detail", "Patience"] }
+    ],
+    [
+      { "title": "Local Courier Driver", "match": "85%", "color": "var(--green)", "desc": "Parcel and document delivery within a city.", "skills": ["Navigation", "Time Management"] },
+      { "title": "Grocery Picker", "match": "80%", "color": "var(--yellow)", "desc": "Select and pack grocery orders for delivery.", "skills": ["Product Knowledge", "Speed"] },
+      { "title": "Delivery Dispatcher", "match": "73%", "color": "var(--orange)", "desc": "Assign orders and monitor fleet.", "skills": ["Communication", "Multi-tasking"] }
+    ],
+    [
+      { "title": "Delivery Platform Trainer", "match": "88%", "color": "var(--green)", "desc": "Onboard new dashers and teach best practices.", "skills": ["Instruction", "Safety Protocols"] },
+      { "title": "Dispatch Assistant", "match": "84%", "color": "var(--yellow)", "desc": "Support zone coordination and order routing.", "skills": ["Route Planning", "Data Entry"] },
+      { "title": "Customer Support (Delivery)", "match": "77%", "color": "var(--orange)", "desc": "Handle order issues and live support.", "skills": ["Problem Solving", "Communication"] }
+    ],
+    [
+      { "title": "Multi-app Consultant", "match": "90%", "color": "var(--green)", "desc": "Advise riders on platform stacking strategies.", "skills": ["Analytical Thinking", "Platform Knowledge"] },
+      { "title": "Small Fleet Manager", "match": "86%", "color": "var(--yellow)", "desc": "Manage 5-10 subcontractors and their earnings.", "skills": ["Leadership", "Compliance"] },
+      { "title": "Last-Mile Operations Supervisor", "match": "80%", "color": "var(--orange)", "desc": "Oversee delivery operations for a zone.", "skills": ["Supply Chain Basics", "KPI Tracking"] }
+    ],
+    [
+      { "title": "Logistics Operations Manager", "match": "93%", "color": "var(--green)", "desc": "Manage urban delivery operations for a company.", "skills": ["Strategic Leadership", "P&L Management"] },
+      { "title": "Delivery SaaS Sales", "match": "89%", "color": "var(--yellow)", "desc": "Sell routing and dispatch software.", "skills": ["Tech Sales", "Industry Knowledge"] },
+      { "title": "Urban Logistics Entrepreneur", "match": "83%", "color": "var(--orange)", "desc": "Found a local courier network or delivery startup.", "skills": ["Entrepreneurship", "Network Building"] }
+    ]
+  ],
+  "survivalStrategy": [
+    "As a <strong>New Dasher</strong>, focus on building a 5-star rating and learn zone hotspots to stay indispensable beyond algorithms.",
+    "As a <strong>Regular Dasher</strong>, diversify across platforms to reduce dependency and master route optimization tools.",
+    "As a <strong>Top Dasher</strong>, invest in understanding AI dispatch logic and prepare for multi-app stacking as automation advances.",
+    "As a <strong>Multi-app Pro</strong>, start building relationships to transition into dispatching or fleet management before robots replace riders.",
+    "As a <strong>Fleet Owner/Dispatcher</strong>, pivot to logistics SaaS or last-mile consulting where human oversight remains critical against automation."
+  ],
+  "hazards": [
+    { "icon": "🚗", "name": "Traffic Accidents", "levelClass": "haz-5", "width": "100%", "desc": "Critical · road crashes" },
+    { "icon": "🌧️", "name": "Weather Exposure", "levelClass": "haz-4", "width": "85%", "desc": "High · rain, heat, snow" },
+    { "icon": "🎒", "name": "Back & Shoulder Strain", "levelClass": "haz-4", "width": "80%", "desc": "High · heavy loads and repetitive motion" },
+    { "icon": "🧠", "name": "Algorithm Stress / Deactivation Risk", "levelClass": "haz-4", "width": "75%", "desc": "High · time pressure and account suspension" },
+    { "icon": "🔋", "name": "Vehicle Breakdown Risk", "levelClass": "haz-3", "width": "65%", "desc": "Medium · scooters/ebikes wear and tear" },
+    { "icon": "🌡️", "name": "Heat Exhaustion", "levelClass": "haz-3", "width": "60%", "desc": "Medium · extreme temperatures" },
+    { "icon": "👁️", "name": "Eye Strain (screen navigation)", "levelClass": "haz-2", "width": "40%", "desc": "Low · constant phone use" },
+    { "icon": "🦵", "name": "Leg & Knee Fatigue", "levelClass": "haz-3", "width": "55%", "desc": "Medium · prolonged sitting or cycling" }
+  ],
+  "baseTasksByLevel": {
+    "0": [
+      { "name": "Pickup Navigation", "ratio": 75, "eta": "mid", "status": "in-danger", "desc": "Navigate to restaurant, verify order — still human-led but apps automate dispatch." },
+      { "name": "Route Following (GPS)", "ratio": 90, "eta": "soon", "status": "replaceable", "desc": "GPS navigation fully handled by algorithms; human merely follows." },
+      { "name": "Customer Handoff", "ratio": 15, "eta": "prot", "status": "nothing", "desc": "Face-to-face interaction, special instructions, building rapport." },
+      { "name": "Rating Maintenance", "ratio": 20, "eta": "prot", "status": "nothing", "desc": "Maintaining 4.7+ rating through service and politeness." },
+      { "name": "Vehicle Pre-ride Check", "ratio": 5, "eta": "prot", "status": "nothing", "desc": "Check brakes, tires, lights — basic mechanical safety." },
+      { "name": "Peak Hour Management", "ratio": 60, "eta": "mid", "status": "in-danger", "desc": "Choosing zones and times; gradually optimized by platform heatmaps." }
+    ],
+    "1": [
+      { "name": "Pickup Navigation", "ratio": 75, "eta": "mid", "status": "in-danger", "desc": "Efficient multi-restaurant pickups; still requires human adaptation." },
+      { "name": "Route Optimization", "ratio": 90, "eta": "soon", "status": "replaceable", "desc": "Algorithms suggest best route; rider can override but rarely does." },
+      { "name": "Customer Handoff", "ratio": 15, "eta": "prot", "status": "nothing", "desc": "Managing gate codes, apartments, special requests." },
+      { "name": "Rating Maintenance", "ratio": 20, "eta": "prot", "status": "nothing", "desc": "Higher ratings unlock tier bonuses." },
+      { "name": "Batch Order Handling", "ratio": 80, "eta": "soon", "status": "replaceable", "desc": "Stacking orders already automated by platform logic." },
+      { "name": "Vehicle Maintenance", "ratio": 5, "eta": "prot", "status": "nothing", "desc": "Regular oil/electric care and part replacements." }
+    ],
+    "2": [
+      { "name": "Route Optimization (Advanced)", "ratio": 90, "eta": "soon", "status": "replaceable", "desc": "Algorithms dominate; rider experience adds marginal gains." },
+      { "name": "Pickup Navigation", "ratio": 75, "eta": "mid", "status": "in-danger", "desc": "Familiarity with restaurant layouts saves time." },
+      { "name": "Customer Handoff", "ratio": 15, "eta": "prot", "status": "nothing", "desc": "Premium service for high-value orders." },
+      { "name": "Rating Maintenance", "ratio": 20, "eta": "prot", "status": "nothing", "desc": "Sustaining 4.8+ rating for Top Dasher status." },
+      { "name": "Peak Hour Strategy", "ratio": 60, "eta": "mid", "status": "in-danger", "desc": "Manual zone hopping vs algorithm-driven surge." },
+      { "name": "Customer Complaint Handling", "ratio": 10, "eta": "prot", "status": "nothing", "desc": "Resolving missing items, cold food, etc., through app or voice." }
+    ],
+    "3": [
+      { "name": "Multi-platform Order Stacking", "ratio": 70, "eta": "mid", "status": "in-danger", "desc": "Juggling DoorDash, Uber Eats, Grubhub without violations." },
+      { "name": "Route Optimization (Expert)", "ratio": 90, "eta": "soon", "status": "replaceable", "desc": "Human brain adds little beyond what AI suggests." },
+      { "name": "Customer Handoff", "ratio": 15, "eta": "prot", "status": "nothing", "desc": "Quick handoffs; rating impact from multi-app speed." },
+      { "name": "Rating Maintenance", "ratio": 20, "eta": "prot", "status": "nothing", "desc": "Crucial to stay on all platforms." },
+      { "name": "Vehicle Maintenance (intensive)", "ratio": 5, "eta": "prot", "status": "nothing", "desc": "High mileage; battery and tire management." },
+      { "name": "Dispatch Coordination", "ratio": 55, "eta": "mid", "status": "in-danger", "desc": "Communicating with platform support and restaurants." }
+    ],
+    "4": [
+      { "name": "Dispatching & Order Assignment", "ratio": 30, "eta": "mid", "status": "in-danger", "desc": "Manual dispatching; increasingly automated by platforms." },
+      { "name": "Fleet Vehicle Management", "ratio": 5, "eta": "prot", "status": "nothing", "desc": "Oversee maintenance schedules for multiple scooters/ebikes." },
+      { "name": "Platform Compliance", "ratio": 25, "eta": "mid", "status": "in-danger", "desc": "Ensure accounts meet terms; avoid mass deactivations." },
+      { "name": "Merchant Coordination", "ratio": 10, "eta": "prot", "status": "nothing", "desc": "Build relationships with restaurant managers for priority." },
+      { "name": "Rider Recruitment & Training", "ratio": 15, "eta": "prot", "status": "nothing", "desc": "Hire and train subcontractors; human judgment needed." },
+      { "name": "Performance Analytics", "ratio": 20, "eta": "mid", "status": "in-danger", "desc": "Use platform data to optimize fleet performance." }
+    ]
+  },
+  "filters": [
+    { "id": "all", "label": "All", "class": "all", "active": true, "dot": false },
+    { "id": "replaceable", "label": "Replaceable", "class": "gf", "active": false, "dot": true },
+    { "id": "indanger", "label": "In-Danger", "class": "yf", "active": false, "dot": true },
+    { "id": "intro", "label": "Intro", "class": "of", "active": false, "dot": true },
+    { "id": "nothing", "label": "Nothing", "class": "rf", "active": false, "dot": true }
+  ],
+  "mbtiData": [
+    { "type": "ESTP", "desc": "The Dynamo. Thrives in fast-paced, on-the-road independence." },
+    { "type": "ISTP", "desc": "The Craftsperson. Tactical route optimization and vehicle maintenance." },
+    { "type": "ESFP", "desc": "The Performer. Social, high customer ratings and repeat tips." },
+    { "type": "ISFP", "desc": "The Adventurer. Quiet, values freedom of schedule." },
+    { "type": "ENTP", "desc": "The Debater. Multi-platform strategy optimizer and experimenter." }
+  ],
+  "filialPietyCountries": ["CN", "TW", "SG", "JP"],
+  "ltvMethodology": "Per-unit earnings model × 30-year horizon. AI-automation threat weighted.",
+  "highestThreat": "Route Optimization & Dispatch is the most vulnerable node — fully automated by platform algorithms.",
+  "langPillClasses": {
+    "Essential": "llp-essential",
+    "Helpful": "llp-helpful",
+    "Optional": "llp-optional",
+    "Senior Only": "llp-senior",
+    "High-end Only": "llp-senior",
+    "Regional": "llp-helpful"
+  },
+  "networkCards": [
+    { "title": "Recommended Majors", "value": "Logistics & Supply Chain Management", "meta": "Secondary: Business Administration, Urban Planning, or Data Analytics." },
+    { "title": "Target Courses", "value": "Time Management, Platform Algorithm Basics, Vehicle Maintenance", "meta": "Also: Food Safety, Gig Worker Law, Customer Service." },
+    { "title": "Stretch Majors", "value": "Entrepreneurship / Small Logistics Operations", "meta": "Build skills to start your own delivery fleet or logistics company." },
+    { "title": "Key Connections", "value": "Platform Regional Managers & Fleet Owners", "meta": "Build ties with persons who control zones and dispatches.", "loginCTA": true }
+  ],
+  "version": "v2.6 · Apr 2026 · Food Delivery Courier",
+  "footnote": "* Data: BLS 2025 · Gridwise Gig Economy Report · DoorDash · Uber Eats · Meituan Annual Report · ILO"
+}

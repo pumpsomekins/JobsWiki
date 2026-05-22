@@ -1,12 +1,18 @@
-Target file: The most recently generated html
-Complete all pre-checked tasks strictly:
-1. [x] move City Income Heatmap and Language Requirements under Career Profile Insights
-2. [x] give me full HNWI text, ppl dont know what HNWI means
+针对hobbydiy.html：
 
-I. Reorder log.md to display the latest log content at the top.
-II. Preserve all original design completely with no modifications.
-III. Do not generate new HTML files. Only perform in-place edits, then rename the file as MMDDYY_TIMERN_model_used (date + timer number separated from model name by underscore).
-IV. Create/update log.md (generate if missing): record all used prompts, external instructions, original filename and new filename.
-V. Once finished, update completion checkmarks for corresponding tasks in next.txt. DO NOT PLACE CHECKMARKS ON ROMAN NUMBERED ITEMS.
-VI. Never re-read or re-visit a file after the tasks are successfully done for this specific file unless other tasks need to check back.
-VII. After completing the last task, output a single one-line confirmation and halt. No summary, no directory listing, no re-check.
+把搜索框居中
+把age和for那一栏居中
+把🎁 Gift Ideas by Person
+See all gift guides →
+🧒
+For Kids (6–12)
+STEM kits, art sets & starter crafts
+🧑
+For Teens (13–17)
+Candle making, keyboards, resin art
+👧
+Gifts for Her
+Embroidery, jewelry, macramé & more
+👦
+Gifts for Him
+Woodworking, leathercraft, mixology 这个section删掉

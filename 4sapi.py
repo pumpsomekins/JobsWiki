@@ -5,7 +5,7 @@ base_url = "https://4sapi.com/v1"
 
 client = openai.OpenAI(api_key=api_key, base_url=base_url)
 
-model_list = ["gemini-2.5-flash"]           # 请替换为你能用的真实模型名
+model_list = ["deepseek-v4-pro"]           # 请替换为你能用的真实模型名
 
 # ========== 原先的单轮测试 ==========
 prompt = "你写一首唐诗好不好"

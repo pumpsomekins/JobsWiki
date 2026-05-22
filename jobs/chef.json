@@ -5,6 +5,11 @@
     "incomeType": "salary",
     "incomeLabel": "Annual Salary",
     "calculatorInputs": ["annualSalary", "careerYears", "bonusRate"],
+
+    "bonusApplicable": true,
+    "bonusRange": [0.05, 0.15],
+    "inflationSensitive": true,
+    
     "ltv_formula": "annualSalary × careerYears × (1 + bonusRate)",
     "automationThreat": "MID",
     "platformNote": "W2 employee, benefits included, unionized in some markets"

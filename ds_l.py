@@ -1,5 +1,6 @@
 import requests
 import json
+import time  # Add this import at the top of your script
 
 # 配置文件
 OUTPUT_FILE = "deepseek回答.md"
@@ -7,11 +8,94 @@ OUTPUT_FILE = "deepseek回答.md"
 # 你的提问内容
 content = """
 
-Level & Country specific tasks is still hardcoded, make it into the json where i could insert to orignal json easily and 
-edit the html so i dont need it
+你是一个职业数据工程师，正在为一个职业生涯分析平台构建数据文件。
 
-DO NOT CHANGE ANYTHING ELSE
+## 任务
+生成两个代码BLOCK：
+1.  [dasher.json] — DoorDash Dasher（外卖配送员）的职业数据文件
+2.  [dasher.html] — 渲染页面，复用 chef.html 的完整设计系统
 
+---
+
+## 必须遵守的规则
+
+### JSON 规则
+- `meta.incomeType` 必须是 `"piece_rate"`（来自 income-types.json registry，不得自造新 key）
+- `meta.bonusApplicable` = true（Peak Pay 算奖金）
+- `meta.bonusRange` = [0.05, 0.40]
+- `meta.inflationSensitive` = true
+- `calculatorInputs` 必须完全复制 income-types.json 中 `piece_rate` 的 calculatorInputs：
+  `["ratePerTask", "tasksPerHour", "hoursPerWeek", "weeksPerYear", "careerYears", "peakPayRate", "peakHoursPct", "inflationRate", "taxRate"]`
+- `ltv_formula` = `"ratePerTask × tasksPerHour × hoursPerWeek × weeksPerYear × careerYears × (1 + peakPayRate × peakHoursPct)"`
+- 国家数据必须包含：US / CA / AU / UK / DE / JP / SG / TW / CN 九个国家
+- 每个国家必须包含：`annualUSD`, `annualLocal`, `symbol`, `flag`, `career`, `automationIdx`, `riskLabel`, `riskClass`, `startAge`, `riskAge`, `localDisplay`
+- levels（职业晋升）：Entry Dasher → Top Dasher → Team Lead / Shift Coordinator → Fleet Manager（4级）
+- 每级必须有 `yearsFrom`, `color`, `short`, `name`, `yearsLabel`
+- 包含 `tasksByLevel`（0–3 级），每个 task 必须有：`action`, `human`, `ai`, `timePct`, `ratio`, `ratioColor`, `eta`, `etaClass`, `status`, `statusClass`, `statusLabel`, `costRatio`
+- 包含 `cities` 数据（每个国家至少 5 个城市），每个城市：`city`, `region`, `salary`（年收入 USD）, `cost`（生活成本指数）
+- 包含 `hazards`（职业风险）：至少 6 项，格式与 chef.json 一致
+- 包含 `languages` 数据（各国语言要求）
+- 包含 `extendedMeta`（每个国家的 budget/mo, startupReadiness, mbti, retire, pivot）
+- 包含 `survivalStrategy`（5 条，对应 5 个生涯阶段）
+- 包含 `careerRecs`（至少 9 条转型推荐）
+- 包含 `countryTaskMods`（techAdoption, laborCost, aiSpeed）
+- `version` = "v1.0 May 2026"
+- `footnote` 引用 BLS 2025、DoorDash Earnings Report 2024、JobForesight 2026
+
+### HTML 规则
+- 完整复制 chef.html 的所有 CSS（一字不改，包括 :root 变量、所有 class）
+- 复制 chef.html 的所有 HTML 结构（nav tabs、country tabs、level tabs、modal、toast 全部保留）
+- `<script>` 部分：
+  - 使用 `Promise.all([fetch('./jobs/dasher.json'), fetch('./jobs/income-types.json')])` 加载数据
+  - 声明 `let INCOME_TYPES`，赋值后传入 `initAll()`
+  - **在此页面第一次真正调用** `renderCalculator(country)` 和 `calcLTVAdvanced()`
+  - 原有所有函数（renderLTVKpiCards, renderIncomeChart, renderPromoFlow 等）完整保留，不删不改
+
+### LTV 图表 Toggle 规则（重要）
+- Toggle 行必须渲染在 `income-chart-wrap` 的**右上角**，与 `income-chart-title` 同行，横排排列
+- 三个 toggle 从左到右顺序：`+ Bonus` → `− Inflation` → `− Tax`
+- Toggle 样式：
+  - 未激活：border 1px solid var(--border-hi), color var(--text-faint), background transparent
+  - 激活：background var(--accent), color #fff, border-color var(--accent)
+  - 尺寸：font-size 11px, padding 3px 10px, border-radius 4px, font-weight 700
+- Toggle 状态改变时，LTV 图表曲线实时重新渲染：
+  - 全关（base）：曲线颜色用原来的 careerGrad（蓝→黄→绿）
+  - Bonus ON：曲线整体上移，顶部标注 "+X%"
+  - Inflation ON：曲线向下弯曲，用 var(--orange) 描边
+  - Tax ON：曲线整体降低，用 var(--red) 描边
+  - 多个同时 ON：叠加计算，曲线颜色取最低的那个（red > orange > green）
+- Toggle 的 HTML id：`toggle-bonus-btn`, `toggle-inflation-btn`, `toggle-tax-btn`
+- Toggle 状态存在 JS 变量：`let bonusOn = false, inflationOn = false, taxOn = false`
+
+### 不得新增的东西
+- 不得新增任何 chef.html 没有的 CSS class
+- 不得新增任何 chef.html 没有的 tab 或 nav 项目
+- Toggle 按钮样式只用 inline style 或已有 class 组合，不新增 class
+- 不得改变任何现有函数的签名
+
+---
+
+## 参考数据（Dasher 美国基准）
+- 平均每单收入：$6.50–$8.50（含 tip）
+- 平均每小时完成单数：1.8–2.5 单
+- 典型工作时长：15–40 小时/周（兼职到全职）
+- Peak Pay 奖励：+$1–$4/单，占工时约 20–30%
+- 美国年收入（全职估算）：$28,000–$45,000
+- 自动化威胁：HIGH（无人机配送、自动驾驶）
+- automationIdx（US）：72
+- Career 年限：建议 10 年（行业变化快）
+- startAge：18, riskAge：38
+
+## 各国年收入参考（USD）
+- US: $36,000 | CA: $32,000 | AU: $34,000 | UK: $28,000
+- DE: $24,000 | JP: $18,000 | SG: $22,000 | TW: $10,000 | CN: $8,000
+
+---
+
+输出格式：两个代码block都必须完整，不得截断，不得用省略号代替内容。
+
+参考以下代码：
+[chef.html]
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -2060,29 +2144,31 @@ DO NOT CHANGE ANYTHING ELSE
             color: var(--accent);
         }
         .page-hero-wrap {
-        position: relative;
+            position: relative;
         }
         .hero-job-img {
-        position: absolute;
-        top: 48x;
-        right: 0;
-        width: 280px;
-        bottom: 0;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #363636;
-        pointer-events: none;
-        z-index: 0;
+            position: absolute;
+            top: 48x;
+            right: 0;
+            width: 280px;
+            bottom: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #363636;
+            pointer-events: none;
+            z-index: 0;
         }
         .hero-job-img img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        filter: brightness(0.75);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.75);
         }
         @media(max-width: 700px) {
-        .hero-job-img { display: none; }
+            .hero-job-img {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -2176,170 +2262,27 @@ DO NOT CHANGE ANYTHING ELSE
         // ── fetch job data from external JSON ──
         let JOB_DATA;
         let D;
-        fetch('./jobs/chef.json')
-            .then(r => r.json())
-            .then(d => {
-                JOB_DATA = d;
-                D = JOB_DATA;
-                initAll();
-            });
-
-        // ─── Level & Country specific tasks ───
-        const _baseTasksByLevel = {
-            0: [{ action: 'Food Preparation (Mise en Place)', human: 'Wash, peel, chop vegetables; portion proteins; measure dry goods per station specs.',
-                    ai: 'Suzumo robotic vegetable cutters & automated portioning systems handle bulk prep.',
-                    timePct: 35, ratio: 75, ratioColor: 'var(--red)', eta: '~2 yrs', etaClass: 'eta-soon',
-                    status: 'replaceable', statusClass: 'b-replaceable', statusLabel: 'Replaceable',
-                    costRatio: 6.0 },
-                { action: 'Basic Cooking & Station Support', human: 'Operate grill/fryer/sauté under chef direction; monitor temps; flip & stir continuously.',
-                    ai: 'Miso Robotics Flippy arm with thermal vision automates grilling & frying sequences.',
-                    timePct: 28, ratio: 58, ratioColor: 'var(--orange)', eta: '3–5 yrs', etaClass: 'eta-mid',
-                    status: 'indanger', statusClass: 'b-indanger', statusLabel: 'In-Danger',
-                costRatio: 3.5 },
-                { action: 'Cleaning & Sanitation', human: 'Scrub stations, sanitize surfaces, wash dishes, empty grease traps between services.',
-                    ai: 'Autonomous floor scrubbers & UV-C sanitizing robots reduce manual cleaning load.',
-                    timePct: 20, ratio: 45, ratioColor: 'var(--yellow)', eta: '5–7 yrs',
-                    etaClass: 'eta-far', status: 'intro', statusClass: 'b-intro', statusLabel: 'Intro',
-                    costRatio: 4.0 },
-                { action: 'Plating Support & Garnishing', human: 'Assemble basic plates per spec; add garnishes; ensure consistent portion presentation.',
-                    ai: 'Dexterous plating robots emerging but struggle with artistic nuance & sauce drizzling.',
-                    timePct: 10, ratio: 12, ratioColor: 'var(--green)', eta: '10+ yrs',
-                    etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.4 },
-                { action: 'Inventory Assistance', human: 'Check low-stock items; report shortages to Chef de Partie; rotate FIFO stock.',
-                    ai: 'RFID & AI camera systems auto-track inventory levels in real time.',
-                    timePct: 7, ratio: 85, ratioColor: 'var(--red)', eta: '~1.5 yrs',
-                etaClass: 'eta-soon', status: 'replaceable', statusClass: 'b-replaceable',
-                    statusLabel: 'Replaceable', costRatio: 7.5 },
-            ],
-            1: [{ action: 'Station Cooking & Management', human: 'Own a station (sauté, pastry, grill); execute dishes to spec; manage timing & flow.',
-                    ai: 'AI-assisted cooktops with recipe-guided temp control; robotic stir & flip functions.',
-                    timePct: 35, ratio: 50, ratioColor: 'var(--orange)', eta: '4–6 yrs', etaClass: 'eta-mid',
-                    status: 'indanger', statusClass: 'b-indanger', statusLabel: 'In-Danger',
-                costRatio: 2.8 },
-                { action: 'Advanced Food Preparation', human: 'Butcher fish/meat; prepare complex sauces & emulsions; oversee junior prep cooks.',
-                    ai: 'Automated butchery systems & precision dispensers for sauces; still needs human QC.',
-                    timePct: 22, ratio: 40, ratioColor: 'var(--yellow)', eta: '5–8 yrs',
-                etaClass: 'eta-far', status: 'intro', statusClass: 'b-intro', statusLabel: 'Intro',
-                    costRatio: 3.2 },
-                { action: 'Quality Control & Tasting', human: 'Taste every batch; adjust seasoning; ensure consistency across covers; reject subpar output.',
-                    ai: 'Electronic noses & computer vision grade food; cannot replicate subjective taste nuance.',
-                    timePct: 15, ratio: 10, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.3 },
-                { action: 'Mentoring Junior Staff', human: 'Coach Line Cooks on knife skills, timing, and station protocols; demonstrate techniques.',
-                    ai: 'VR/AR training modules supplement but cannot replace hands-on human mentorship.',
-                    timePct: 12, ratio: 8, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.2 },
-                { action: 'Inventory & Ordering', human: 'Track station inventory; place supplier orders; manage par levels & reduce waste.',
-                    ai: 'MarketMan / BlueCart AI predictive analytics for automated ordering.',
-                    timePct: 16, ratio: 82, ratioColor: 'var(--red)', eta: '~2 yrs', etaClass: 'eta-soon',
-                    status: 'replaceable', statusClass: 'b-replaceable', statusLabel: 'Replaceable',
-                    costRatio: 6.5 },
-            ],
-            2: [{ action: 'Team Supervision & Scheduling', human: 'Manage brigade shifts; resolve conflicts; ensure coverage; maintain morale & discipline.',
-                    ai: 'AI scheduling tools optimize shifts; human leadership & conflict resolution irreplaceable.',
-                    timePct: 25, ratio: 15, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.15 },
-                { action: 'Quality Control & Expediting', human: 'Oversee every plate leaving the pass; ensure consistency; call orders; manage pace.',
-                    ai: 'Computer vision checks plate composition; cannot judge nuanced flavor or artistic merit.',
-                    timePct: 22, ratio: 18, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.25 },
-                { action: 'Inventory & Cost Management', human: 'Manage kitchen-wide ordering; negotiate with suppliers; track food cost percentages.',
-                    ai: 'AI procurement platforms automate ordering & cost analysis with high accuracy.',
-                    timePct: 20, ratio: 78, ratioColor: 'var(--red)', eta: '~2.5 yrs',
-                etaClass: 'eta-soon', status: 'replaceable', statusClass: 'b-replaceable',
-                    statusLabel: 'Replaceable', costRatio: 5.5 },
-                { action: 'Recipe Testing & Menu Support', human: 'Collaborate with Head Chef on new dishes; test recipes; document procedures.',
-                    ai: 'Generative AI suggests flavor pairings; human sensory validation still essential.',
-                    timePct: 18, ratio: 30, ratioColor: 'var(--yellow)', eta: '6–9 yrs',
-                etaClass: 'eta-far', status: 'intro', statusClass: 'b-intro', statusLabel: 'Intro',
-                    costRatio: 1.8 },
-                { action: 'Station Coverage (Peak Service)', human: 'Jump onto stations during rushes; demonstrate technique; fill gaps in brigade.',
-                    ai: 'Limited robotic coverage; cannot adapt to dynamic rush conditions with human dexterity.',
-                    timePct: 15, ratio: 22, ratioColor: 'var(--green)', eta: '8+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.35 },
-            ],
-            3: [{ action: 'Menu Planning & Creation', human: 'Design seasonal menus; create signature dishes; balance flavor, cost & presentation.',
-                    ai: 'AI generates molecular flavor combinations; lacks cultural intuition & creative vision.',
-                    timePct: 25, ratio: 25, ratioColor: 'var(--yellow)', eta: '7–10 yrs',
-                etaClass: 'eta-far', status: 'intro', statusClass: 'b-intro', statusLabel: 'Intro',
-                    costRatio: 1.5 },
-                { action: 'Team Management & Development', human: 'Hire, train, promote brigade members; build kitchen culture; performance reviews.',
-                    ai: 'No AI equivalent for human leadership, mentorship & cultural development.',
-                    timePct: 25, ratio: 5, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.1 },
-                { action: 'Vendor Relations & Sourcing', human: 'Build relationships with farmers, fishmongers, specialty suppliers; negotiate contracts.',
-                    ai: 'Digital marketplaces streamline ordering; relationship-based sourcing remains human.',
-                    timePct: 15, ratio: 20, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.3 },
-                { action: 'Quality Control Oversight', human: 'Set quality standards; audit stations; ensure consistency across all shifts.',
-                    ai: 'Sensors and cameras assist; final judgment requires human sensory expertise.',
-                    timePct: 15, ratio: 12, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.2 },
-                { action: 'Administrative & Financial', human: 'Manage P&L; food cost analysis; report to ownership; handle compliance paperwork.',
-                    ai: 'AI-powered restaurant management platforms automate much of P&L tracking.',
-                    timePct: 20, ratio: 65, ratioColor: 'var(--orange)', eta: '3–4 yrs',
-                etaClass: 'eta-mid', status: 'indanger', statusClass: 'b-indanger',
-                statusLabel: 'In-Danger', costRatio: 4.0 },
-            ],
-            4: [{ action: 'Strategic Planning & Vision', human: 'Define culinary direction; multi-outlet strategy; brand positioning; expansion planning.',
-                    ai: 'AI provides data insights; strategic vision and brand storytelling remain uniquely human.',
-                    timePct: 25, ratio: 8, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.12 },
-                { action: 'Brand & Business Development', human: 'Media appearances; cookbook deals; consulting; build personal & restaurant brand equity.',
-                    ai: 'No AI equivalent for personal brand building & authentic media presence.',
-                    timePct: 20, ratio: 3, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.08 },
-                { action: 'Executive Leadership', human: 'Lead all kitchen operations; mentor Head Chefs; represent culinary vision to stakeholders.',
-                    ai: 'Leadership, inspiration & organizational culture are fundamentally human domains.',
-                    timePct: 22, ratio: 2, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.05 },
-                { action: 'Vendor & Partner Relations', human: 'Cultivate high-level supplier partnerships; secure exclusives; negotiate multi-unit deals.',
-                    ai: 'CRM & procurement AI assist; relationship trust & exclusivity require human touch.',
-                    timePct: 15, ratio: 15, ratioColor: 'var(--green)', eta: '10+ yrs',
-                etaClass: 'eta-prot', status: 'nothing', statusClass: 'b-none', statusLabel: 'Nothing',
-                    costRatio: 0.2 },
-                { action: 'Menu Innovation & R&D', human: 'Pioneer new techniques; lead culinary R&D; create signature concepts across outlets.',
-                    ai: 'AI supports flavor analysis; true culinary innovation needs human creativity & instinct.',
-                    timePct: 10, ratio: 20, ratioColor: 'var(--yellow)', eta: '8–12 yrs',
-                etaClass: 'eta-far', status: 'intro', statusClass: 'b-intro', statusLabel: 'Intro',
-                    costRatio: 1.2 },
-                { action: 'Financial Oversight', human: 'Multi-venue P&L review; capital allocation; investor reporting; long-term financial strategy.',
-                    ai: 'AI dashboards automate reporting; strategic financial decisions remain human-led.',
-                    timePct: 8, ratio: 50, ratioColor: 'var(--orange)', eta: '4–5 yrs',
-                etaClass: 'eta-mid', status: 'indanger', statusClass: 'b-indanger',
-                statusLabel: 'In-Danger', costRatio: 3.0 },
-            ],
-        };
+        let INCOME_TYPES;
+        Promise.all([
+            fetch('./jobs/chef.json').then(r => r.json()),
+            fetch('./jobs/income-types.json').then(r => r.json())
+        ]).then(([jobData, incomeTypes]) => {
+            JOB_DATA = jobData;
+            D = JOB_DATA;
+            INCOME_TYPES = incomeTypes;
+            initAll();
+        });
 
         // Country-specific modifiers for task data
         function getCountryTaskMods(country) {
-            const mods = {
-                US: { techAdoption: 1.0, laborCost: 1.0, aiSpeed: 1.0 },
-                UK: { techAdoption: 0.9, laborCost: 0.85, aiSpeed: 0.9 },
-                AU: { techAdoption: 0.85, laborCost: 0.9, aiSpeed: 0.85 },
-                DE: { techAdoption: 0.75, laborCost: 0.8, aiSpeed: 0.7 },
-                JP: { techAdoption: 0.8, laborCost: 0.7, aiSpeed: 0.75 },
-                SG: { techAdoption: 1.1, laborCost: 0.95, aiSpeed: 1.1 },
-                TW: { techAdoption: 0.9, laborCost: 0.5, aiSpeed: 0.85 },
-                CN: { techAdoption: 1.05, laborCost: 0.35, aiSpeed: 1.0 },
-            };
-            return mods[country] || mods.US;
+            return (JOB_DATA.countryTaskMods && JOB_DATA.countryTaskMods[country]) 
+                || JOB_DATA.countryTaskMods?.US 
+                || { techAdoption: 1.0, laborCost: 1.0, aiSpeed: 1.0 };
         }
 
         function getTasksForLevelCountry(level, country) {
-            const base = (_baseTasksByLevel[level] || _baseTasksByLevel[0]).map(t => ({ ...t }));
+            const tasksByLevel = JOB_DATA.tasksByLevel || {};
+            const base = (tasksByLevel[level] || tasksByLevel[0] || []).map(t => ({ ...t }));
             const mod = getCountryTaskMods(country);
             base.forEach(t => {
                 const origRatio = t.ratio;
@@ -2524,6 +2467,58 @@ DO NOT CHANGE ANYTHING ELSE
             const footnoteEl = document.getElementById('footnoteText'); if (footnoteEl) footnoteEl.textContent = JOB_DATA.footnote;
         }
 
+        // ── NEW: Inserted functions (renderCalculator & calcLTVAdvanced) ──
+        function renderCalculator(country) {
+            const type = INCOME_TYPES[JOB_DATA.meta.incomeType];
+            const country_data = JOB_DATA.countries[country];
+            const showBonus = type.bonusApplicable && JOB_DATA.meta.bonusApplicable;
+            const showInflation = type.inflationSensitive;
+
+            // 渲染三个 toggle 的显示/隐藏
+            document.getElementById('toggle-bonus').style.display = showBonus ? 'flex' : 'none';
+            document.getElementById('toggle-inflation').style.display = showInflation ? 'flex' : 'none';
+            document.getElementById('toggle-tax').style.display = 'flex'; // 所有职业都有
+
+            // 渲染奖金滑块范围
+            if (showBonus) {
+                const [min, max] = JOB_DATA.meta.bonusRange;
+                document.getElementById('bonus-slider').min = min * 100;
+                document.getElementById('bonus-slider').max = max * 100;
+            }
+        }
+
+        function calcLTVAdvanced(country) {
+            const c = JOB_DATA.countries[country];
+            const bonusOn = document.getElementById('toggle-bonus').checked;
+            const inflationOn = document.getElementById('toggle-inflation').checked;
+            const taxOn = document.getElementById('toggle-tax').checked;
+
+            const bonusRate = bonusOn ? (document.getElementById('bonus-slider').value / 100) : 0;
+            const inflationRate = inflationOn ? 0.03 : 0; // 默认 3% CPI
+            const taxRate = taxOn ? getTaxRate(country) : 0;
+
+            // Base LTV
+            let ltv = c.annualUSD * c.career;
+
+            // + Bonus
+            if (bonusOn) ltv = ltv * (1 + bonusRate);
+
+            // × 通胀折现（实际购买力）
+            if (inflationOn) {
+                let realLTV = 0;
+                for (let yr = 0; yr < c.career; yr++) {
+                    realLTV += c.annualUSD * (1 + bonusRate) / Math.pow(1 + inflationRate, yr);
+                }
+                ltv = realLTV;
+            }
+
+            // − 税后
+            if (taxOn) ltv = ltv * (1 - taxRate);
+
+            return Math.round(ltv);
+        }
+        // ── end of inserted functions ──
+
         document.getElementById('countryDropdown')?.addEventListener('click', e => { const item = e.target.closest('.cdd-item'); if (!item) return;
             currentCountry = item.dataset.country; document.querySelectorAll('.cdd-item').forEach(i => i.classList.remove('active')); item.classList.add('active'); const lbl = document.getElementById('countryPillLabel'); if (lbl) lbl.textContent = currentCountry;
             document.getElementById('countryDropdown')?.classList.remove('open'); renderAll(currentCountry, currentLevel, true); });
@@ -2556,6 +2551,490 @@ DO NOT CHANGE ANYTHING ELSE
 </body>
 </html>
 
+[chef.json]
+{
+  "meta": {
+    "job": "Chef / Cook",
+    "slug": "chef",
+    "incomeType": "salary",
+    "incomeLabel": "Annual Salary",
+    "calculatorInputs": ["annualSalary", "careerYears", "bonusRate"],
+
+    "bonusApplicable": true,
+    "bonusRange": [0.05, 0.15],
+    "inflationSensitive": true,
+    
+    "ltv_formula": "annualSalary × careerYears × (1 + bonusRate)",
+    "automationThreat": "MID",
+    "platformNote": "W2 employee, benefits included, unionized in some markets"
+  },
+  "industries": [
+    { "id": "fb", "label": "Food & Beverage", "active": true },
+    { "id": "hosp", "label": "Hospitality", "active": false },
+    { "id": "qsr", "label": "QSR / Fast Food", "active": false },
+    { "id": "fine", "label": "Fine Dining", "active": false },
+    { "id": "cat", "label": "Catering", "active": false },
+    { "id": "inst", "label": "Institutional", "active": false }
+  ],
+  "countries": {
+    "US": {
+      "name": "United States",
+      "symbol": "$",
+      "annualUSD": 56000,
+      "annualLocal": 56000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Toyota Camry",
+      "carPriceUSD": 28000,
+      "riskAge": 47,
+      "startAge": 25,
+      "localDisplay": "$56,000/yr (USD)",
+      "flag": "🇺🇸",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "UK": {
+      "name": "United Kingdom",
+      "symbol": "£",
+      "annualUSD": 44000,
+      "annualLocal": 35000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Ford Focus",
+      "carPriceUSD": 26000,
+      "riskAge": 49,
+      "startAge": 25,
+      "localDisplay": "~£35K/yr (~$44K)",
+      "flag": "🇬🇧",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "AU": {
+      "name": "Australia",
+      "symbol": "A$",
+      "annualUSD": 42000,
+      "annualLocal": 65000,
+      "career": 30,
+      "automationIdx": 37,
+      "carName": "Toyota RAV4",
+      "carPriceUSD": 28000,
+      "riskAge": 48,
+      "startAge": 25,
+      "localDisplay": "~A$65K/yr (~$42K)",
+      "flag": "🇦🇺",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "DE": {
+      "name": "Germany",
+      "symbol": "€",
+      "annualUSD": 41000,
+      "annualLocal": 38000,
+      "career": 30,
+      "automationIdx": 35,
+      "carName": "VW Golf",
+      "carPriceUSD": 30000,
+      "riskAge": 50,
+      "startAge": 25,
+      "localDisplay": "~€38K/yr (~$41K)",
+      "flag": "🇩🇪",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "JP": {
+      "name": "Japan",
+      "symbol": "¥",
+      "annualUSD": 28000,
+      "annualLocal": 4200000,
+      "career": 30,
+      "automationIdx": 32,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 18000,
+      "riskAge": 52,
+      "startAge": 25,
+      "localDisplay": "~¥4.2M/yr (~$28K)",
+      "flag": "🇯🇵",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "SG": {
+      "name": "Singapore",
+      "symbol": "S$",
+      "annualUSD": 31000,
+      "annualLocal": 42000,
+      "career": 30,
+      "automationIdx": 42,
+      "carName": "Toyota Corolla*",
+      "carPriceUSD": 88000,
+      "riskAge": 46,
+      "startAge": 25,
+      "localDisplay": "~S$42K/yr (~$31K)",
+      "flag": "🇸🇬",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "TW": {
+      "name": "Taiwan",
+      "symbol": "NT$",
+      "annualUSD": 15000,
+      "annualLocal": 480000,
+      "career": 30,
+      "automationIdx": 40,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 22000,
+      "riskAge": 45,
+      "startAge": 25,
+      "localDisplay": "~NT$480K/yr (~$15K)",
+      "flag": "🇹🇼",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "CN": {
+      "name": "China",
+      "symbol": "¥",
+      "annualUSD": 12000,
+      "annualLocal": 86000,
+      "career": 30,
+      "automationIdx": 44,
+      "carName": "BYD Seagull",
+      "carPriceUSD": 12000,
+      "riskAge": 44,
+      "startAge": 25,
+      "localDisplay": "~¥86K/yr (~$12K)",
+      "flag": "🇨🇳",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    }
+  },
+  "levels": [
+    { "id": 0, "name": "Line Cook", "short": "Line", "yearsFrom": 0, "color": "#888888", "yearsLabel": "Entry · Yr 0" },
+    { "id": 1, "name": "Chef de Partie", "short": "CDP", "yearsFrom": 2, "color": "#4f98a3", "yearsLabel": "≈ 2–3 yrs" },
+    { "id": 2, "name": "Sous Chef", "short": "Sous", "yearsFrom": 5, "color": "#eab308", "yearsLabel": "≈ 5–6 yrs" },
+    { "id": 3, "name": "Head Chef", "short": "Head", "yearsFrom": 8, "color": "#f97316", "yearsLabel": "≈ 8–11 yrs" },
+    { "id": 4, "name": "Executive Chef", "short": "Exec", "yearsFrom": 16, "color": "#22c55e", "yearsLabel": "≈ 16–19 yrs" }
+  ],
+  "promotions": [
+    { "from": "Line Cook", "to": "Chef de Partie", "years": "2–3 yrs", "tip": "Station mastery required" },
+    { "from": "Chef de Partie", "to": "Sous Chef", "years": "2–3 yrs", "tip": "Performance + kitchen leadership" },
+    { "from": "Sous Chef", "to": "Head Chef", "years": "3–5 yrs", "tip": "Menu creation + team management" },
+    { "from": "Head Chef", "to": "Executive Chef", "years": "5–8 yrs", "tip": "Business acumen + reputation" }
+  ],
+  "levelUSD": {
+    "US": [32000, 48000, 55000, 72000, 95000],
+    "UK": [28000, 42000, 48000, 65000, 88000],
+    "AU": [33000, 45000, 50000, 68000, 90000],
+    "DE": [26000, 38000, 42000, 58000, 78000],
+    "JP": [25000, 35000, 40000, 55000, 73000],
+    "SG": [22000, 36000, 41000, 58000, 78000],
+    "TW": [13000, 18000, 20000, 28000, 37000],
+    "CN": [8000, 12000, 14000, 20000, 30000]
+  },
+  "levelLocal": {
+    "US": ["$32K", "$48K", "$55K", "$72K", "$95K"],
+    "UK": ["£22K", "£32K", "£37K", "£50K", "£68K"],
+    "AU": ["A$45K", "A$62K", "A$70K", "A$95K", "A$125K"],
+    "DE": ["€24K", "€35K", "€39K", "€54K", "€72K"],
+    "JP": ["¥3.2M", "¥4.5M", "¥5.1M", "¥7.0M", "¥9.3M"],
+    "SG": ["S$30K", "S$48K", "S$55K", "S$78K", "S$105K"],
+    "TW": ["NT$380K", "NT$520K", "NT$580K", "NT$820K", "NT$1.1M"],
+    "CN": ["¥50K", "¥72K", "¥85K", "¥120K", "¥180K"]
+  },
+  "languages": {
+    "US": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Spanish", "level": "Helpful", "score": 2 }],
+    "UK": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "AU": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "DE": [{ "lang": "German", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Helpful", "score": 2 }],
+    "JP": [{ "lang": "Japanese", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "SG": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Mandarin", "level": "Helpful", "score": 2 }, { "lang": "Malay", "level": "Optional", "score": 1 }],
+    "TW": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Taiwanese", "level": "Helpful", "score": 2 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "CN": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Dialect", "level": "Regional", "score": 2 }, { "lang": "English", "level": "High-end Only", "score": 3 }]
+  },
+  "langScoreLabels": { "1": "Elementary", "2": "Limited Working", "3": "Professional Working", "4": "Full Professional", "5": "Native / Bilingual" },
+  "cities": {
+    "US": [
+      { "city": "San Francisco", "region": "West", "salary": 72000, "cost": 105 },
+      { "city": "New York", "region": "Northeast", "salary": 68000, "cost": 103 },
+      { "city": "Boston", "region": "Northeast", "salary": 64000, "cost": 90 },
+      { "city": "Seattle", "region": "West", "salary": 62000, "cost": 88 },
+      { "city": "Los Angeles", "region": "West", "salary": 65000, "cost": 95 },
+      { "city": "Chicago", "region": "Midwest", "salary": 58000, "cost": 80 },
+      { "city": "Denver", "region": "Mountain", "salary": 55000, "cost": 78 },
+      { "city": "Miami", "region": "South", "salary": 52000, "cost": 75 },
+      { "city": "Dallas", "region": "South", "salary": 50000, "cost": 65 },
+      { "city": "Phoenix", "region": "Southwest", "salary": 48000, "cost": 60 }
+    ],
+    "UK": [
+      { "city": "London", "region": "England", "salary": 55000, "cost": 100 },
+      { "city": "Edinburgh", "region": "Scotland", "salary": 44000, "cost": 75 },
+      { "city": "Bristol", "region": "England", "salary": 43000, "cost": 73 },
+      { "city": "Manchester", "region": "England", "salary": 42000, "cost": 72 },
+      { "city": "Birmingham", "region": "England", "salary": 40000, "cost": 70 },
+      { "city": "Leeds", "region": "England", "salary": 39000, "cost": 68 }
+    ],
+    "AU": [
+      { "city": "Sydney", "region": "NSW", "salary": 88000, "cost": 100 },
+      { "city": "Melbourne", "region": "VIC", "salary": 82000, "cost": 92 },
+      { "city": "Canberra", "region": "ACT", "salary": 80000, "cost": 85 },
+      { "city": "Perth", "region": "WA", "salary": 78000, "cost": 82 },
+      { "city": "Brisbane", "region": "QLD", "salary": 75000, "cost": 80 },
+      { "city": "Gold Coast", "region": "QLD", "salary": 70000, "cost": 75 },
+      { "city": "Adelaide", "region": "SA", "salary": 68000, "cost": 72 }
+    ],
+    "DE": [
+      { "city": "Munich", "region": "Bavaria", "salary": 72000, "cost": 100 },
+      { "city": "Frankfurt", "region": "Hesse", "salary": 68000, "cost": 95 },
+      { "city": "Stuttgart", "region": "Baden-W.", "salary": 66000, "cost": 88 },
+      { "city": "Hamburg", "region": "Hamburg", "salary": 65000, "cost": 88 },
+      { "city": "Düsseldorf", "region": "NRW", "salary": 60000, "cost": 82 },
+      { "city": "Berlin", "region": "Berlin", "salary": 60000, "cost": 80 },
+      { "city": "Cologne", "region": "NRW", "salary": 58000, "cost": 78 }
+    ],
+    "JP": [
+      { "city": "Tokyo", "region": "Kanto", "salary": 68000, "cost": 100 },
+      { "city": "Yokohama", "region": "Kanto", "salary": 62000, "cost": 90 },
+      { "city": "Osaka", "region": "Kansai", "salary": 58000, "cost": 85 },
+      { "city": "Kyoto", "region": "Kansai", "salary": 55000, "cost": 82 },
+      { "city": "Nagoya", "region": "Chubu", "salary": 52000, "cost": 75 },
+      { "city": "Fukuoka", "region": "Kyushu", "salary": 47000, "cost": 70 },
+      { "city": "Sapporo", "region": "Hokkaido", "salary": 45000, "cost": 68 }
+    ],
+    "SG": [
+      { "city": "Orchard", "region": "Central", "salary": 82000, "cost": 103 },
+      { "city": "CBD / Marina", "region": "Central", "salary": 80000, "cost": 100 },
+      { "city": "Tampines", "region": "East", "salary": 64000, "cost": 80 },
+      { "city": "Jurong", "region": "West", "salary": 62000, "cost": 78 },
+      { "city": "Woodlands", "region": "North", "salary": 60000, "cost": 72 }
+    ],
+    "TW": [
+      { "city": "Taipei", "region": "Northern", "salary": 30000, "cost": 100 },
+      { "city": "Hsinchu", "region": "Northern", "salary": 28000, "cost": 82 },
+      { "city": "New Taipei", "region": "Northern", "salary": 27000, "cost": 88 },
+      { "city": "Taichung", "region": "Central", "salary": 24000, "cost": 72 },
+      { "city": "Kaohsiung", "region": "Southern", "salary": 23000, "cost": 68 },
+      { "city": "Tainan", "region": "Southern", "salary": 22000, "cost": 65 },
+      { "city": "Taitung", "region": "Eastern", "salary": 18000, "cost": 55 },
+      { "city": "Hualien", "region": "Eastern", "salary": 17000, "cost": 52 }
+    ],
+    "CN": [
+      { "city": "Shanghai", "region": "East", "salary": 30000, "cost": 105 },
+      { "city": "Beijing", "region": "North", "salary": 28000, "cost": 100 },
+      { "city": "Shenzhen", "region": "South", "salary": 28000, "cost": 98 },
+      { "city": "Guangzhou", "region": "South", "salary": 24000, "cost": 85 },
+      { "city": "Chengdu", "region": "Southwest", "salary": 18000, "cost": 65 },
+      { "city": "Chongqing", "region": "Southwest", "salary": 17000, "cost": 60 },
+      { "city": "Wuhan", "region": "Central", "salary": 16000, "cost": 58 },
+      { "city": "Xi'an", "region": "Northwest", "salary": 14000, "cost": 52 }
+    ]
+  },
+  "countryMeta": {
+    "US": { "difficulty": 8, "restDays": 10, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "ServSafe · CIA Degree Optional", "travel": "Low", "mobility": "High", "expression": "High" },
+    "UK": { "difficulty": 8, "restDays": 15, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "16–21", "bestEntryAge": "18–24", "cert": "Level 2/3 Food Safety · NVQ", "travel": "Low", "mobility": "High", "expression": "High" },
+    "AU": { "difficulty": 7, "restDays": 20, "hoursPerDay": 9.5, "splitShift": false, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "SITXFSA006 · Certificate III Hospitality", "travel": "Low", "mobility": "High", "expression": "High" },
+    "DE": { "difficulty": 7, "restDays": 25, "hoursPerDay": 9, "splitShift": false, "bestLearnAge": "16–20", "bestEntryAge": "18–23", "cert": "Ausbildung Koch (3 yrs IHK apprentice)", "travel": "Low", "mobility": "High", "expression": "Moderate" },
+    "JP": { "difficulty": 9, "restDays": 8, "hoursPerDay": 11, "splitShift": true, "bestLearnAge": "18–23", "bestEntryAge": "20–26", "cert": "調理師免許 (National Cook License)", "travel": "Very Low", "mobility": "Extreme", "expression": "Moderate" },
+    "SG": { "difficulty": 8, "restDays": 14, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "WSQ Food Safety · ITE Pastry/Culinary", "travel": "Low", "mobility": "High", "expression": "High" },
+    "TW": { "difficulty": 8, "restDays": 12, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "17–22", "bestEntryAge": "19–25", "cert": "廚師證照 Level 1–3 · 餐飲管理學位", "travel": "Low", "mobility": "High", "expression": "Moderate" },
+    "CN": { "difficulty": 9, "restDays": 7, "hoursPerDay": 11.5, "splitShift": true, "bestLearnAge": "16–21", "bestEntryAge": "18–24", "cert": "中式烹飪師 (初/中/高級) · 廚師職業資格証", "travel": "Low", "mobility": "High", "expression": "High" }
+  },
+  "difficultyLabels": ["", "", "Very Easy", "Easy", "Below Avg", "Average", "Above Avg", "Hard", "Very Hard", "Brutal", "Extreme"],
+  "insightCards": [
+    { "id": "difficulty", "icon": "💪", "label": "Job Hardship", "valueKey": "difficulty", "valueTemplate": "{value}/10", "metaTemplate": "{difficultyLabel} · physically & mentally demanding", "colorMode": "gradient-bad" },
+    { "id": "restDays", "icon": "🏖️", "label": "Annual Leave", "valueKey": "restDays", "valueTemplate": "{value} days", "metaTemplate": "{hoursPerDay}h avg work day · Split shifts {splitShiftLabel}", "colorMode": "gradient-good" },
+    { "id": "bestLearnAge", "icon": "🎓", "label": "Best Learning Age", "valueKey": "bestLearnAge", "valueTemplate": "{value}", "metaTemplate": "Culinary school or apprenticeship entry window", "colorMode": "accent" },
+    { "id": "bestEntryAge", "icon": "🚀", "label": "Best Entry Age", "valueKey": "bestEntryAge", "valueTemplate": "{value}", "metaTemplate": "Peak energy & fastest skill absorption period", "colorMode": "accent" },
+    { "id": "travel", "icon": "✈️", "label": "Business Travel", "valueKey": "travel", "valueTemplate": "{value}", "metaTemplate": "Frequency of travel for events, sourcing, or multi-site management.", "colorMode": "accent" },
+    { "id": "mobility", "icon": "🏃", "label": "Physical Mobility", "valueKey": "mobility", "valueTemplate": "{value}", "metaTemplate": "Level of constant movement, standing, and station transitions.", "colorMode": "accent" },
+    { "id": "expression", "icon": "🗣️", "label": "Creative Self-Expression", "valueKey": "expression", "valueTemplate": "{value}", "metaTemplate": "Requirement to communicate vision, lead teams, and express creativity.", "colorMode": "accent" },
+    { "id": "cert", "icon": "📜", "label": "Certifications Required", "valueKey": "cert", "valueTemplate": "{value}", "metaTemplate": "Varies by employer tier & establishment type", "spanFull": true, "colorMode": "neutral" }
+  ],
+  "extendedMeta": {
+    "US": { "budget": "$450/mo", "hnwi": "Private Clubs · Resort Dining · Estate Chef Ladder", "startupReadiness": 68, "mbti": "ESTP · ISTJ · ENTJ", "uni": "Not required", "uniMeta": "Prestige helps less than Michelin-grade references.", "privateSchool": "Useful but debt-sensitive", "privateMeta": "Line experience still wins.", "schools": "CIA · Johnson & Wales · Kendall", "retire": "Corporate Dining Leadership, Instructor Roles, Private Chef.", "pivot": "Estate Chef, Kitchen Ops Consultant, Content/Demo Chef." },
+    "UK": { "budget": "£260/mo", "hnwi": "Hotels · Members Clubs · Private Events", "startupReadiness": 54, "mbti": "ISTJ · ESTJ · ENTJ", "uni": "Optional", "uniMeta": "References and practical output dominate.", "privateSchool": "Helpful for placement", "privateMeta": "Apprenticeship kitchens carry more weight.", "schools": "Westminster Kingsway · Le Cordon Bleu London · UCB", "retire": "Hotel Training, F&B Management, Consultancy.", "pivot": "Members-Club Chef, Luxury Catering Lead, Compliance Trainer." },
+    "AU": { "budget": "A$420/mo", "hnwi": "Resorts · Wine Regions · Premium Tourism", "startupReadiness": 72, "mbti": "ESTP · ENTJ · ISTJ", "uni": "Optional", "uniMeta": "TAFE and real kitchen output matter more.", "privateSchool": "Often practical", "privateMeta": "Live service volume is key.", "schools": "Le Cordon Bleu Melbourne · William Angliss · TAFE NSW", "retire": "Catering Operator, Venue Manager, Hospitality Trainer.", "pivot": "Private Dining Operator, Venue Consultant, Regional Trainer." },
+    "DE": { "budget": "€220/mo", "hnwi": "Luxury Hotels · Old-money Dining · Cruise / Resort", "startupReadiness": 49, "mbti": "ISTJ · INTJ · ESTJ", "uni": "Usually not required", "uniMeta": "Formal training structure matters more.", "privateSchool": "Apprenticeship stronger", "privateMeta": "Apprenticeship route is more trusted.", "schools": "IHK tracks · Hotelfachschule Heidelberg · DHBW", "retire": "Training Kitchens, Hotel Operations, Procurement.", "pivot": "Food Safety Lead, Hotel Trainer, Procurement Specialist." },
+    "JP": { "budget": "¥45,000/mo", "hnwi": "Omakase · Ryokan · Private Invitation Dining", "startupReadiness": 46, "mbti": "ISTJ · INTJ · ISFJ", "uni": "Not required", "uniMeta": "Lineage and master-apprentice credibility matter more.", "privateSchool": "Can help, lineage stronger", "privateMeta": "Hierarchy and apprenticeship quality remain stronger.", "schools": "Tsuji Culinary Institute · Hattori Nutrition College · Tokyo Seika", "retire": "Teaching, Quality Control, Supplier Advisory, Small-Format Dining.", "pivot": "Luxury Counter Chef, QA/Standards Lead, Craft Instructor." },
+    "SG": { "budget": "S$420/mo", "hnwi": "Luxury Hotels · Expat Clients · Regional Events", "startupReadiness": 76, "mbti": "ENTJ · ESTJ · ESTP", "uni": "Useful but optional", "uniMeta": "Multilingual polish and operational discipline matter more.", "privateSchool": "Useful if placement-led", "privateMeta": "Brand-name hotel placement and language advantage.", "schools": "At-Sunrice · SHATEC · Temasek hospitality tracks", "retire": "Consulting, Regional Training, Private Dining.", "pivot": "Cloud-Kitchen Founder, Private Dining Operator, Regional Trainer." },
+    "TW": { "budget": "NT$8,000/mo", "hnwi": "Private Banquets · Boutique Hospitality · Luxury Clubs", "startupReadiness": 57, "mbti": "ISTJ · ESTP · ENTJ", "uni": "Optional", "uniMeta": "Bilingual service quality and steady kitchen reputation.", "privateSchool": "Selective value", "privateMeta": "Consistent kitchen output remains strongest signal.", "schools": "國立高雄餐旅大學 · 景文科大餐飲系 · 實踐大學", "retire": "Banquet Operations, Culinary Teaching, Central Kitchen Roles.", "pivot": "Banquet Lead, Product Testing, Kitchen Standards Consultant." },
+    "CN": { "budget": "¥1,800/mo", "hnwi": "Luxury Banquets · Private Rooms · Club Kitchens", "startupReadiness": 61, "mbti": "ISTJ · ESTP · ENTJ", "uni": "Not required", "uniMeta": "Apprenticeship pedigree and execution matter more.", "privateSchool": "Mixed value", "privateMeta": "Live kitchen references outrank tuition branding.", "schools": "Le Cordon Bleu Shanghai · SICA · Shanghai Business & Tourism", "retire": "Training Manager, Central Kitchen Leader, Private Chef.", "pivot": "Private Household Chef, SOP Consultant, Flavor/Product R&D." }
+  },
+  "startupLinks": {
+    "US": [{ "label": "SBA Grants", "url": "https://www.sba.gov" }, { "label": "CloudKitchens", "url": "https://cloudkitchens.com" }],
+    "UK": [{ "label": "Gov Business Support", "url": "https://www.gov.uk/business-finance-support" }, { "label": "Kitchen United", "url": "https://www.kitchenunited.com" }],
+    "AU": [{ "label": "Business.gov.au", "url": "https://business.gov.au" }, { "label": "FoodStars", "url": "https://foodstars.com.au" }],
+    "DE": [{ "label": "KfW Start-ups", "url": "https://www.kfw.de" }, { "label": "KitchenTown Berlin", "url": "https://www.kitchentown.de" }],
+    "JP": [{ "label": "J-Net21", "url": "https://j-net21.smrj.go.jp" }, { "label": "Cloud Kitchen Japan", "url": "https://cloudkitchens.com/jp/" }],
+    "SG": [{ "label": "Enterprise SG", "url": "https://www.enterprisesg.gov.sg" }, { "label": "Smart City Kitchens", "url": "https://smartcitykitchens.com" }],
+    "TW": [{ "label": "SMEA Grants", "url": "https://www.smea.gov.tw" }, { "label": "Cloud Kitchen Taiwan", "url": "https://www.cloudkitchens.com.tw" }],
+    "CN": [{ "label": "China Business Registry", "url": "http://www.gsxt.gov.cn" }, { "label": "Meituan Cloud Kitchen", "url": "https://kd.meituan.com" }]
+  },
+  "famousChefs": {
+    "US": [{ "name": "Alan Wong", "netWorth": "$1.1B" }, { "name": "Wolfgang Puck", "netWorth": "$120M" }],
+    "UK": [{ "name": "Gordon Ramsay", "netWorth": "$220M" }, { "name": "Jamie Oliver", "netWorth": "$200M" }],
+    "AU": [{ "name": "Curtis Stone", "netWorth": "$25M" }, { "name": "Neil Perry", "netWorth": "$25M" }],
+    "DE": [{ "name": "Tim Mälzer", "netWorth": "$10M" }, { "name": "Eckart Witzigmann", "netWorth": "$5M" }],
+    "JP": [{ "name": "Nobu Matsuhisa", "netWorth": "$200M" }, { "name": "Masaharu Morimoto", "netWorth": "$18M" }],
+    "SG": [{ "name": "Sam Leong", "netWorth": "$5M" }, { "name": "Janice Wong", "netWorth": "$3M" }],
+    "TW": [{ "name": "André Chiang", "netWorth": "$10M" }, { "name": "Lanshu Chen", "netWorth": "$5M" }],
+    "CN": [{ "name": "Da Dong", "netWorth": "$50M" }, { "name": "Wang Gang", "netWorth": "$2M" }]
+  },
+  "accessLinks": [
+    { "title": "Training & Courses", "desc": "Online platforms and culinary schools." },
+    { "title": "Certifications & Credentials", "desc": "Food safety, HACCP, Red Seal, and licensing." },
+    { "title": "Job Search & Placement", "desc": "LinkedIn, Culinary Agents, hotel career pages." },
+    { "title": "Freelance & Side Work", "desc": "Banquet staffing, private events, pop-ups." },
+    { "title": "Your Portfolio & Referrals", "desc": "Link to your own portfolio and referral network." },
+    { "title": "Find a Mentor", "desc": "Connect with a master chef or senior sifu." }
+  ],
+  "careerRecs": [
+    [
+      { "title": "Kitchen Quality Monitor", "match": "76%", "color": "var(--green)", "desc": "Inspect food prep standards and safety compliance.", "skills": ["Food Safety", "Temperature Control"] },
+      { "title": "Catering Production Staff", "match": "71%", "color": "var(--yellow)", "desc": "Execute large-batch food production.", "skills": ["Station Management", "Speed"] },
+      { "title": "Food Prep Trainer", "match": "65%", "color": "var(--orange)", "desc": "Onboard new kitchen staff.", "skills": ["Knife Skills", "Ingredient Handling"] }
+    ],
+    [
+      { "title": "Recipe Testing Technician", "match": "83%", "color": "var(--green)", "desc": "Support R&D teams testing dishes.", "skills": ["Sensory Evaluation", "Mise en Place"] },
+      { "title": "Catering Supervisor", "match": "78%", "color": "var(--yellow)", "desc": "Lead a team for events.", "skills": ["Team Coordination", "Quality Awareness"] },
+      { "title": "Production Kitchen Lead", "match": "72%", "color": "var(--orange)", "desc": "Oversee batch production.", "skills": ["Station Leadership", "Time Management"] }
+    ],
+    [
+      { "title": "Food Technologist (R&D)", "match": "88%", "color": "var(--green)", "desc": "Sensory evaluation and recipe scaling.", "skills": ["Recipe Development", "Quality Control"] },
+      { "title": "Event Operations Manager", "match": "82%", "color": "var(--yellow)", "desc": "High-pressure coordination.", "skills": ["Staff Supervision", "Cost Management"] },
+      { "title": "F&B Procurement Analyst", "match": "76%", "color": "var(--orange)", "desc": "Ingredient quality and yield management.", "skills": ["Inventory Control", "Supplier Knowledge"] }
+    ],
+    [
+      { "title": "F&B Operations Manager", "match": "90%", "color": "var(--green)", "desc": "Oversee multi-venue operations.", "skills": ["Budget Control", "Team Management"] },
+      { "title": "Event Operations Manager", "match": "85%", "color": "var(--yellow)", "desc": "Crisis management and event logistics.", "skills": ["Crisis Management", "Logistics"] },
+      { "title": "F&B Procurement Specialist", "match": "80%", "color": "var(--orange)", "desc": "Supplier and ingredient quality.", "skills": ["Supply Chain", "Negotiation"] }
+    ],
+    [
+      { "title": "F&B Director", "match": "93%", "color": "var(--green)", "desc": "Lead entire F&B strategy.", "skills": ["Strategic Planning", "Brand Building"] },
+      { "title": "Food Innovation Consultant", "match": "88%", "color": "var(--yellow)", "desc": "Advise on menu trends and innovation.", "skills": ["Culinary Expertise", "Market Analysis"] },
+      { "title": "Culinary Program Director", "match": "82%", "color": "var(--orange)", "desc": "Lead culinary school or training.", "skills": ["Training Design", "Leadership"] }
+    ]
+  ],
+  "survivalStrategy": [
+    "As a <strong>Line Cook</strong>, master speed, knife precision, and food safety — skills no robot fully replicates at your pace.",
+    "As a <strong>Chef de Partie</strong>, double down on station mastery and specialty depth.",
+    "As a <strong>Sous Chef</strong>, recipe development and people management are your armor.",
+    "As a <strong>Head Chef</strong>, focus on menu creation, brand identity, and team culture.",
+    "As an <strong>Executive Chef</strong>, leverage brand, vision, and business relationships."
+  ],
+  "hazards": [
+    { "icon": "🔥", "name": "Burns & Scalds", "levelClass": "haz-5", "width": "100%", "desc": "Critical · open flame" },
+    { "icon": "🌡️", "name": "Heat Exhaustion", "levelClass": "haz-5", "width": "100%", "desc": "Critical · 38–50°C kitchens" },
+    { "icon": "🔪", "name": "Cuts & Lacerations", "levelClass": "haz-4", "width": "80%", "desc": "High · daily knife work" },
+    { "icon": "💪", "name": "Musculoskeletal Strain", "levelClass": "haz-4", "width": "80%", "desc": "High · 8–12 hrs standing" },
+    { "icon": "🧠", "name": "Mental Fatigue", "levelClass": "haz-4", "width": "75%", "desc": "High · burnout 40–60%" },
+    { "icon": "🚿", "name": "Slip & Fall", "levelClass": "haz-3", "width": "55%", "desc": "Medium · wet floors" },
+    { "icon": "⚗️", "name": "Chemical Exposure", "levelClass": "haz-3", "width": "50%", "desc": "Medium · cleaning agents" },
+    { "icon": "👂", "name": "Noise Exposure", "levelClass": "haz-2", "width": "35%", "desc": "Low-Med · fans" },
+    { "icon": "🫁", "name": "Smoke & Fumes", "levelClass": "haz-3", "width": "45%", "desc": "Medium · ventilation" }
+  ],
+  "filters": [
+    { "id": "all", "label": "All", "class": "all", "active": true, "dot": false },
+    { "id": "replaceable", "label": "Replaceable", "class": "gf", "active": false, "dot": true },
+    { "id": "indanger", "label": "In-Danger", "class": "yf", "active": false, "dot": true },
+    { "id": "intro", "label": "Intro", "class": "of", "active": false, "dot": true },
+    { "id": "nothing", "label": "Nothing", "class": "rf", "active": false, "dot": true }
+  ],
+  "mbtiData": [
+    { "type": "ESTP", "desc": "The Dynamo. Thrives in fast-paced, high-pressure environments." },
+    { "type": "ENTJ", "desc": "The Commander. Natural leaders who manage complex brigades." },
+    { "type": "ISFP", "desc": "The Artist. Passionate about culinary aesthetics." },
+    { "type": "ESFJ", "desc": "The Provider. Fosters collaborative kitchen culture." },
+    { "type": "INTJ", "desc": "The Architect. Strategic kitchen optimization thinkers." }
+  ],
+  "filialPietyCountries": ["CN", "TW", "SG", "JP"],
+  "ltvMethodology": "BLS 2025 median salary × 30-year career horizon. AI Risk weighted.",
+  "highestThreat": "Inventory & Ordering is the most vulnerable node.",
+  "langPillClasses": {
+    "Essential": "llp-essential",
+    "Helpful": "llp-helpful",
+    "Optional": "llp-optional",
+    "Senior Only": "llp-senior",
+    "High-end Only": "llp-senior",
+    "Regional": "llp-helpful"
+  },
+  "networkCards": [
+    { "title": "Recommended Majors", "value": "Culinary Arts & Hospitality Mgt", "meta": "Secondary: Food Science, Nutrition, or Business Administration." },
+    { "title": "Target Courses", "value": "Kitchen Ops & Cost Control", "meta": "Also: Molecular Gastronomy, Sustainable Sourcing, Staff Leadership." },
+    { "title": "Stretch Majors", "value": "F&B Tech & Innovation", "meta": "Transition into tech-enabled food systems." },
+    { "title": "Key Connections", "value": "Michelin Execs & F&B Directors", "meta": "Build relationships with top-tier culinary executives.", "loginCTA": true }
+  ],
+  "tasksByLevel": {
+    "0": [
+      { "action": "Food Preparation (Mise en Place)", "human": "Wash, peel, chop vegetables; portion proteins; measure dry goods per station specs.", "ai": "Suzumo robotic vegetable cutters & automated portioning systems handle bulk prep.", "timePct": 35, "ratio": 75, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 6.0 },
+      { "action": "Basic Cooking & Station Support", "human": "Operate grill/fryer/sauté under chef direction; monitor temps; flip & stir continuously.", "ai": "Miso Robotics Flippy arm with thermal vision automates grilling & frying sequences.", "timePct": 28, "ratio": 58, "ratioColor": "var(--orange)", "eta": "3–5 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 3.5 },
+      { "action": "Cleaning & Sanitation", "human": "Scrub stations, sanitize surfaces, wash dishes, empty grease traps between services.", "ai": "Autonomous floor scrubbers & UV-C sanitizing robots reduce manual cleaning load.", "timePct": 20, "ratio": 45, "ratioColor": "var(--yellow)", "eta": "5–7 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 4.0 },
+      { "action": "Plating Support & Garnishing", "human": "Assemble basic plates per spec; add garnishes; ensure consistent portion presentation.", "ai": "Dexterous plating robots emerging but struggle with artistic nuance & sauce drizzling.", "timePct": 10, "ratio": 12, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.4 },
+      { "action": "Inventory Assistance", "human": "Check low-stock items; report shortages to Chef de Partie; rotate FIFO stock.", "ai": "RFID & AI camera systems auto-track inventory levels in real time.", "timePct": 7, "ratio": 85, "ratioColor": "var(--red)", "eta": "~1.5 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 7.5 }
+    ],
+    "1": [
+      { "action": "Station Cooking & Management", "human": "Own a station (sauté, pastry, grill); execute dishes to spec; manage timing & flow.", "ai": "AI-assisted cooktops with recipe-guided temp control; robotic stir & flip functions.", "timePct": 35, "ratio": 50, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 2.8 },
+      { "action": "Advanced Food Preparation", "human": "Butcher fish/meat; prepare complex sauces & emulsions; oversee junior prep cooks.", "ai": "Automated butchery systems & precision dispensers for sauces; still needs human QC.", "timePct": 22, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 3.2 },
+      { "action": "Quality Control & Tasting", "human": "Taste every batch; adjust seasoning; ensure consistency across covers; reject subpar output.", "ai": "Electronic noses & computer vision grade food; cannot replicate subjective taste nuance.", "timePct": 15, "ratio": 10, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.3 },
+      { "action": "Mentoring Junior Staff", "human": "Coach Line Cooks on knife skills, timing, and station protocols; demonstrate techniques.", "ai": "VR/AR training modules supplement but cannot replace hands-on human mentorship.", "timePct": 12, "ratio": 8, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.2 },
+      { "action": "Inventory & Ordering", "human": "Track station inventory; place supplier orders; manage par levels & reduce waste.", "ai": "MarketMan / BlueCart AI predictive analytics for automated ordering.", "timePct": 16, "ratio": 82, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 6.5 }
+    ],
+    "2": [
+      { "action": "Team Supervision & Scheduling", "human": "Manage brigade shifts; resolve conflicts; ensure coverage; maintain morale & discipline.", "ai": "AI scheduling tools optimize shifts; human leadership & conflict resolution irreplaceable.", "timePct": 25, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.15 },
+      { "action": "Quality Control & Expediting", "human": "Oversee every plate leaving the pass; ensure consistency; call orders; manage pace.", "ai": "Computer vision checks plate composition; cannot judge nuanced flavor or artistic merit.", "timePct": 22, "ratio": 18, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.25 },
+      { "action": "Inventory & Cost Management", "human": "Manage kitchen-wide ordering; negotiate with suppliers; track food cost percentages.", "ai": "AI procurement platforms automate ordering & cost analysis with high accuracy.", "timePct": 20, "ratio": 78, "ratioColor": "var(--red)", "eta": "~2.5 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 5.5 },
+      { "action": "Recipe Testing & Menu Support", "human": "Collaborate with Head Chef on new dishes; test recipes; document procedures.", "ai": "Generative AI suggests flavor pairings; human sensory validation still essential.", "timePct": 18, "ratio": 30, "ratioColor": "var(--yellow)", "eta": "6–9 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 1.8 },
+      { "action": "Station Coverage (Peak Service)", "human": "Jump onto stations during rushes; demonstrate technique; fill gaps in brigade.", "ai": "Limited robotic coverage; cannot adapt to dynamic rush conditions with human dexterity.", "timePct": 15, "ratio": 22, "ratioColor": "var(--green)", "eta": "8+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.35 }
+    ],
+    "3": [
+      { "action": "Menu Planning & Creation", "human": "Design seasonal menus; create signature dishes; balance flavor, cost & presentation.", "ai": "AI generates molecular flavor combinations; lacks cultural intuition & creative vision.", "timePct": 25, "ratio": 25, "ratioColor": "var(--yellow)", "eta": "7–10 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 1.5 },
+      { "action": "Team Management & Development", "human": "Hire, train, promote brigade members; build kitchen culture; performance reviews.", "ai": "No AI equivalent for human leadership, mentorship & cultural development.", "timePct": 25, "ratio": 5, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.1 },
+      { "action": "Vendor Relations & Sourcing", "human": "Build relationships with farmers, fishmongers, specialty suppliers; negotiate contracts.", "ai": "Digital marketplaces streamline ordering; relationship-based sourcing remains human.", "timePct": 15, "ratio": 20, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.3 },
+      { "action": "Quality Control Oversight", "human": "Set quality standards; audit stations; ensure consistency across all shifts.", "ai": "Sensors and cameras assist; final judgment requires human sensory expertise.", "timePct": 15, "ratio": 12, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.2 },
+      { "action": "Administrative & Financial", "human": "Manage P&L; food cost analysis; report to ownership; handle compliance paperwork.", "ai": "AI-powered restaurant management platforms automate much of P&L tracking.", "timePct": 20, "ratio": 65, "ratioColor": "var(--orange)", "eta": "3–4 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 4.0 }
+    ],
+    "4": [
+      { "action": "Strategic Planning & Vision", "human": "Define culinary direction; multi-outlet strategy; brand positioning; expansion planning.", "ai": "AI provides data insights; strategic vision and brand storytelling remain uniquely human.", "timePct": 25, "ratio": 8, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.12 },
+      { "action": "Brand & Business Development", "human": "Media appearances; cookbook deals; consulting; build personal & restaurant brand equity.", "ai": "No AI equivalent for personal brand building & authentic media presence.", "timePct": 20, "ratio": 3, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.08 },
+      { "action": "Executive Leadership", "human": "Lead all kitchen operations; mentor Head Chefs; represent culinary vision to stakeholders.", "ai": "Leadership, inspiration & organizational culture are fundamentally human domains.", "timePct": 22, "ratio": 2, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.05 },
+      { "action": "Vendor & Partner Relations", "human": "Cultivate high-level supplier partnerships; secure exclusives; negotiate multi-unit deals.", "ai": "CRM & procurement AI assist; relationship trust & exclusivity require human touch.", "timePct": 15, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.2 },
+      { "action": "Menu Innovation & R&D", "human": "Pioneer new techniques; lead culinary R&D; create signature concepts across outlets.", "ai": "AI supports flavor analysis; true culinary innovation needs human creativity & instinct.", "timePct": 10, "ratio": 20, "ratioColor": "var(--yellow)", "eta": "8–12 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 1.2 },
+      { "action": "Financial Oversight", "human": "Multi-venue P&L review; capital allocation; investor reporting; long-term financial strategy.", "ai": "AI dashboards automate reporting; strategic financial decisions remain human-led.", "timePct": 8, "ratio": 50, "ratioColor": "var(--orange)", "eta": "4–5 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 3.0 }
+    ]
+  },
+  "countryTaskMods": {
+    "US": { "techAdoption": 1.0, "laborCost": 1.0, "aiSpeed": 1.0 },
+    "UK": { "techAdoption": 0.9, "laborCost": 0.85, "aiSpeed": 0.9 },
+    "AU": { "techAdoption": 0.85, "laborCost": 0.9, "aiSpeed": 0.85 },
+    "DE": { "techAdoption": 0.75, "laborCost": 0.8, "aiSpeed": 0.7 },
+    "JP": { "techAdoption": 0.8, "laborCost": 0.7, "aiSpeed": 0.75 },
+    "SG": { "techAdoption": 1.1, "laborCost": 0.95, "aiSpeed": 1.1 },
+    "TW": { "techAdoption": 0.9, "laborCost": 0.5, "aiSpeed": 0.85 },
+    "CN": { "techAdoption": 1.05, "laborCost": 0.35, "aiSpeed": 1.0 }
+  },
+  "version": "v2.4 · Apr 2026",
+  "footnote": "* Data: Miso Robotics · BLS 2025 · JobForesight 2026 · ILO benchmarks"
+}
+
+[income-types.json]
+{
+  "_version": "v3.1",
+  "_note": "Income types classified by labor trigger event. All occupation JSONs must reference incomeType from this registry.",
+
+  "piece_rate": {
+    "label": "Piece Rate / Per-Task",
+    "icon": "📦",
+    "structure": "output-based / per completed task or unit",
+    "bonusApplicable": true,
+    "bonusRange": [0.05, 0.40],
+    "inflationSensitive": true,
+    "timeAutonomy": "MED",
+    "incomeFlexibility": "VARIABLE",
+    "calculatorInputs": ["ratePerTask","tasksPerHour","hoursPerWeek","weeksPerYear","careerYears","peakPayRate","peakHoursPct","inflationRate","taxRate"],
+    "ltv_base":      "ratePerTask × tasksPerHour × hoursPerWeek × weeksPerYear × careerYears",
+    "ltv_bonus":     "ltv_base × (1 + peakPayRate × peakHoursPct)",
+    "ltv_inflation": "ltv_base × Σ(1 + inflationRate)^year",
+    "ltv_aftertax":  "ltv_bonus × (1 - taxRate)"
+  }
+}
+
 """
 
 # API 配置（请替换成你的新 Key）
@@ -2581,6 +3060,7 @@ data = {
 }
 
 print("正在请求 DeepSeek API...")
+start_time = time.time()  # Record start time
 
 try:
     response = requests.post(
@@ -2588,6 +3068,8 @@ try:
         headers=headers,
         json=data
     )
+    
+    elapsed_time = time.time() - start_time  # Calculate elapsed time
     
     # 检查是否成功
     if response.status_code == 200:
@@ -2600,10 +3082,14 @@ try:
         
         print(f"\n========================================")
         print(f"✅ 回答已保存到文档：{OUTPUT_FILE}")
+        print(f"⏱️ 请求耗时：{elapsed_time:.2f} 秒")
         print(f"========================================")
     else:
         print(f"API 请求失败：{response.status_code}")
+        print(f"⏱️ 请求耗时：{elapsed_time:.2f} 秒")
         print(response.text)
         
 except Exception as e:
+    elapsed_time = time.time() - start_time
     print(f"错误：{e}")
+    print(f"⏱️ 请求耗时：{elapsed_time:.2f} 秒")

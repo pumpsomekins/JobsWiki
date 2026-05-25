@@ -43,14 +43,16 @@ nav {
   background: var(--white); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 999;
   padding: 0 2rem; height: 68px;
-  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 680px) 1fr; /* ← 左右对称 */
+  align-items: center;
 }
 .nav-logo {
   font-size: 1.5rem; font-weight: 800; color: var(--orange); white-space: nowrap;
   letter-spacing: -0.02em; cursor: pointer;
 }
 .nav-search {
-  flex: 1; max-width: 580px;
+  width: 100%; max-width: 800px;
   display: flex; align-items: center;
   border: 2px solid var(--border); border-radius: 3rem; overflow: hidden;
   transition: border-color 0.2s;

@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "job": "Dasher / Delivery Driver",
+    "slug": "dasher",
+    "incomeType": "piece_rate",
+    "incomeLabel": "Per Delivery",
+    "calculatorInputs": ["ratePerTask", "tasksPerHour", "hoursPerWeek", "weeksPerYear", "careerYears", "peakPayRate", "peakHoursPct"],
+    "bonusApplicable": true,
+    "bonusRange": [0.05, 0.40],
+    "inflationSensitive": true,
+    "ltv_formula": "ratePerTask × tasksPerHour × hoursPerWeek × weeksPerYear × careerYears",
+    "automationThreat": "HIGH",
+    "platformNote": "Gig worker, no benefits, platform-dependent"
+  },
+  "industries": [
+    { "id": "fd", "label": "Food Delivery", "active": true },
+    { "id": "rs", "label": "Rideshare", "active": false },
+    { "id": "gig", "label": "Gig Economy", "active": false },
+    { "id": "ec", "label": "E-Commerce Logistics", "active": false },
+    { "id": "lm", "label": "Last-Mile Delivery", "active": false },
+    { "id": "gk", "label": "Ghost Kitchen Pickup", "active": false }
+  ],
+  "countries": {
+    "US": {
+      "name": "United States",
+      "symbol": "$",
+      "annualUSD": 45000,
+      "annualLocal": 45000,
+      "career": 20,
+      "automationIdx": 75,
+      "carName": "Toyota Corolla",
+      "carPriceUSD": 22000,
+      "riskAge": 40,
+      "startAge": 22,
+      "localDisplay": "$45,000/yr (USD)",
+      "flag": "🇺🇸",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "UK": {
+      "name": "United Kingdom",
+      "symbol": "£",
+      "annualUSD": 38000,
+      "annualLocal": 32000,
+      "career": 20,
+      "automationIdx": 72,
+      "carName": "Ford Fiesta",
+      "carPriceUSD": 20000,
+      "riskAge": 41,
+      "startAge": 22,
+      "localDisplay": "~£32K/yr (~$38K)",
+      "flag": "🇬🇧",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "AU": {
+      "name": "Australia",
+      "symbol": "A$",
+      "annualUSD": 42000,
+      "annualLocal": 68000,
+      "career": 20,
+      "automationIdx": 68,
+      "carName": "Hyundai i30",
+      "carPriceUSD": 21000,
+      "riskAge": 42,
+      "startAge": 22,
+      "localDisplay": "~A$68K/yr (~$42K)",
+      "flag": "🇦🇺",
+      "riskLabel": "MID",
+      "riskClass": "mid"
+    },
+    "DE": {
+      "name": "Germany",
+      "symbol": "€",
+      "annualUSD": 35000,
+      "annualLocal": 33000,
+      "career": 20,
+      "automationIdx": 65,
+      "carName": "VW Polo",
+      "carPriceUSD": 23000,
+      "riskAge": 43,
+      "startAge": 22,
+      "localDisplay": "~€33K/yr (~$35K)",
+      "flag": "🇩🇪",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "JP": {
+      "name": "Japan",
+      "symbol": "¥",
+      "annualUSD": 32000,
+      "annualLocal": 4800000,
+      "career": 20,
+      "automationIdx": 62,
+      "carName": "Honda Fit",
+      "carPriceUSD": 16000,
+      "riskAge": 44,
+      "startAge": 22,
+      "localDisplay": "~¥4.8M/yr (~$32K)",
+      "flag": "🇯🇵",
+      "riskLabel": "SLOW",
+      "riskClass": "slow"
+    },
+    "SG": {
+      "name": "Singapore",
+      "symbol": "S$",
+      "annualUSD": 38000,
+      "annualLocal": 52000,
+      "career": 20,
+      "automationIdx": 78,
+      "carName": "Toyota Vios",
+      "carPriceUSD": 75000,
+      "riskAge": 39,
+      "startAge": 22,
+      "localDisplay": "~S$52K/yr (~$38K)",
+      "flag": "🇸🇬",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "TW": {
+      "name": "Taiwan",
+      "symbol": "NT$",
+      "annualUSD": 25000,
+      "annualLocal": 800000,
+      "career": 20,
+      "automationIdx": 80,
+      "carName": "Toyota Yaris",
+      "carPriceUSD": 18000,
+      "riskAge": 38,
+      "startAge": 22,
+      "localDisplay": "~NT$800K/yr (~$25K)",
+      "flag": "🇹🇼",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    },
+    "CN": {
+      "name": "China",
+      "symbol": "¥",
+      "annualUSD": 18000,
+      "annualLocal": 130000,
+      "career": 20,
+      "automationIdx": 85,
+      "carName": "BYD Dolphin",
+      "carPriceUSD": 11000,
+      "riskAge": 37,
+      "startAge": 22,
+      "localDisplay": "~¥130K/yr (~$18K)",
+      "flag": "🇨🇳",
+      "riskLabel": "FAST",
+      "riskClass": "fast"
+    }
+  },
+  "levels": [
+    { "id": 0, "name": "Dasher", "short": "Dasher", "yearsFrom": 0, "color": "#4f98a3", "yearsLabel": "Entry · Yr 0" },
+    { "id": 1, "name": "Top Dasher", "short": "Top", "yearsFrom": 1, "color": "#eab308", "yearsLabel": "~1–2 yrs" },
+    { "id": 2, "name": "Fleet Partner", "short": "Fleet", "yearsFrom": 3, "color": "#f97316", "yearsLabel": "~3–5 yrs" },
+    { "id": 3, "name": "Regional Ops Lead", "short": "Ops", "yearsFrom": 6, "color": "#22c55e", "yearsLabel": "~6–10 yrs" }
+  ],
+  "promotions": [
+    { "from": "Dasher", "to": "Top Dasher", "years": "1–2 yrs", "tip": "High acceptance, on-time delivery required" },
+    { "from": "Top Dasher", "to": "Fleet Partner", "years": "2–3 yrs", "tip": "Build network and manage multiple drivers" },
+    { "from": "Fleet Partner", "to": "Regional Ops Lead", "years": "3–5 yrs", "tip": "Platform-specific operations role" }
+  ],
+  "levelUSD": {
+    "US": [38000, 45000, 55000, 75000],
+    "UK": [30000, 36000, 44000, 60000],
+    "AU": [35000, 42000, 52000, 70000],
+    "DE": [28000, 34000, 42000, 58000],
+    "JP": [26000, 32000, 40000, 55000],
+    "SG": [32000, 39000, 48000, 65000],
+    "TW": [21000, 26000, 32000, 44000],
+    "CN": [15000, 19000, 24000, 33000]
+  },
+  "levelLocal": {
+    "US": ["$38K", "$45K", "$55K", "$75K"],
+    "UK": ["£24K", "£29K", "£35K", "£48K"],
+    "AU": ["A$52K", "A$63K", "A$78K", "A$106K"],
+    "DE": ["€26K", "€32K", "€39K", "€54K"],
+    "JP": ["¥3.9M", "¥4.8M", "¥6.0M", "¥8.3M"],
+    "SG": ["S$43K", "S$53K", "S$65K", "S$88K"],
+    "TW": ["NT$670K", "NT$830K", "NT$1.0M", "NT$1.4M"],
+    "CN": ["¥105K", "¥133K", "¥168K", "¥231K"]
+  },
+  "languages": {
+    "US": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Spanish", "level": "Helpful", "score": 2 }],
+    "UK": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "AU": [{ "lang": "English", "level": "Essential", "score": 5 }],
+    "DE": [{ "lang": "German", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Helpful", "score": 2 }],
+    "JP": [{ "lang": "Japanese", "level": "Essential", "score": 5 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "SG": [{ "lang": "English", "level": "Essential", "score": 5 }, { "lang": "Mandarin", "level": "Helpful", "score": 2 }, { "lang": "Malay", "level": "Optional", "score": 1 }],
+    "TW": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Taiwanese", "level": "Helpful", "score": 2 }, { "lang": "English", "level": "Senior Only", "score": 3 }],
+    "CN": [{ "lang": "Mandarin", "level": "Essential", "score": 5 }, { "lang": "Dialect", "level": "Regional", "score": 2 }, { "lang": "English", "level": "High-end Only", "score": 3 }]
+  },
+  "langScoreLabels": { "1": "Elementary", "2": "Limited Working", "3": "Professional Working", "4": "Full Professional", "5": "Native / Bilingual" },
+  "cities": {
+    "US": [
+      { "city": "San Francisco", "region": "West", "salary": 58000, "cost": 105 },
+      { "city": "New York", "region": "Northeast", "salary": 55000, "cost": 103 },
+      { "city": "Los Angeles", "region": "West", "salary": 52000, "cost": 95 },
+      { "city": "Chicago", "region": "Midwest", "salary": 45000, "cost": 80 },
+      { "city": "Austin", "region": "South", "salary": 42000, "cost": 78 },
+      { "city": "Miami", "region": "South", "salary": 40000, "cost": 75 },
+      { "city": "Phoenix", "region": "Southwest", "salary": 38000, "cost": 60 }
+    ],
+    "UK": [
+      { "city": "London", "region": "England", "salary": 45000, "cost": 100 },
+      { "city": "Manchester", "region": "England", "salary": 35000, "cost": 72 },
+      { "city": "Birmingham", "region": "England", "salary": 33000, "cost": 70 },
+      { "city": "Edinburgh", "region": "Scotland", "salary": 34000, "cost": 75 }
+    ],
+    "AU": [
+      { "city": "Sydney", "region": "NSW", "salary": 55000, "cost": 100 },
+      { "city": "Melbourne", "region": "VIC", "salary": 52000, "cost": 92 },
+      { "city": "Brisbane", "region": "QLD", "salary": 48000, "cost": 80 },
+      { "city": "Perth", "region": "WA", "salary": 46000, "cost": 82 }
+    ],
+    "DE": [
+      { "city": "Berlin", "region": "Berlin", "salary": 38000, "cost": 80 },
+      { "city": "Munich", "region": "Bavaria", "salary": 42000, "cost": 100 },
+      { "city": "Hamburg", "region": "Hamburg", "salary": 40000, "cost": 88 },
+      { "city": "Cologne", "region": "NRW", "salary": 36000, "cost": 78 }
+    ],
+    "JP": [
+      { "city": "Tokyo", "region": "Kanto", "salary": 38000, "cost": 100 },
+      { "city": "Osaka", "region": "Kansai", "salary": 34000, "cost": 85 },
+      { "city": "Nagoya", "region": "Chubu", "salary": 32000, "cost": 75 },
+      { "city": "Fukuoka", "region": "Kyushu", "salary": 30000, "cost": 70 }
+    ],
+    "SG": [
+      { "city": "Downtown", "region": "Central", "salary": 48000, "cost": 100 },
+      { "city": "Orchard", "region": "Central", "salary": 46000, "cost": 103 },
+      { "city": "Tampines", "region": "East", "salary": 40000, "cost": 80 },
+      { "city": "Woodlands", "region": "North", "salary": 38000, "cost": 72 }
+    ],
+    "TW": [
+      { "city": "Taipei", "region": "Northern", "salary": 30000, "cost": 100 },
+      { "city": "New Taipei", "region": "Northern", "salary": 28000, "cost": 88 },
+      { "city": "Taichung", "region": "Central", "salary": 24000, "cost": 72 },
+      { "city": "Kaohsiung", "region": "Southern", "salary": 22000, "cost": 68 }
+    ],
+    "CN": [
+      { "city": "Shanghai", "region": "East", "salary": 25000, "cost": 105 },
+      { "city": "Beijing", "region": "North", "salary": 24000, "cost": 100 },
+      { "city": "Shenzhen", "region": "South", "salary": 23000, "cost": 98 },
+      { "city": "Hangzhou", "region": "East", "salary": 20000, "cost": 85 },
+      { "city": "Chengdu", "region": "Southwest", "salary": 17000, "cost": 65 }
+    ]
+  },
+  "countryMeta": {
+    "US": { "difficulty": 5, "restDays": 7, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "UK": { "difficulty": 5, "restDays": 10, "hoursPerDay": 9.5, "splitShift": true, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "AU": { "difficulty": 4, "restDays": 14, "hoursPerDay": 9, "splitShift": false, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "DE": { "difficulty": 5, "restDays": 16, "hoursPerDay": 8.5, "splitShift": false, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "JP": { "difficulty": 6, "restDays": 6, "hoursPerDay": 11, "splitShift": true, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "SG": { "difficulty": 5, "restDays": 8, "hoursPerDay": 10, "splitShift": true, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "TW": { "difficulty": 5, "restDays": 9, "hoursPerDay": 10.5, "splitShift": true, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" },
+    "CN": { "difficulty": 6, "restDays": 5, "hoursPerDay": 12, "splitShift": true, "bestLearnAge": "20–25", "bestEntryAge": "22–30", "cert": "Driver's License · Insurance", "travel": "High", "mobility": "Very High", "expression": "Low" }
+  },
+  "difficultyLabels": ["", "", "Very Easy", "Easy", "Below Avg", "Average", "Above Avg", "Hard", "Very Hard", "Brutal", "Extreme"],
+  "insightCards": [
+    { "id": "difficulty", "icon": "💪", "label": "Job Difficulty", "valueKey": "difficulty", "valueTemplate": "{value}/10", "metaTemplate": "{difficultyLabel} · Flexible but demanding", "colorMode": "gradient-bad" },
+    { "id": "restDays", "icon": "🏖️", "label": "Flexibility", "valueKey": "restDays", "valueTemplate": "Your Schedule", "metaTemplate": "Set your own hours · No fixed rest days", "colorMode": "gradient-good" },
+    { "id": "bestLearnAge", "icon": "🎓", "label": "Best Entry Age", "valueKey": "bestLearnAge", "valueTemplate": "{value}", "metaTemplate": "Tech-savvy generations adapt quickly", "colorMode": "accent" },
+    { "id": "bestEntryAge", "icon": "🚀", "label": "Peak Earning Age", "valueKey": "bestEntryAge", "valueTemplate": "{value}", "metaTemplate": "Before full autonomous vehicles arrive", "colorMode": "accent" },
+    { "id": "travel", "icon": "✈️", "label": "Driving Required", "valueKey": "travel", "valueTemplate": "High", "metaTemplate": "Constant driving · Vehicle expenses apply", "colorMode": "accent" },
+    { "id": "mobility", "icon": "🏃", "label": "Physical Activity", "valueKey": "mobility", "valueTemplate": "{value}", "metaTemplate": "Getting in/out of vehicle · Walking to doors", "colorMode": "accent" },
+    { "id": "expression", "icon": "🧠", "label": "Decision Making", "valueKey": "expression", "valueTemplate": "{value}", "metaTemplate": "Route optimization · Parking choices", "colorMode": "accent" },
+    { "id": "cert", "icon": "🚗", "label": "Requirements", "valueKey": "cert", "valueTemplate": "{value}", "metaTemplate": "Clean driving record essential", "spanFull": true, "colorMode": "neutral" }
+  ],
+  "extendedMeta": {
+    "US": { "budget": "$350/mo", "hnwi": "Luxury Delivery Specialist · Black Car Service", "startupReadiness": 72, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "High school diploma sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving record matters most", "schools": "Defensive Driving Courses", "retire": "Fleet Manager · Delivery Operations", "pivot": "Last-Mile Logistics Coordinator · Local Courier Service Owner" },
+    "UK": { "budget": "£220/mo", "hnwi": "Premium Delivery · Executive Courier", "startupReadiness": 68, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "GCSEs sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving record is key", "schools": "Advanced Driver Training", "retire": "Delivery Operations Manager", "pivot": "Local Courier Business Owner" },
+    "AU": { "budget": "A$380/mo", "hnwi": "Premium Food & Wine Delivery", "startupReadiness": 75, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "High school sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving experience most important", "schools": "Defensive Driving", "retire": "Fleet Operations Manager", "pivot": "Local Delivery Service Owner" },
+    "DE": { "budget": "€280/mo", "hnwi": "Premium Delivery Service Partner", "startupReadiness": 62, "mbti": "ISTP · ESTP · ISFP", "uni": "Not required", "uniMeta": "Abitur not necessary", "privateSchool": "Not applicable", "privateMeta": "Driving record essential", "schools": "Fahrerlaubnis Training", "retire": "Lieferoperations-Manager", "pivot": "Lokaler Kurierdienst-Inhaber" },
+    "JP": { "budget": "¥42,000/mo", "hnwi": "高級デリバリードライバー", "startupReadiness": 58, "mbti": "ISTP · ISFP · ESTP", "uni": "Not required", "uniMeta": "高卒で十分", "privateSchool": "Not applicable", "privateMeta": "運転記録が最も重要", "schools": "安全運転講習", "retire": "配送オペレーションマネージャー", "pivot": "地域宅配サービス事業主" },
+    "SG": { "budget": "S$450/mo", "hnwi": "Premium Delivery Specialist", "startupReadiness": 80, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "O/N Levels sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving record critical", "schools": "Defensive Driving", "retire": "Delivery Operations Manager", "pivot": "Local Courier Service Owner" },
+    "TW": { "budget": "NT$9,000/mo", "hnwi": "精品外送專員", "startupReadiness": 65, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "高中畢即可", "privateSchool": "Not applicable", "privateMeta": "駕駛紀錄最重要", "schools": "防禦駕駛課程", "retire": "營運管理主管", "pivot": "地區快遞服務負責人" },
+    "CN": { "budget": "¥1,800/mo", "hnwi": "高端配送专员", "startupReadiness": 70, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "高中即可", "privateSchool": "Not applicable", "privateMeta": "驾驶记录最重要", "schools": "防御性驾驶培训", "retire": "配送运营主管", "pivot": "本地配送服务负责人" }
+  },
+  "startupLinks": {
+    "US": [{ "label": "Gig Platforms", "url": "#" }, { "label": "Electric Scooter Rental", "url": "#" }],
+    "UK": [{ "label": "Delivery Apps", "url": "#" }, { "label": "Bike Courier Services", "url": "#" }],
+    "AU": [{ "label": "Delivery Platforms", "url": "#" }, { "label": "EV Delivery", "url": "#" }],
+    "DE": [{ "label": "Lieferdienste", "url": "#" }, { "label": "E-Bike Lieferung", "url": "#" }],
+    "JP": [{ "label": "デリバリーアプリ", "url": "#" }, { "label": "eバイク配達", "url": "#" }],
+    "SG": [{ "label": "Delivery Platforms", "url": "#" }, { "label": "EV Courier", "url": "#" }],
+    "TW": [{ "label": "外送平台", "url": "#" }, { "label": "機車快遞", "url": "#" }],
+    "CN": [{ "label": "外卖平台", "url": "#" }, { "label": "电动车配送", "url": "#" }]
+  },
+  "famousDashers": {
+    "US": [{ "name": "Top Dasher of the Year", "netWorth": "Top Earners ~$100K/yr" }],
+    "UK": [{ "name": "Delivery Champion", "netWorth": "Top Earners ~£60K/yr" }],
+    "AU": [{ "name": "Delivery Legend", "netWorth": "Top Earners ~A$120K/yr" }],
+    "DE": [{ "name": "Lieferprofi", "netWorth": "Top Verdienen ~€80K/Jahr" }],
+    "JP": [{ "name": "配達の達人", "netWorth": "トップ ~¥12M/年" }],
+    "SG": [{ "name": "Delivery Star", "netWorth": "Top Earners ~S$120K/yr" }],
+    "TW": [{ "name": "外送王", "netWorth": "TOP ~NT$2M/年" }],
+    "CN": [{ "name": "单王", "netWorth": "TOP ~¥500K/年" }]
+  },
+  "accessLinks": [
+    { "title": "Platform Signup", "desc": "Join major delivery apps" },
+    { "title": "Vehicle Prep", "desc": "Get your vehicle ready for delivery" },
+    { "title": "Insurance", "desc": "Commercial auto insurance options" },
+    { "title": "Tax Guide", "desc": "Self-employment tax tips" },
+    { "title": "Efficiency Tips", "desc": "Maximize deliveries per hour" },
+    { "title": "Safety Training", "desc": "Defensive driving and personal safety" }
+  ],
+  "careerRecs": [
+    [
+      { "title": "EV Fleet Driver", "match": "85%", "color": "var(--green)", "desc": "Drive for electric delivery fleets", "skills": ["Clean Record", "Tech Comfortable"] },
+      { "title": "Bike Courier", "match": "75%", "color": "var(--yellow)", "desc": "Urban bike delivery in dense areas", "skills": ["Fitness", "Navigation"] },
+      { "title": "Warehouse Associate", "match": "65%", "color": "var(--orange)", "desc": "Sorting packages in distribution centers", "skills": ["Organization", "Physical Stamina"] }
+    ],
+    [
+      { "title": "Fleet Coordinator", "match": "88%", "color": "var(--green)", "desc": "Manage small delivery fleets", "skills": ["Scheduling", "Communication"] },
+      { "title": "Dispatcher", "match": "78%", "color": "var(--yellow)", "desc": "Route and dispatch drivers", "skills": ["Multi-tasking", "Quick Decisions"] },
+      { "title": "Operations Assistant", "match": "70%", "color": "var(--orange)", "desc": "Support daily delivery operations", "skills": ["Admin", "Problem Solving"] }
+    ],
+    [
+      { "title": "Fleet Manager", "match": "92%", "color": "var(--green)", "desc": "Manage delivery fleet operations", "skills": ["Leadership", "Logistics"] },
+      { "title": "Operations Manager", "match": "85%", "color": "var(--yellow)", "desc": "Run local delivery operations", "skills": ["Management", "Budgeting"] },
+      { "title": "Driver Trainer", "match": "78%", "color": "var(--orange)", "desc": "Train new delivery drivers", "skills": ["Teaching", "Patience"] }
+    ],
+    [
+      { "title": "Regional Operations Director", "match": "95%", "color": "var(--green)", "desc": "Lead multi-city delivery ops", "skills": ["Strategy", "Leadership"] },
+      { "title": "Logistics Consultant", "match": "88%", "color": "var(--yellow)", "desc": "Optimize delivery networks", "skills": ["Analysis", "Optimization"] },
+      { "title": "Startup Founder", "match": "80%", "color": "var(--orange)", "desc": "Launch local delivery service", "skills": ["Entrepreneurship", "Risk Tolerance"] }
+    ]
+  ],
+  "survivalStrategy": [
+    "As a <strong>Dasher</strong>, focus on peak hours and multi-apping. Automation coming for navigation and route planning.",
+    "As a <strong>Top Dasher</strong>, leverage scheduling priority and high-demand zones. Build local knowledge.",
+    "As a <strong>Fleet Partner</strong>, manage other drivers and build a team. Human management remains valuable.",
+    "As a <strong>Regional Ops Lead</strong>, transition into platform operations. This is your automation-safe path."
+  ],
+  "hazards": [
+    { "icon": "🚗", "name": "Traffic Accidents", "levelClass": "haz-5", "width": "100%", "desc": "Critical · Constant driving risk" },
+    { "icon": "☔", "name": "Weather Exposure", "levelClass": "haz-4", "width": "80%", "desc": "High · All weather conditions" },
+    { "icon": "🕐", "name": "Time Pressure", "levelClass": "haz-4", "width": "75%", "desc": "High · Delivery time windows" },
+    { "icon": "💺", "name": "Sitting Fatigue", "levelClass": "haz-3", "width": "60%", "desc": "Medium · Long hours driving" },
+    { "icon": "🔒", "name": "Safety Concerns", "levelClass": "haz-3", "width": "55%", "desc": "Medium · Unfamiliar locations" },
+    { "icon": "⛽", "name": "Fuel Costs", "levelClass": "haz-2", "width": "40%", "desc": "Low-Medium · Expense volatility" },
+    { "icon": "📱", "name": "Phone Distraction", "levelClass": "haz-3", "width": "50%", "desc": "Medium · App while driving" }
+  ],
+  "filters": [
+    { "id": "all", "label": "All", "class": "all", "active": true, "dot": false },
+    { "id": "replaceable", "label": "Replaceable", "class": "gf", "active": false, "dot": true },
+    { "id": "indanger", "label": "In-Danger", "class": "yf", "active": false, "dot": true },
+    { "id": "intro", "label": "Intro", "class": "of", "active": false, "dot": true },
+    { "id": "nothing", "label": "Nothing", "class": "rf", "active": false, "dot": true }
+  ],
+  "mbtiData": [
+    { "type": "ESTP", "desc": "The Dynamo. Thrives in fast-paced, flexible environments." },
+    { "type": "ESFP", "desc": "The Performer. Great customer interactions, adapts quickly." },
+    { "type": "ISTP", "desc": "The Virtuoso. Excellent at navigation and problem-solving on the fly." },
+    { "type": "ISFP", "desc": "The Adventurer. Enjoys independence and exploring the city." },
+    { "type": "ENTP", "desc": "The Debater. Great at finding optimal routes and multi-apping strategies." }
+  ],
+  "filialPietyCountries": ["CN", "TW", "SG", "JP"],
+  "ltvMethodology": "Avg $10/delivery × 10 deliveries/day × 260 days/yr × 20 yr career. AV risk weighted.",
+  "highestThreat": "Autonomous delivery vehicles are the biggest threat to this role.",
+  "langPillClasses": {
+    "Essential": "llp-essential",
+    "Helpful": "llp-helpful",
+    "Optional": "llp-optional",
+    "Senior Only": "llp-senior",
+    "High-end Only": "llp-senior",
+    "Regional": "llp-helpful"
+  },
+  "networkCards": [
+    { "title": "Recommended Vehicle", "value": "Fuel-Efficient Compact Car", "meta": "Prius, Corolla, or similar. EV strongly recommended long-term." },
+    { "title": "Key Skills", "value": "Navigation · Time Management", "meta": "Also: App proficiency, customer service, city knowledge." },
+    { "title": "Growth Path", "value": "Fleet → Operations", "meta": "Your safest path is moving into management before AVs arrive." },
+    { "title": "Key Connections", "value": "Local Business Owners · Fleet Managers", "meta": "Build relationships for transition to ops roles.", "loginCTA": true }
+  ],
+  "tasksByLevel": {
+    "0": [
+      { "action": "Navigating Routes", "human": "Using GPS, finding addresses, choosing best routes", "ai": "Autonomous navigation, AI route optimization fully handles this", "timePct": 25, "ratio": 90, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 8.5 },
+      { "action": "Driving Vehicle", "human": "Operating car, scooter, or bike safely in traffic", "ai": "Self-driving vehicles eliminate the need for human drivers", "timePct": 40, "ratio": 88, "ratioColor": "var(--red)", "eta": "3–7 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 7.2 },
+      { "action": "Picking Up Orders", "human": "Collecting food/packages from merchants, confirming orders", "ai": "Autonomous pickup lockers and robot collection systems", "timePct": 15, "ratio": 70, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 5.0 },
+      { "action": "Customer Interaction", "human": "Handing off orders, friendly communication, handling issues", "ai": "Drones and robots drop off, but human touch still valued for issues", "timePct": 10, "ratio": 25, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.8 },
+      { "action": "Using Delivery Apps", "human": "Accepting orders, updating status, taking photos, in-app communication", "ai": "AI fully manages order acceptance, status, and communications", "timePct": 10, "ratio": 92, "ratioColor": "var(--red)", "eta": "~1.5 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 9.0 }
+    ],
+    "1": [
+      { "action": "Strategic Route Planning", "human": "Planning multi-stop routes for max efficiency, multi-apping", "ai": "AI algorithms optimize routes and order stacking automatically", "timePct": 20, "ratio": 85, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 6.5 },
+      { "action": "Peak Hour Strategy", "human": "Knowing hot zones, best times to work, surge pricing strategy", "ai": "AI predicts demand and dispatches autonomous vehicles accordingly", "timePct": 15, "ratio": 80, "ratioColor": "var(--red)", "eta": "2–3 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 5.8 },
+      { "action": "Problem Resolution", "human": "Handling missing items, wrong addresses, customer complaints", "ai": "Some issues automated, but complex problems need humans", "timePct": 20, "ratio": 30, "ratioColor": "var(--yellow)", "eta": "6–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 1.5 },
+      { "action": "Vehicle Maintenance", "human": "Keeping vehicle clean, fueled, basic maintenance checks", "ai": "Autonomous vehicles self-diagnose and go to service centers", "timePct": 10, "ratio": 75, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 4.0 },
+      { "action": "Customer Relationship Building", "human": "Remembering regulars, personalized service, building loyalty", "ai": "Cannot replicate genuine human relationship building", "timePct": 35, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.3 }
+    ],
+    "2": [
+      { "action": "Driver Scheduling & Management", "human": "Managing other drivers, setting schedules, ensuring coverage", "ai": "AI scheduling tools, but human leadership still needed", "timePct": 25, "ratio": 25, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.4 },
+      { "action": "Fleet Optimization", "human": "Assigning orders, balancing workload across fleet", "ai": "AI optimizes fleet dispatch and order assignment", "timePct": 20, "ratio": 85, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 6.0 },
+      { "action": "Driver Training & Onboarding", "human": "Training new drivers, sharing tips, setting expectations", "ai": "Some training modules, but hands-on mentoring needs humans", "timePct": 20, "ratio": 35, "ratioColor": "var(--yellow)", "eta": "7–10 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 1.8 },
+      { "action": "Merchant Relationships", "human": "Building relationships with restaurants and stores", "ai": "Cannot build genuine business relationships", "timePct": 20, "ratio": 10, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.2 },
+      { "action": "Quality Assurance", "human": "Checking that orders meet standards, handling complaints", "ai": "Computer vision checks orders, human judgment for edge cases", "timePct": 15, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–7 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 2.0 }
+    ],
+    "3": [
+      { "action": "Operations Strategy", "human": "Setting regional strategy, optimizing delivery zones", "ai": "AI provides data insights, but strategy needs human judgment", "timePct": 30, "ratio": 20, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.3 },
+      { "action": "Team Leadership", "human": "Leading operations team, culture building, performance management", "ai": "No AI replacement for human leadership", "timePct": 30, "ratio": 5, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.1 },
+      { "action": "Stakeholder Communication", "human": "Working with merchants, platform, city government", "ai": "Cannot navigate complex stakeholder relationships", "timePct": 20, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.25 },
+      { "action": "AV Integration Planning", "human": "Planning for autonomous vehicle integration", "ai": "AI helps, but human leadership needed for transition", "timePct": 10, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 1.5 },
+      { "action": "Budget & Financial Management", "human": "Managing operations budget, cost optimization", "ai": "AI accounting tools automate much of this", "timePct": 10, "ratio": 60, "ratioColor": "var(--orange)", "eta": "3–5 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 3.5 }
+    ]
+  }
+}

@@ -53,8 +53,9 @@ nav {
   font-size: 1.5rem; font-weight: 800; color: var(--orange); white-space: nowrap;
   letter-spacing: -0.02em; cursor: pointer;
 }
+.nav-left-group { display: flex; align-items: center; gap: 0.6rem; }
 .nav-search {
-  width: 100%; max-width: 800px;
+  width: 100%; max-width: 800px; justify-self: center;
   display: flex; align-items: center;
   border: 2px solid var(--border); border-radius: 3rem; overflow: hidden;
   transition: border-color 0.2s;
@@ -87,13 +88,14 @@ nav {
   min-width: 16px; text-align: center;
 }
 .nav-sell-btn {
-  font-size: 0.8rem; font-weight: 600; color: var(--black);
-  text-decoration: none; padding: 0.45rem 0.8rem; border-radius: 3px;
+  font-size: 0.68rem; font-weight: 600; color: var(--black);
+  text-decoration: none; padding: 0.3rem 0.5rem; border-radius: 3px;
   white-space: nowrap; transition: color 0.2s;
-  display: flex; align-items: center; gap: 0.3rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.15rem;
+  line-height: 1.2; text-align: center;
 }
 .nav-sell-btn:hover { color: var(--orange); }
-.nav-sell-icon { font-size: 0.9rem; }
+.nav-sell-icon { font-size: 1.1rem; }
 .nav-divider { width: 1px; height: 24px; background: var(--border); }
 .nav-signin {
   font-size: 0.82rem; font-weight: 600; background: var(--white);
@@ -170,7 +172,7 @@ input[type=range] { width: 100%; accent-color: var(--orange); cursor: pointer; h
 .section-head a:hover { text-decoration: underline; }
 
 /* ── MAIN GRID LAYOUT ── */
-.main-content { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem; }
+.main-content { max-width: 1200px; margin: 0 auto; padding: 1.4rem 2rem 2.5rem; }
 .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
 
 /* ── COLUMN HEADERS ── */
@@ -366,6 +368,55 @@ footer {
   .for-someone-inner { gap: 1rem; }
   .add-birthday-form { grid-template-columns: 1fr; }
 }
+
+/* ── HOLD OVERLAY ── */
+.hold-overlay {
+  position: fixed; inset: 0; z-index: 10001; pointer-events: none;
+  display: none; align-items: center; justify-content: center;
+}
+.hold-overlay.active { display: flex; }
+.hold-ring {
+  position: relative; width: 100px; height: 100px;
+}
+.hold-ring svg { transform: rotate(-90deg); width: 100px; height: 100px; }
+.hold-ring-bg { fill: none; stroke: rgba(0,0,0,0.08); stroke-width: 4; }
+.hold-ring-fill { fill: none; stroke: var(--orange); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 0.1s linear; }
+.hold-ring-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+
+/* ── HISTORY MODAL ── */
+.history-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 10002;
+  display: none; align-items: center; justify-content: center; padding: 1rem;
+}
+.history-modal.open { display: flex; }
+.history-modal-content {
+  background: var(--white); border-radius: 14px; max-width: 520px; width: 100%;
+  max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.history-modal-header {
+  padding: 1.3rem 1.5rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--cream); border-radius: 14px 14px 0 0;
+}
+.history-modal-header h3 { font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+.history-modal-close { border: none; background: none; font-size: 1.5rem; cursor: pointer; color: var(--gray); }
+.history-modal-body { padding: 1.5rem; }
+.history-icon-circle {
+  width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; margin: 0 auto 1rem;
+}
+.history-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1.2rem; }
+.history-stat {
+  background: var(--cream); border-radius: 10px; padding: 1rem; text-align: center;
+}
+.history-stat-val { font-size: 1.3rem; font-weight: 800; color: var(--black); }
+.history-stat-lbl { font-size: 0.68rem; color: var(--gray); margin-top: 0.2rem; }
+.history-timeline { margin-top: 1.2rem; }
+.history-timeline h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray); margin-bottom: 0.8rem; }
+.history-tl-item { display: flex; gap: 0.8rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; align-items: flex-start; }
+.history-tl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); margin-top: 0.35rem; flex-shrink: 0; }
+.history-tl-date { font-size: 0.7rem; color: var(--gray); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -375,7 +426,11 @@ footer {
 
 <!-- NAV (Etsy-style) -->
 <nav>
-  <div class="nav-logo">HobbyDIYnSkill</div>
+  <div class="nav-left-group">
+    <div class="nav-logo">HobbyDIYnSkill</div>
+    <a class="nav-sell-btn" href="#">🤖<br>AI</a>
+    <a class="nav-sell-btn" href="#">💬<br>Forum</a>
+  </div>
   <div class="nav-search">
     <select>
       <option>All categories</option>
@@ -388,10 +443,9 @@ footer {
     <button>🔍</button>
   </div>
   <div class="nav-actions">
-    <div class="nav-gift-icon" id="giftIconBtn">
-      🎁
-      <span class="nav-gift-badge" id="giftBadge" style="display:none;">0</span>
-    </div>
+    <a class="nav-sell-btn" href="#">🔖<br>Saved</a>
+    <a class="nav-sell-btn" href="#">🗄️<br>My Stash</a>
+    <a class="nav-sell-btn" href="#">🛒<br>Cart</a>
     <button class="nav-signin" id="signInBtn">Sign in</button>
     <button class="nav-register">Register</button>
   </div>
@@ -404,7 +458,7 @@ footer {
   <a class="cat-tab" href="#">🧵 Fiber Arts</a>
   <a class="cat-tab" href="#">🪵 Woodworking</a>
   <a class="cat-tab" href="#">🎨 Miniatures</a>
-  <a class="cat-tab" href="#">🍸 Mixology</a>
+  <a class="cat-tab" href="mixology.html">🍸 Mixology</a>
   <a class="cat-tab" href="#">🎩 Magic</a>
   <a class="cat-tab" href="#">🏺 Ceramics</a>
   <a class="cat-tab" href="#">💡 Electronics</a>
@@ -441,6 +495,13 @@ footer {
         <button class="for-pill pink">👧 For Her</button>
         <button class="for-pill blue">👦 For Him</button>
       </div>
+    </div>
+
+    <div class="for-divider"></div>
+
+    <!-- Fit My Stash -->
+    <div class="for-group">
+      <button class="btn-orange fit-stash-btn">🎒 Fit My Stash</button>
     </div>
 
   </div>
@@ -710,6 +771,28 @@ footer {
   </div>
 </div>
 
+<!-- HOLD OVERLAY -->
+<div class="hold-overlay" id="holdOverlay">
+  <div class="hold-ring">
+    <svg viewBox="0 0 100 100">
+      <circle class="hold-ring-bg" cx="50" cy="50" r="45"/>
+      <circle class="hold-ring-fill" id="holdRingFill" cx="50" cy="50" r="45"/>
+    </svg>
+    <div class="hold-ring-icon" id="holdRingIcon">🎯</div>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="history-modal" id="historyModal">
+  <div class="history-modal-content">
+    <div class="history-modal-header">
+      <h3 id="historyModalTitle">📜 Hobby History</h3>
+      <button class="history-modal-close" id="historyModalClose">&times;</button>
+    </div>
+    <div class="history-modal-body" id="historyModalBody"></div>
+  </div>
+</div>
+
 <script>
   // === DATA ===
   const HOLIDAYS = [
@@ -974,9 +1057,6 @@ footer {
       if (signInBtn) signInBtn.textContent = 'Account';
     }
 
-    const giftIconBtn = document.getElementById('giftIconBtn');
-    if (giftIconBtn) giftIconBtn.addEventListener('click', openGiftModal);
-
     const giftModalClose = document.getElementById('giftModalClose');
     if (giftModalClose) giftModalClose.addEventListener('click', closeGiftModal);
 
@@ -1012,6 +1092,120 @@ footer {
       tab.classList.add('active');
     });
   });
+
+  /* ═══════════════════════════════════
+     HOLD-TO-REVEAL HISTORY FEATURE
+     ═══════════════════════════════════ */
+  const HOLD_DURATION = 2000;
+  let holdTimer = null;
+  let holdStartTime = 0;
+  let holdTarget = null;
+  let holdActive = false;
+  const CIRCUMFERENCE = 2 * Math.PI * 45;
+
+  function attachHoldListeners() {
+    document.querySelectorAll('.listing-card, .cat-tab, .for-pill').forEach(el => {
+      if (el.dataset.holdBound) return;
+      el.dataset.holdBound = '1';
+      el.addEventListener('mousedown', holdStart);
+      el.addEventListener('touchstart', holdStart, {passive: false});
+      el.addEventListener('mouseup', holdEnd);
+      el.addEventListener('mouseleave', holdEnd);
+      el.addEventListener('touchend', holdEnd);
+      el.addEventListener('touchcancel', holdEnd);
+    });
+  }
+
+  function holdStart(e) {
+    if (e.type === 'touchstart') e.preventDefault();
+    holdTarget = e.currentTarget;
+    holdStartTime = Date.now();
+    holdActive = true;
+    const emoji = holdTarget.dataset.emoji || '🎯';
+    const overlay = document.getElementById('holdOverlay');
+    const ringFill = document.getElementById('holdRingFill');
+    const ringIcon = document.getElementById('holdRingIcon');
+    ringIcon.textContent = emoji;
+    ringFill.style.strokeDashoffset = CIRCUMFERENCE;
+    overlay.classList.add('active');
+    holdTimer = setInterval(() => {
+      const elapsed = Date.now() - holdStartTime;
+      const progress = Math.min(elapsed / HOLD_DURATION, 1);
+      ringFill.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+      if (progress >= 1) {
+        clearInterval(holdTimer);
+        holdComplete();
+      }
+    }, 50);
+  }
+
+  function holdEnd() {
+    clearInterval(holdTimer);
+    holdActive = false;
+    holdTarget = null;
+    document.getElementById('holdOverlay').classList.remove('active');
+  }
+
+  function holdComplete() {
+    holdActive = false;
+    document.getElementById('holdOverlay').classList.remove('active');
+    if (!holdTarget) return;
+    const nameEl = holdTarget.querySelector('.listing-name') || holdTarget.querySelector('.cat-tab') || holdTarget;
+    const name = holdTarget.dataset.hobby || (nameEl ? nameEl.textContent.trim() : holdTarget.textContent.trim());
+    const emoji = holdTarget.dataset.emoji || '🎯';
+    showHistory(name, emoji);
+  }
+
+  function showHistory(name, emoji) {
+    const title = document.getElementById('historyModalTitle');
+    const body = document.getElementById('historyModalBody');
+    title.innerHTML = '📜 ' + emoji + ' ' + name + ' — Your Journey';
+
+    const startDate = new Date(2022, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+    const projects = Math.floor(Math.random() * 60) + 10;
+    const hours = Math.floor(Math.random() * 500) + 50;
+    const level = ['Beginner', 'Intermediate', 'Advanced', 'Master'][Math.floor(Math.random() * 4)];
+
+    body.innerHTML = `
+      <div class="history-icon-circle" style="background:var(--orange-bg);">${emoji}</div>
+      <p style="text-align:center;color:var(--gray);font-size:0.85rem;">Here's a snapshot of your journey with <strong>${name}</strong>.</p>
+      <div class="history-stat-grid">
+        <div class="history-stat">
+          <div class="history-stat-val">${startDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'})}</div>
+          <div class="history-stat-lbl">Since</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-val">${projects}</div>
+          <div class="history-stat-lbl">Projects Done</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-val">${hours}h</div>
+          <div class="history-stat-lbl">Time Invested</div>
+        </div>
+        <div class="history-stat">
+          <div class="history-stat-val">${level}</div>
+          <div class="history-stat-lbl">Skill Level</div>
+        </div>
+      </div>
+      <div class="history-timeline">
+        <h4>🕐 Recent Milestones</h4>
+        <div class="history-tl-item"><div class="history-tl-dot"></div><div><strong>First attempt</strong> — ${startDate.toLocaleDateString('en-US', {month: 'long', year: 'numeric'})}</div></div>
+        <div class="history-tl-item"><div class="history-tl-dot"></div><div><strong>Completed 10th project</strong> — ${new Date(startDate.getTime() + 1000 * 60 * 60 * 24 * 90).toLocaleDateString('en-US', {month: 'long', year: 'numeric'})}</div></div>
+        <div class="history-tl-item"><div class="history-tl-dot"></div><div><strong>Reached ${level} level</strong> — placeholder milestone</div></div>
+      </div>
+      <p style="text-align:center;margin-top:1rem;font-size:0.72rem;color:var(--gray);">✨ More detailed history coming soon — this is a placeholder</p>
+    `;
+    document.getElementById('historyModal').classList.add('open');
+  }
+
+  document.getElementById('historyModalClose').addEventListener('click', () => {
+    document.getElementById('historyModal').classList.remove('open');
+  });
+  document.getElementById('historyModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('historyModal')) document.getElementById('historyModal').classList.remove('open');
+  });
+
+  attachHoldListeners();
 </script>
 </body>
 </html>

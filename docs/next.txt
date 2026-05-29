@@ -1,45 +1,7 @@
-你是一个 JSON schema 编辑器，任务是精确补全以下 income-types.json，不得新增或删除任何 income type，不得修改任何现有字段的值，只做以下五处补全：
+#做的next.txt的内容
 
-## 任务清单
-
-### 任务1：给所有 income type 统一补全 hasBasePayToggle 配套字段
-凡是已有 "hasBasePayToggle": true 的类型，必须紧跟其后补全以下四个字段：
-- "basePayToggleLabel": string  // 用户看到的 toggle 开关文字，说明"开了之后加的是什么"
-- "basePayToggleEffect": string // 技术说明：开了之后 calculatorInputs 新增什么字段、ltv 公式如何变化
-- "basePayToggleTimeAutonomy": "LOW" | "MED" | "HIGH" | "FULL"  // toggle 开后 timeAutonomy 变为什么
-- "basePayToggleIncomeFlexibility": "FIXED" | "VARIABLE" | "SCALABLE" | "PASSIVE"  // toggle 开后 incomeFlexibility 变为什么
-
-凡是没有 "hasBasePayToggle" 字段的类型，补 "hasBasePayToggle": false，不需要加其余四个字段。
-
-需要补全 toggle 配套字段的类型及参考内容如下：
-- piece_rate: toggle = 加保底时薪地板价; 新增 hourlyFloor 输入; ltv 加 hourlyFloor×hoursPerWeek×weeksPerYear×careerYears; timeAutonomy→LOW
-- prize_per_event: toggle = 加战队底薪/赞助保底; 新增 baseSalary 输入（已在 calculatorInputs 里）; ltv_bonus 已含; timeAutonomy→LOW; incomeFlexibility→VARIABLE
-- commission_only: toggle = 加底薪变成 base+commission 模式; 新增 baseSalary 输入; ltv 公式变为 (baseSalary + annualSales×commissionRate)×careerYears; timeAutonomy→LOW; incomeFlexibility→SCALABLE
-- creative_royalty: toggle = 加出版商/厂牌预付款 advance（可回收）; 新增 advanceAmount 输入; ltv 加 advanceAmount 作为 year-0 收入，后续版税在 advance 回收前不计入; timeAutonomy→FULL; incomeFlexibility→SCALABLE
-- platform_revenue_share: toggle = 加平台签约保底月费; 新增 monthlyGuarantee 输入; ltv 加 monthlyGuarantee×12×contractYears; timeAutonomy→MED（有内容交付义务）; incomeFlexibility→SCALABLE
-- active_trading: toggle = 加机构底薪（自营交易员/prop firm）; 新增 institutionalBase 输入; ltv 加 institutionalBase×careerYears; timeAutonomy→LOW（受机构合规约束）; incomeFlexibility→SCALABLE
-
-### 任务2：salary 补 hasBasePayToggle: false
-在 salary 的 "calculatorInputs" 字段之前插入：
-"hasBasePayToggle": false,
-
-### 任务3：salary_plus_equity 的 variants 补全 tup_time_unit_plan
-在现有 phantom_share_locked 对象之后，同级新增：
-"tup_time_unit_plan": {
-  "label": "TUP — Time Unit Plan (Virtual Bonus Pool)",
-  "examples": ["Huawei TUP"],
-  "liquidityMode": "AUTO_VEST_5YR",
-  "pricingAuthority": "COMPANY_ONLY",
-  "votingRights": false,
-  "marketPrice": false,
-  "exitOnLeave": "FORFEIT_UNVESTED",
-  "retireRetainAllowed": false,
-  "calculatorInputs_extra": ["annualTUPValue", "tupVestingYears"],
-  "ltv_modifier": "annualTUPValue × min(careerYears, tupVestingYears) — 到期清零不累积",
-  "warningFlags": ["cliff_at_5yr", "zero_value_on_early_exit", "not_real_equity", "company_controls_pricing"]
-}
-
-### 任务4：_note 更新版本说明
-将 "_version" 改为 "v4.1"
-将 "_note" 改为：
-"Income types classified by labor trigger event + payment structure. No asset-passive income. 21 active labor types. hasBasePayToggle=true types carry full toggle metadata for UI rendering. salary_plus_equity includes phantom share variants (Huawei ESOP + TUP). All occupation JSONs must reference incomeType from this registry."
+2.1  dasher.json 补 JP/TW/CN 空字段
+2.2  dasher.json 补所有 task 的 statusLabel
+2.3  chef.json 补 search 字段（按规范格式）
+2.4  dasher.json 补 search 字段
+2.5  两个 JSON 都加 incomeNote 和扩展 calculatorInputs

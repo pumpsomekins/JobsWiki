@@ -4,13 +4,29 @@
     "slug": "dasher",
     "incomeType": "piece_rate",
     "incomeLabel": "Per Delivery",
+    "incomeNote": "Earnings vary by location, time of day, and tips. Peak hours (lunch/dinner) and surge pricing significantly impact income.",
     "calculatorInputs": ["ratePerTask", "tasksPerHour", "hoursPerWeek", "weeksPerYear", "careerYears", "peakPayRate", "peakHoursPct"],
+    "calculatorInputSpecs": {
+      "ratePerTask": { "label": "Rate per Delivery ($)", "min": 2, "max": 15, "default": 5, "step": 0.5, "unit": "$" },
+      "tasksPerHour": { "label": "Deliveries per Hour", "min": 1, "max": 6, "default": 3, "step": 0.5, "unit": "" },
+      "hoursPerWeek": { "label": "Hours per Week", "min": 10, "max": 60, "default": 40, "step": 5, "unit": "hrs" },
+      "weeksPerYear": { "label": "Weeks per Year", "min": 40, "max": 52, "default": 50, "step": 1, "unit": "wks" },
+      "careerYears": { "label": "Career Length (Years)", "min": 1, "max": 30, "default": 20, "step": 1, "unit": "yrs" },
+      "peakPayRate": { "label": "Peak Hour Premium (%)", "min": 0, "max": 100, "default": 25, "step": 5, "unit": "%" },
+      "peakHoursPct": { "label": "Peak Hours %", "min": 0, "max": 50, "default": 30, "step": 5, "unit": "%" }
+    },
     "bonusApplicable": true,
     "bonusRange": [0.05, 0.40],
     "inflationSensitive": true,
     "ltv_formula": "ratePerTask × tasksPerHour × hoursPerWeek × weeksPerYear × careerYears",
     "automationThreat": "HIGH",
     "platformNote": "Gig worker, no benefits, platform-dependent"
+  },
+  "search": {
+    "primaryTitle": "Dasher / Delivery Driver",
+    "primarySlug": "dasher",
+    "aliases": ["Delivery Driver", "Courier", "Food Delivery", "Package Delivery", "Gig Worker", "Uber Eats Driver", "DoorDash Driver", "Grubhub Driver"],
+    "subTitles": ["Gig Economy", "Food Delivery", "Last-Mile Logistics", "Rideshare Delivery", "Platform Work"]
   },
   "industries": [
     { "id": "fd", "label": "Food Delivery", "active": true },
@@ -375,32 +391,32 @@
   ],
   "tasksByLevel": {
     "0": [
-      { "action": "Navigating Routes", "human": "Using GPS, finding addresses, choosing best routes", "ai": "Autonomous navigation, AI route optimization fully handles this", "timePct": 25, "ratio": 90, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 8.5 },
-      { "action": "Driving Vehicle", "human": "Operating car, scooter, or bike safely in traffic", "ai": "Self-driving vehicles eliminate the need for human drivers", "timePct": 40, "ratio": 88, "ratioColor": "var(--red)", "eta": "3–7 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 7.2 },
-      { "action": "Picking Up Orders", "human": "Collecting food/packages from merchants, confirming orders", "ai": "Autonomous pickup lockers and robot collection systems", "timePct": 15, "ratio": 70, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 5.0 },
-      { "action": "Customer Interaction", "human": "Handing off orders, friendly communication, handling issues", "ai": "Drones and robots drop off, but human touch still valued for issues", "timePct": 10, "ratio": 25, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.8 },
-      { "action": "Using Delivery Apps", "human": "Accepting orders, updating status, taking photos, in-app communication", "ai": "AI fully manages order acceptance, status, and communications", "timePct": 10, "ratio": 92, "ratioColor": "var(--red)", "eta": "~1.5 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 9.0 }
+      { "action": "Navigating Routes", "human": "Using GPS, finding addresses, choosing best routes", "ai": "Autonomous navigation, AI route optimization fully handles this", "timePct": 25, "ratio": 90, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 8.5 },
+      { "action": "Driving Vehicle", "human": "Operating car, scooter, or bike safely in traffic", "ai": "Self-driving vehicles eliminate the need for human drivers", "timePct": 40, "ratio": 88, "ratioColor": "var(--red)", "eta": "3–7 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 7.2 },
+      { "action": "Picking Up Orders", "human": "Collecting food/packages from merchants, confirming orders", "ai": "Autonomous pickup lockers and robot collection systems", "timePct": 15, "ratio": 70, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 5.0 },
+      { "action": "Customer Interaction", "human": "Handing off orders, friendly communication, handling issues", "ai": "Drones and robots drop off, but human touch still valued for issues", "timePct": 10, "ratio": 25, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.8 },
+      { "action": "Using Delivery Apps", "human": "Accepting orders, updating status, taking photos, in-app communication", "ai": "AI fully manages order acceptance, status, and communications", "timePct": 10, "ratio": 92, "ratioColor": "var(--red)", "eta": "~1.5 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 9.0 }
     ],
     "1": [
-      { "action": "Strategic Route Planning", "human": "Planning multi-stop routes for max efficiency, multi-apping", "ai": "AI algorithms optimize routes and order stacking automatically", "timePct": 20, "ratio": 85, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 6.5 },
-      { "action": "Peak Hour Strategy", "human": "Knowing hot zones, best times to work, surge pricing strategy", "ai": "AI predicts demand and dispatches autonomous vehicles accordingly", "timePct": 15, "ratio": 80, "ratioColor": "var(--red)", "eta": "2–3 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 5.8 },
-      { "action": "Problem Resolution", "human": "Handling missing items, wrong addresses, customer complaints", "ai": "Some issues automated, but complex problems need humans", "timePct": 20, "ratio": 30, "ratioColor": "var(--yellow)", "eta": "6–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 1.5 },
-      { "action": "Vehicle Maintenance", "human": "Keeping vehicle clean, fueled, basic maintenance checks", "ai": "Autonomous vehicles self-diagnose and go to service centers", "timePct": 10, "ratio": 75, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 4.0 },
-      { "action": "Customer Relationship Building", "human": "Remembering regulars, personalized service, building loyalty", "ai": "Cannot replicate genuine human relationship building", "timePct": 35, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.3 }
+      { "action": "Strategic Route Planning", "human": "Planning multi-stop routes for max efficiency, multi-apping", "ai": "AI algorithms optimize routes and order stacking automatically", "timePct": 20, "ratio": 85, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 6.5 },
+      { "action": "Peak Hour Strategy", "human": "Knowing hot zones, best times to work, surge pricing strategy", "ai": "AI predicts demand and dispatches autonomous vehicles accordingly", "timePct": 15, "ratio": 80, "ratioColor": "var(--red)", "eta": "2–3 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 5.8 },
+      { "action": "Problem Resolution", "human": "Handling missing items, wrong addresses, customer complaints", "ai": "Some issues automated, but complex problems need humans", "timePct": 20, "ratio": 30, "ratioColor": "var(--yellow)", "eta": "6–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 1.5 },
+      { "action": "Vehicle Maintenance", "human": "Keeping vehicle clean, fueled, basic maintenance checks", "ai": "Autonomous vehicles self-diagnose and go to service centers", "timePct": 10, "ratio": 75, "ratioColor": "var(--orange)", "eta": "4–6 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 4.0 },
+      { "action": "Customer Relationship Building", "human": "Remembering regulars, personalized service, building loyalty", "ai": "Cannot replicate genuine human relationship building", "timePct": 35, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.3 }
     ],
     "2": [
-      { "action": "Driver Scheduling & Management", "human": "Managing other drivers, setting schedules, ensuring coverage", "ai": "AI scheduling tools, but human leadership still needed", "timePct": 25, "ratio": 25, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.4 },
-      { "action": "Fleet Optimization", "human": "Assigning orders, balancing workload across fleet", "ai": "AI optimizes fleet dispatch and order assignment", "timePct": 20, "ratio": 85, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "costRatio": 6.0 },
-      { "action": "Driver Training & Onboarding", "human": "Training new drivers, sharing tips, setting expectations", "ai": "Some training modules, but hands-on mentoring needs humans", "timePct": 20, "ratio": 35, "ratioColor": "var(--yellow)", "eta": "7–10 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 1.8 },
-      { "action": "Merchant Relationships", "human": "Building relationships with restaurants and stores", "ai": "Cannot build genuine business relationships", "timePct": 20, "ratio": 10, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.2 },
-      { "action": "Quality Assurance", "human": "Checking that orders meet standards, handling complaints", "ai": "Computer vision checks orders, human judgment for edge cases", "timePct": 15, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–7 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 2.0 }
+      { "action": "Driver Scheduling & Management", "human": "Managing other drivers, setting schedules, ensuring coverage", "ai": "AI scheduling tools, but human leadership still needed", "timePct": 25, "ratio": 25, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.4 },
+      { "action": "Fleet Optimization", "human": "Assigning orders, balancing workload across fleet", "ai": "AI optimizes fleet dispatch and order assignment", "timePct": 20, "ratio": 85, "ratioColor": "var(--red)", "eta": "~2 yrs", "etaClass": "eta-soon", "status": "replaceable", "statusClass": "b-replaceable", "statusLabel": "Replaceable", "costRatio": 6.0 },
+      { "action": "Driver Training & Onboarding", "human": "Training new drivers, sharing tips, setting expectations", "ai": "Some training modules, but hands-on mentoring needs humans", "timePct": 20, "ratio": 35, "ratioColor": "var(--yellow)", "eta": "7–10 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 1.8 },
+      { "action": "Merchant Relationships", "human": "Building relationships with restaurants and stores", "ai": "Cannot build genuine business relationships", "timePct": 20, "ratio": 10, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.2 },
+      { "action": "Quality Assurance", "human": "Checking that orders meet standards, handling complaints", "ai": "Computer vision checks orders, human judgment for edge cases", "timePct": 15, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–7 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 2.0 }
     ],
     "3": [
-      { "action": "Operations Strategy", "human": "Setting regional strategy, optimizing delivery zones", "ai": "AI provides data insights, but strategy needs human judgment", "timePct": 30, "ratio": 20, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.3 },
-      { "action": "Team Leadership", "human": "Leading operations team, culture building, performance management", "ai": "No AI replacement for human leadership", "timePct": 30, "ratio": 5, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.1 },
-      { "action": "Stakeholder Communication", "human": "Working with merchants, platform, city government", "ai": "Cannot navigate complex stakeholder relationships", "timePct": 20, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "costRatio": 0.25 },
-      { "action": "AV Integration Planning", "human": "Planning for autonomous vehicle integration", "ai": "AI helps, but human leadership needed for transition", "timePct": 10, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "costRatio": 1.5 },
-      { "action": "Budget & Financial Management", "human": "Managing operations budget, cost optimization", "ai": "AI accounting tools automate much of this", "timePct": 10, "ratio": 60, "ratioColor": "var(--orange)", "eta": "3–5 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "costRatio": 3.5 }
+      { "action": "Operations Strategy", "human": "Setting regional strategy, optimizing delivery zones", "ai": "AI provides data insights, but strategy needs human judgment", "timePct": 30, "ratio": 20, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.3 },
+      { "action": "Team Leadership", "human": "Leading operations team, culture building, performance management", "ai": "No AI replacement for human leadership", "timePct": 30, "ratio": 5, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.1 },
+      { "action": "Stakeholder Communication", "human": "Working with merchants, platform, city government", "ai": "Cannot navigate complex stakeholder relationships", "timePct": 20, "ratio": 15, "ratioColor": "var(--green)", "eta": "10+ yrs", "etaClass": "eta-prot", "status": "nothing", "statusClass": "b-none", "statusLabel": "Nothing", "costRatio": 0.25 },
+      { "action": "AV Integration Planning", "human": "Planning for autonomous vehicle integration", "ai": "AI helps, but human leadership needed for transition", "timePct": 10, "ratio": 40, "ratioColor": "var(--yellow)", "eta": "5–8 yrs", "etaClass": "eta-far", "status": "intro", "statusClass": "b-intro", "statusLabel": "Intro", "costRatio": 1.5 },
+      { "action": "Budget & Financial Management", "human": "Managing operations budget, cost optimization", "ai": "AI accounting tools automate much of this", "timePct": 10, "ratio": 60, "ratioColor": "var(--orange)", "eta": "3–5 yrs", "etaClass": "eta-mid", "status": "indanger", "statusClass": "b-indanger", "statusLabel": "In-Danger", "costRatio": 3.5 }
     ]
   }
 }

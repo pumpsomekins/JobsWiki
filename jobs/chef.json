@@ -4,15 +4,27 @@
     "slug": "chef",
     "incomeType": "salary",
     "incomeLabel": "Annual Salary",
+    "incomeNote": "Salary varies significantly by establishment type (fast food vs fine dining), location, and experience level. Tips may apply in some positions.",
     "calculatorInputs": ["annualSalary", "careerYears", "bonusRate"],
+    "calculatorInputSpecs": {
+      "annualSalary": { "label": "Starting Annual Salary ($)", "min": 20000, "max": 120000, "default": 56000, "step": 1000, "unit": "$" },
+      "careerYears": { "label": "Career Length (Years)", "min": 1, "max": 40, "default": 30, "step": 1, "unit": "yrs" },
+      "bonusRate": { "label": "Annual Bonus (%)", "min": 0, "max": 30, "default": 10, "step": 1, "unit": "%" }
+    },
 
     "bonusApplicable": true,
     "bonusRange": [0.05, 0.15],
     "inflationSensitive": true,
-    
+
     "ltv_formula": "annualSalary × careerYears × (1 + bonusRate)",
     "automationThreat": "MID",
     "platformNote": "W2 employee, benefits included, unionized in some markets"
+  },
+  "search": {
+    "primaryTitle": "Chef / Cook",
+    "primarySlug": "chef",
+    "aliases": ["Cook", "Line Cook", "Sous Chef", "Head Chef", "Executive Chef", "Kitchen Staff", "Culinary Professional"],
+    "subTitles": ["Restaurant Kitchen", "Food Service", "Culinary Arts", "Hospitality Industry"]
   },
   "industries": [
     { "id": "fb", "label": "Food & Beverage", "active": true },

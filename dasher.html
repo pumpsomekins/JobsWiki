@@ -2164,14 +2164,9 @@
         // ── fetch job data from external JSON ──
         let JOB_DATA;
         let D;
-        let INCOME_TYPES;
-        Promise.all([
-            fetch('./jobs/dasher.json').then(r => r.json()),
-            fetch('./jobs/income-types.json').then(r => r.json())
-        ]).then(([jobData, incomeTypes]) => {
+        fetch('./jobs/dasher.json').then(r => r.json()).then(jobData => {
             JOB_DATA = jobData;
             D = JOB_DATA;
-            INCOME_TYPES = incomeTypes;
             initAll();
         });
 
@@ -2313,14 +2308,14 @@
         function renderCareerRecs(level) { const section = document.getElementById('careerRecsSection'); if (!section) return; const recs = JOB_DATA.careerRecs[level] || JOB_DATA.careerRecs[0];
             section.innerHTML = `<div class="section-label">Career Recommendations</div><div class="note-grid">${recs.map(r=>`<div class="note-card"><div class="note-title">${r.title}</div><div class="note-value" style="font-size:14px;color:${r.color}">${r.match} Match</div><div class="note-meta">${r.desc}<br><br><strong>Skills:</strong> ${r.skills.join(', ')}.</div></div>`).join('')}</div>`; }
 
-        function renderNetworkSection(country) { const section = document.getElementById('networkSection'); if (!section) return; const meta = JOB_DATA.extendedMeta[country] || JOB_DATA.extendedMeta.US; const chefs = JOB_DATA.famousChefs[country] || JOB_DATA.famousChefs.US; const chefsHtml = chefs.map(c => `<strong>${c.name}</strong> (${c.netWorth})`).join(', '); const networkCardsHtml = JOB_DATA.networkCards.map(card => `<div class="note-card"><div class="note-title">${card.title}</div><div class="note-value" style="font-size:14px">${card.value}</div><div class="note-meta">${card.meta}${card.loginCTA?`<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login to unlock personalized connections.</div></div>`:''}</div></div>`).join('');
+        function renderNetworkSection(country) { const section = document.getElementById('networkSection'); if (!section) return; const meta = JOB_DATA.extendedMeta[country] || JOB_DATA.extendedMeta.US; const dashers = JOB_DATA.famousDashers[country] || JOB_DATA.famousDashers.US; const dashersHtml = dashers.map(c => `<strong>${c.name}</strong> (${c.netWorth})`).join(', '); const networkCardsHtml = JOB_DATA.networkCards.map(card => `<div class="note-card"><div class="note-title">${card.title}</div><div class="note-value" style="font-size:14px">${card.value}</div><div class="note-meta">${card.meta}${card.loginCTA?`<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login to unlock personalized connections.</div></div>`:''}</div></div>`).join('');
             section.innerHTML = `
             <div class="section-label">Education &amp; Networking Strategy</div><div class="note-grid">
               <div class="note-card"><div class="note-title">Prestige University</div><div class="note-value">${meta.uni}</div><div class="note-meta">${meta.uniMeta}</div></div>
               <div class="note-card"><div class="note-title">Private Schooling</div><div class="note-value">${meta.privateSchool}</div><div class="note-meta">${meta.privateMeta}<br><br><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login for personalized ROI analysis.</div></div></div></div>
               <div class="note-card"><div class="note-title">Recommended Schools</div><div class="note-value" style="font-size:14px">${meta.schools}</div><div class="note-meta"><div style="background:color-mix(in oklch,var(--accent) 10%,transparent);border:1px dashed var(--accent);padding:8px;border-radius:4px;margin-top:4px"><div style="color:var(--accent);font-weight:700;font-size:12px">Login for personalized school match.</div></div></div></div>
               ${networkCardsHtml}
-              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${JOB_DATA.countries[country]?.name||country}</div><div class="note-value" style="font-size:14px">${chefsHtml}</div><div class="note-meta">These chefs scaled via brand, media, and multi-venue empires.</div></div>
+              <div class="note-card" style="grid-column:span 2"><div class="note-title">Hall of Fame — ${JOB_DATA.countries[country]?.name||country}</div><div class="note-value" style="font-size:14px">${dashersHtml}</div><div class="note-meta">These dashers scaled via brand, media, and multi-venue empires.</div></div>
             </div>`; }
 
         function renderFiltersAndTable() {
@@ -2371,15 +2366,13 @@
 
         // ── NEW: Inserted functions (renderCalculator & calcLTVAdvanced) ──
         function renderCalculator(country) {
-            const type = INCOME_TYPES[JOB_DATA.meta.incomeType];
             const country_data = JOB_DATA.countries[country];
-            const showBonus = type.bonusApplicable && JOB_DATA.meta.bonusApplicable;
-            const showInflation = type.inflationSensitive;
+            const showBonus = JOB_DATA.meta.bonusApplicable || false;
+            const showInflation = JOB_DATA.meta.inflationSensitive || false;
 
-            // 渲染三个 toggle 的显示/隐藏
+            // 渲染两个 toggle 的显示/隐藏
             document.getElementById('toggle-bonus').style.display = showBonus ? 'flex' : 'none';
             document.getElementById('toggle-inflation').style.display = showInflation ? 'flex' : 'none';
-            document.getElementById('toggle-tax').style.display = 'flex'; // 所有职业都有
 
             // 渲染奖金滑块范围
             if (showBonus) {
@@ -2393,11 +2386,9 @@
             const c = JOB_DATA.countries[country];
             const bonusOn = document.getElementById('toggle-bonus').checked;
             const inflationOn = document.getElementById('toggle-inflation').checked;
-            const taxOn = document.getElementById('toggle-tax').checked;
 
             const bonusRate = bonusOn ? (document.getElementById('bonus-slider').value / 100) : 0;
             const inflationRate = inflationOn ? 0.03 : 0; // 默认 3% CPI
-            const taxRate = taxOn ? getTaxRate(country) : 0;
 
             // Base LTV
             let ltv = c.annualUSD * c.career;
@@ -2413,9 +2404,6 @@
                 }
                 ltv = realLTV;
             }
-
-            // − 税后
-            if (taxOn) ltv = ltv * (1 - taxRate);
 
             return Math.round(ltv);
         }

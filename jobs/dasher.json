@@ -26,7 +26,12 @@
     "primaryTitle": "Dasher / Delivery Driver",
     "primarySlug": "dasher",
     "aliases": ["Delivery Driver", "Courier", "Food Delivery", "Package Delivery", "Gig Worker", "Uber Eats Driver", "DoorDash Driver", "Grubhub Driver"],
-    "subTitles": ["Gig Economy", "Food Delivery", "Last-Mile Logistics", "Rideshare Delivery", "Platform Work"]
+    "subTitles": [
+      { "title": "Dasher", "slug": "dasher", "levelIndex": 0, "type": "sub", "aliases": ["Delivery Driver", "Gig Driver", "Courier"] },
+      { "title": "Top Dasher", "slug": "dasher", "levelIndex": 1, "type": "sub", "aliases": ["Elite Driver", "Priority Dasher", "High-Status Driver"] },
+      { "title": "Fleet Partner", "slug": "dasher", "levelIndex": 2, "type": "sub", "aliases": ["Fleet Operator", "Multi-Vehicle Partner", "Fleet Manager"] },
+      { "title": "Regional Ops Lead", "slug": "dasher", "levelIndex": 3, "type": "sub", "aliases": ["Operations Lead", "Region Manager", "Logistics Supervisor"] }
+    ]
   },
   "industries": [
     { "id": "fd", "label": "Food Delivery", "active": true },
@@ -275,10 +280,10 @@
   "difficultyLabels": ["", "", "Very Easy", "Easy", "Below Avg", "Average", "Above Avg", "Hard", "Very Hard", "Brutal", "Extreme"],
   "insightCards": [
     { "id": "difficulty", "icon": "💪", "label": "Job Difficulty", "valueKey": "difficulty", "valueTemplate": "{value}/10", "metaTemplate": "{difficultyLabel} · Flexible but demanding", "colorMode": "gradient-bad" },
-    { "id": "restDays", "icon": "🏖️", "label": "Flexibility", "valueKey": "restDays", "valueTemplate": "Your Schedule", "metaTemplate": "Set your own hours · No fixed rest days", "colorMode": "gradient-good" },
+    { "id": "restDays", "icon": "🏖️", "label": "Flexibility", "valueKey": "restDays", "valueTemplate": "{value} days", "metaTemplate": "Set your own hours · No fixed rest days", "colorMode": "gradient-good" },
     { "id": "bestLearnAge", "icon": "🎓", "label": "Best Entry Age", "valueKey": "bestLearnAge", "valueTemplate": "{value}", "metaTemplate": "Tech-savvy generations adapt quickly", "colorMode": "accent" },
     { "id": "bestEntryAge", "icon": "🚀", "label": "Peak Earning Age", "valueKey": "bestEntryAge", "valueTemplate": "{value}", "metaTemplate": "Before full autonomous vehicles arrive", "colorMode": "accent" },
-    { "id": "travel", "icon": "✈️", "label": "Driving Required", "valueKey": "travel", "valueTemplate": "High", "metaTemplate": "Constant driving · Vehicle expenses apply", "colorMode": "accent" },
+    { "id": "travel", "icon": "✈️", "label": "Driving Required", "valueKey": "travel", "valueTemplate": "{value}", "metaTemplate": "Constant driving · Vehicle expenses apply", "colorMode": "accent" },
     { "id": "mobility", "icon": "🏃", "label": "Physical Activity", "valueKey": "mobility", "valueTemplate": "{value}", "metaTemplate": "Getting in/out of vehicle · Walking to doors", "colorMode": "accent" },
     { "id": "expression", "icon": "🧠", "label": "Decision Making", "valueKey": "expression", "valueTemplate": "{value}", "metaTemplate": "Route optimization · Parking choices", "colorMode": "accent" },
     { "id": "cert", "icon": "🚗", "label": "Requirements", "valueKey": "cert", "valueTemplate": "{value}", "metaTemplate": "Clean driving record essential", "spanFull": true, "colorMode": "neutral" }
@@ -288,30 +293,30 @@
     "UK": { "budget": "£220/mo", "hnwi": "Premium Delivery · Executive Courier", "startupReadiness": 68, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "GCSEs sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving record is key", "schools": "Advanced Driver Training", "retire": "Delivery Operations Manager", "pivot": "Local Courier Business Owner" },
     "AU": { "budget": "A$380/mo", "hnwi": "Premium Food & Wine Delivery", "startupReadiness": 75, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "High school sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving experience most important", "schools": "Defensive Driving", "retire": "Fleet Operations Manager", "pivot": "Local Delivery Service Owner" },
     "DE": { "budget": "€280/mo", "hnwi": "Premium Delivery Service Partner", "startupReadiness": 62, "mbti": "ISTP · ESTP · ISFP", "uni": "Not required", "uniMeta": "Abitur not necessary", "privateSchool": "Not applicable", "privateMeta": "Driving record essential", "schools": "Fahrerlaubnis Training", "retire": "Lieferoperations-Manager", "pivot": "Lokaler Kurierdienst-Inhaber" },
-    "JP": { "budget": "¥42,000/mo", "hnwi": "高級デリバリードライバー", "startupReadiness": 58, "mbti": "ISTP · ISFP · ESTP", "uni": "Not required", "uniMeta": "高卒で十分", "privateSchool": "Not applicable", "privateMeta": "運転記録が最も重要", "schools": "安全運転講習", "retire": "配送オペレーションマネージャー", "pivot": "地域宅配サービス事業主" },
+    "JP": { "budget": "¥42,000/mo", "hnwi": "高級デリバリードライバー · 法人向け定期配送 · 銀座・丸の内エリア専属", "startupReadiness": 58, "mbti": "ISTP · ISFP · ESTP", "uni": "Not required", "uniMeta": "高卒で十分、大学不要。免許と安全運転記録がすべて", "privateSchool": "Not applicable", "privateMeta": "運転記録と顧客評価が最も重要、プラットフォームの星評価が成約率に直結", "schools": "安全運転講習 · 物流オペレーター養成講座 · デリバリー効率化セミナー", "retire": "配送オペレーションマネージャー · 物流コンサルタント · 軽貨物運送事業者", "pivot": "地域宅配サービス事業主 · ラストワンマイル物流コーディネーター · Uber Eats 配送パートナー" },
     "SG": { "budget": "S$450/mo", "hnwi": "Premium Delivery Specialist", "startupReadiness": 80, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "O/N Levels sufficient", "privateSchool": "Not applicable", "privateMeta": "Driving record critical", "schools": "Defensive Driving", "retire": "Delivery Operations Manager", "pivot": "Local Courier Service Owner" },
-    "TW": { "budget": "NT$9,000/mo", "hnwi": "精品外送專員", "startupReadiness": 65, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "高中畢即可", "privateSchool": "Not applicable", "privateMeta": "駕駛紀錄最重要", "schools": "防禦駕駛課程", "retire": "營運管理主管", "pivot": "地區快遞服務負責人" },
-    "CN": { "budget": "¥1,800/mo", "hnwi": "高端配送专员", "startupReadiness": 70, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "高中即可", "privateSchool": "Not applicable", "privateMeta": "驾驶记录最重要", "schools": "防御性驾驶培训", "retire": "配送运营主管", "pivot": "本地配送服务负责人" }
+    "TW": { "budget": "NT$9,000/mo", "hnwi": "精品外送專員 · 高端餐飲配送 · 企業簽約專送 · 豪宅區專屬服務", "startupReadiness": 65, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "高中畢業即可，大學非必要。機車駕照與在地路線熟悉度更關鍵", "privateSchool": "Not applicable", "privateMeta": "駕駛紀錄與平台顧客評分最重要，高評分可解鎖優先接單權", "schools": "防禦駕駛課程 · 物流管理培訓班 · 外送效率優化工作坊", "retire": "營運管理主管 · 物流調度顧問 · 機車快遞行老闆", "pivot": "地區快遞服務負責人 · 最後一哩物流協調員 · 餐飲外送區域督導" },
+    "CN": { "budget": "¥1,800/mo", "hnwi": "高端配送专员 · 奢侈品闪送 · 企业专属配送 · 商务区专送骑士", "startupReadiness": 70, "mbti": "ESTP · ESFP · ISTP", "uni": "Not required", "uniMeta": "高中即可，学历门槛低。电动车驾驶技术与路线熟悉度是核心竞争力", "privateSchool": "Not applicable", "privateMeta": "驾驶记录与平台评分最重要，高评分获得优先派单和补贴资格", "schools": "防御性驾驶培训 · 配送效率优化课程 · 骑手技能提升训练营", "retire": "配送运营主管 · 城配物流管理 · 骑手站长/片区经理", "pivot": "本地配送服务负责人 · 社区团购配送合伙人 · 即时物流调度员" }
   },
   "startupLinks": {
     "US": [{ "label": "Gig Platforms", "url": "#" }, { "label": "Electric Scooter Rental", "url": "#" }],
     "UK": [{ "label": "Delivery Apps", "url": "#" }, { "label": "Bike Courier Services", "url": "#" }],
     "AU": [{ "label": "Delivery Platforms", "url": "#" }, { "label": "EV Delivery", "url": "#" }],
     "DE": [{ "label": "Lieferdienste", "url": "#" }, { "label": "E-Bike Lieferung", "url": "#" }],
-    "JP": [{ "label": "デリバリーアプリ", "url": "#" }, { "label": "eバイク配達", "url": "#" }],
+    "JP": [{ "label": "Uber Eats 配達パートナー登録", "url": "#" }, { "label": "出前館 配達員募集", "url": "#" }],
     "SG": [{ "label": "Delivery Platforms", "url": "#" }, { "label": "EV Courier", "url": "#" }],
-    "TW": [{ "label": "外送平台", "url": "#" }, { "label": "機車快遞", "url": "#" }],
-    "CN": [{ "label": "外卖平台", "url": "#" }, { "label": "电动车配送", "url": "#" }]
+    "TW": [{ "label": "Uber Eats 外送合作夥伴", "url": "#" }, { "label": "foodpanda 外送員招募", "url": "#" }],
+    "CN": [{ "label": "美团骑手招募", "url": "#" }, { "label": "饿了么蜂鸟配送", "url": "#" }]
   },
   "famousDashers": {
     "US": [{ "name": "Top Dasher of the Year", "netWorth": "Top Earners ~$100K/yr" }],
     "UK": [{ "name": "Delivery Champion", "netWorth": "Top Earners ~£60K/yr" }],
     "AU": [{ "name": "Delivery Legend", "netWorth": "Top Earners ~A$120K/yr" }],
     "DE": [{ "name": "Lieferprofi", "netWorth": "Top Verdienen ~€80K/Jahr" }],
-    "JP": [{ "name": "配達の達人", "netWorth": "トップ ~¥12M/年" }],
+    "JP": [{ "name": "配達の達人（デリバリーチャンピオン）", "netWorth": "年収トップ ~¥12M/年" }],
     "SG": [{ "name": "Delivery Star", "netWorth": "Top Earners ~S$120K/yr" }],
-    "TW": [{ "name": "外送王", "netWorth": "TOP ~NT$2M/年" }],
-    "CN": [{ "name": "单王", "netWorth": "TOP ~¥500K/年" }]
+    "TW": [{ "name": "年度外送之星 · 平台評選 TOP 1%", "netWorth": "年收 TOP ~NT$2M/年" }],
+    "CN": [{ "name": "年度骑手之星 · 平台配送达人", "netWorth": "年收入 TOP ~¥500K/年" }]
   },
   "accessLinks": [
     { "title": "Platform Signup", "desc": "Join major delivery apps" },

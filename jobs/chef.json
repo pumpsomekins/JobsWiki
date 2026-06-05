@@ -24,7 +24,13 @@
     "primaryTitle": "Chef / Cook",
     "primarySlug": "chef",
     "aliases": ["Cook", "Line Cook", "Sous Chef", "Head Chef", "Executive Chef", "Kitchen Staff", "Culinary Professional"],
-    "subTitles": ["Restaurant Kitchen", "Food Service", "Culinary Arts", "Hospitality Industry"]
+    "subTitles": [
+      { "title": "Line Cook", "slug": "chef", "levelIndex": 0, "type": "sub", "aliases": ["Commis", "Prep Cook", "Kitchen Assistant"] },
+      { "title": "Chef de Partie", "slug": "chef", "levelIndex": 1, "type": "sub", "aliases": ["CDP", "Station Chef", "Line Chef"] },
+      { "title": "Sous Chef", "slug": "chef", "levelIndex": 2, "type": "sub", "aliases": ["Second Chef", "Kitchen Supervisor", "Deputy Chef"] },
+      { "title": "Head Chef", "slug": "chef", "levelIndex": 3, "type": "sub", "aliases": ["Chef de Cuisine", "Kitchen Manager", "Lead Chef"] },
+      { "title": "Executive Chef", "slug": "chef", "levelIndex": 4, "type": "sub", "aliases": ["Exec Chef", "Group Chef", "Culinary Director"] }
+    ]
   },
   "industries": [
     { "id": "fb", "label": "Food & Beverage", "active": true },

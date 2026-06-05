@@ -20,7 +20,9 @@
     "inflationSensitive": true,
     "ltv_formula": "ratePerTask × tasksPerHour × hoursPerWeek × weeksPerYear × careerYears",
     "automationThreat": "HIGH",
-    "platformNote": "Gig worker, no benefits, platform-dependent"
+    "platformNote": "Gig worker, no benefits, platform-dependent",
+    "heroImage": "https://images.unsplash.com/photo-1582502841208-f993d457a4d5?w=500&q=80&auto=format&fit=crop",
+    "hallOfFameDesc": "These dashers scaled from gig driver to fleet operations."
   },
   "search": {
     "primaryTitle": "Dasher / Delivery Driver",
@@ -308,7 +310,7 @@
     "TW": [{ "label": "Uber Eats 外送合作夥伴", "url": "#" }, { "label": "foodpanda 外送員招募", "url": "#" }],
     "CN": [{ "label": "美团骑手招募", "url": "#" }, { "label": "饿了么蜂鸟配送", "url": "#" }]
   },
-  "famousDashers": {
+  "famousPersons": {
     "US": [{ "name": "Top Dasher of the Year", "netWorth": "Top Earners ~$100K/yr" }],
     "UK": [{ "name": "Delivery Champion", "netWorth": "Top Earners ~£60K/yr" }],
     "AU": [{ "name": "Delivery Legend", "netWorth": "Top Earners ~A$120K/yr" }],

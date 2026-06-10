@@ -1,7 +1,0 @@
-#做的next.txt的内容
-
-2.1  dasher.json 补 JP/TW/CN 空字段
-2.2  dasher.json 补所有 task 的 statusLabel
-2.3  chef.json 补 search 字段（按规范格式）
-2.4  dasher.json 补 search 字段
-2.5  两个 JSON 都加 incomeNote 和扩展 calculatorInputs

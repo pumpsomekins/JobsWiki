@@ -2166,8 +2166,8 @@
         let D;
         let INCOME_TYPES;
         Promise.all([
-            fetch('./jobs/chef.json').then(r => r.json()),
-            fetch('./jobs/income-types.json').then(r => r.json())
+            fetch('../jobs/chef.json').then(r => r.json()),
+            fetch('../jobs/income-types.json').then(r => r.json())
         ]).then(([jobData, incomeTypes]) => {
             JOB_DATA = jobData;
             D = JOB_DATA;

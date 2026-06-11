@@ -1830,6 +1830,290 @@
         html[data-theme="light"] .lang-name {
             color: #111
         }
+        /* ── Annual Income Curve Calculator ── */
+        .aic-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 22px;
+            margin-bottom: 12px;
+        }
+        .aic-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .aic-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text-faint);
+        }
+        .aic-type-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 4px;
+            background: color-mix(in oklch, var(--accent) 12%, transparent);
+            color: var(--accent);
+            border: 1px solid color-mix(in oklch, var(--accent) 28%, transparent);
+        }
+        .aic-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .aic-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .aic-field-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .aic-field-val {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: var(--font-display);
+        }
+        .aic-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .aic-input {
+            width: 80px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-hi);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 10px;
+            text-align: center;
+            outline: none;
+            transition: border-color .18s;
+        }
+        .aic-input:focus {
+            border-color: var(--accent);
+        }
+        .aic-input-unit {
+            font-size: 12px;
+            color: var(--text-faint);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .aic-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 5px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+            cursor: pointer;
+        }
+        .aic-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--surface);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,.3);
+            transition: transform .15s;
+        }
+        .aic-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        .aic-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--surface);
+            cursor: pointer;
+        }
+        .aic-primary-slider {
+            grid-column: 1 / -1;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+        }
+        .aic-primary-slider .aic-field-label {
+            font-size: 12px;
+            color: #fff;
+        }
+        .aic-primary-slider .aic-slider {
+            height: 6px;
+            background: var(--border-hi);
+        }
+        .aic-primary-slider .aic-slider::-webkit-slider-thumb {
+            width: 22px;
+            height: 22px;
+            border-width: 3px;
+        }
+        .aic-presets {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .aic-preset {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border-hi);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all .15s var(--ease);
+            white-space: nowrap;
+        }
+        .aic-preset:hover {
+            border-color: var(--text-faint);
+            color: var(--text);
+        }
+        .aic-preset.active {
+            background: color-mix(in oklch, var(--accent) 14%, transparent);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .aic-chart-area {
+            position: relative;
+            margin-bottom: 14px;
+        }
+        #aicSVG {
+            width: 100%;
+            overflow: visible;
+            display: block;
+        }
+        .aic-marker-line {
+            transition: all .25s var(--ease);
+        }
+        .aic-summary-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        @media(max-width:768px) {
+            .aic-summary-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media(max-width:480px) {
+            .aic-summary-row {
+                grid-template-columns: 1fr;
+            }
+            .aic-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+        .aic-summary-card {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+        }
+        .aic-summary-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .aic-summary-val {
+            font-family: var(--font-display);
+            font-size: clamp(18px, 2vw, 24px);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+        .aic-summary-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .aic-formula-note {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--text-faint);
+            font-family: monospace;
+            letter-spacing: .02em;
+            padding: 8px 12px;
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+            border-left: 2px solid var(--accent);
+        }
+        .aic-toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .aic-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+        }
+        .aic-toggle input[type="checkbox"] {
+            accent-color: var(--accent);
+            width: 14px;
+            height: 14px;
+        }
+        .aic-bonus-slider-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+        .aic-bonus-val {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 36px;
+            text-align: right;
+        }
+        .aic-current-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+            margin-right: 4px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        html[data-theme="light"] .aic-summary-val {
+            color: #111;
+        }
+        /* ── end Annual Income Curve styles ── */
+
         .main-tabs-nav {
             display: flex;
             gap: 0;
@@ -2120,6 +2404,7 @@
         </div>
         <nav class="main-tabs-nav" role="tablist" id="mainTabsNav">
             <button class="mtab active" role="tab" data-tab="tab-ltv"><span class="mtab-icon">💰</span>LTV &amp; Salary</button>
+            <button class="mtab" role="tab" data-tab="tab-calc"><span class="mtab-icon">📊</span>Income Curve <span class="mtab-badge">NEW</span></button>
             <button class="mtab" role="tab" data-tab="tab-career"><span class="mtab-icon">📈</span>Job Path &amp; Insights</button>
             <button class="mtab" role="tab" data-tab="tab-risk"><span class="mtab-icon">🤖</span>Job Workflow &amp; AI/Robotic Risks</button>
             <button class="mtab" role="tab" data-tab="tab-hazards"><span class="mtab-icon">⚠️</span>Job Hazards</button>
@@ -2129,11 +2414,14 @@
         <div class="tab-panel active" id="tab-ltv">
             <div class="section-label">Job Lifetime Value Analysis</div>
             <div class="ltv-grid" id="ltvKpiGrid"></div>
-            <input type="checkbox" id="toggle-tax" style="display:none" title="After Tax"> After Tax
             <div class="car-viz" id="carVizWrap"></div>
             <div class="income-chart-wrap" id="incomeChartWrap"></div>
             <div class="section-label">Income HeatMap</div>
             <div class="heatmap-section" id="heatmapSection"></div>
+        </div>
+        <div class="tab-panel" id="tab-calc">
+            <div class="section-label">Annual Income Curve Calculator</div>
+            <div class="aic-wrap" id="annualIncomeCalc"></div>
         </div>
         <div class="tab-panel" id="tab-career">
             <div class="section-label" style="margin-bottom:14px">Career Path</div>
@@ -2362,6 +2650,7 @@
 
         function renderAll(countryCode, levelIndex, animate = true) {
             renderLTVKpiCards(countryCode, levelIndex, animate); renderCarViz(countryCode, levelIndex); renderIncomeChart(countryCode); renderPromoFlow(countryCode); renderInsights(countryCode); renderLang(countryCode); renderHeatmap(countryCode); renderExtraInsights(countryCode); renderCareerNotes(countryCode); renderCareerRecs(levelIndex); renderNetworkSection(countryCode); renderFiltersAndTable(); renderSummary(levelIndex);
+            renderAnnualIncomeCalc(countryCode);
             if (animate) { const sec = document.querySelector('.ltv-section'); if (sec) { sec.classList.remove('ltv-fade'); void sec.offsetWidth; sec.classList.add('ltv-fade'); } }
         }
 
@@ -2370,65 +2659,396 @@
             const footnoteEl = document.getElementById('footnoteText'); if (footnoteEl) footnoteEl.textContent = JOB_DATA.footnote;
         }
 
-        // ── NEW: Inserted functions (renderCalculator & calcLTVAdvanced) ──
-        function renderCalculator(country) {
-            const type = INCOME_TYPES[JOB_DATA.meta.incomeType];
-            const country_data = JOB_DATA.countries[country];
-            const showBonus = type.bonusApplicable && JOB_DATA.meta.bonusApplicable;
-            const showInflation = type.inflationSensitive;
+        // ═══════════════════════════════════════════════════════
+        //  Annual Income Curve Calculator — generic architecture
+        // ═══════════════════════════════════════════════════════
 
-            // 渲染三个 toggle 的显示/隐藏
-            document.getElementById('toggle-bonus').style.display = showBonus ? 'flex' : 'none';
-            document.getElementById('toggle-inflation').style.display = showInflation ? 'flex' : 'none';
-            document.getElementById('toggle-tax').style.display = 'flex'; // 所有职业都有
+        // Maps income-type.calculatorInputs → user-adjustable slider config
+        // Each param gets min/max/step/default pulled from jobJSON.calculatorInputSpecs
+        function buildCalcParams(jobData, incomeType) {
+            const specs = jobData.meta.calculatorInputSpecs || {};
+            const inputs = incomeType.calculatorInputs || [];
+            const params = {};
 
-            // 渲染奖金滑块范围
-            if (showBonus) {
-                const [min, max] = JOB_DATA.meta.bonusRange;
-                document.getElementById('bonus-slider').min = min * 100;
-                document.getElementById('bonus-slider').max = max * 100;
+            inputs.forEach(key => {
+                const spec = specs[key] || {};
+                params[key] = {
+                    label: spec.label || key,
+                    min: spec.min != null ? spec.min : 1,
+                    max: spec.max != null ? spec.max : 100,
+                    step: spec.step != null ? spec.step : 1,
+                    default: spec.default != null ? spec.default : Math.round((spec.min + spec.max) / 2),
+                    unit: spec.unit || '',
+                    current: spec.default != null ? spec.default : Math.round((spec.min + spec.max) / 2)
+                };
+            });
+            return params;
+        }
+
+        // Compute annual income from current param values using the income-type formula
+        function calcAnnualIncome(params, incomeType, jobMeta) {
+            const p = params;
+            const code = incomeType.code;
+
+            switch (code) {
+                case 'piece_rate': {
+                    const base = (p.ratePerTask?.current||0) * (p.tasksPerHour?.current||0) * (p.hoursPerWeek?.current||0) * (p.weeksPerYear?.current||0);
+                    const peakBoost = 1 + ((p.peakPayRate?.current||0)/100) * ((p.peakHoursPct?.current||0)/100);
+                    return Math.round(base * peakBoost);
+                }
+                case 'salary': {
+                    return Math.round((p.annualSalary?.current||0));
+                }
+                case 'hourly': {
+                    return Math.round((p.hourlyRate?.current||0) * (p.hoursPerWeek?.current||0) * (p.weeksPerYear?.current||0));
+                }
+                case 'wage_plus_tips': {
+                    const wage = (p.hourlyRate?.current||0) * (p.hoursPerShift?.current||0);
+                    return Math.round((wage + (p.avgTipsPerShift?.current||0)) * (p.shiftsPerWeek?.current||0) * (p.weeksPerYear?.current||0));
+                }
+                case 'commission_only': {
+                    return Math.round((p.annualSales?.current||0) * ((p.commissionRate?.current||0)/100));
+                }
+                case 'base_plus_commission': {
+                    const comm = (p.annualSales?.current||0) * ((p.commissionRate?.current||0)/100);
+                    return Math.round(((p.baseSalary?.current||0) + comm));
+                }
+                case 'fixed_price_contract': {
+                    return Math.round((p.avgProjectFee?.current||0) * (p.projectsPerYear?.current||0));
+                }
+                case 'time_and_materials': {
+                    return Math.round((p.hourlyRate?.current||0) * (p.billableHoursPerYear?.current||0));
+                }
+                case 'day_rate_freelance': {
+                    return Math.round((p.dayRate?.current||0) * (p.billableDaysPerYear?.current||0));
+                }
+                case 'retainer': {
+                    return Math.round((p.monthlyRetainer?.current||0) * (p.clientCount?.current||0) * 12);
+                }
+                case 'salary_plus_equity': {
+                    return Math.round((p.baseSalary?.current||0) + (p.annualEquityGrant?.current||0));
+                }
+                case 'per_diem_travel': {
+                    return Math.round((p.baseSalary?.current||0) + (p.perDiemRate?.current||0) * (p.travelDaysPerYear?.current||0));
+                }
+                case 'government_indexed': {
+                    return Math.round((p.baseSalary?.current||0));
+                }
+                case 'creative_royalty': {
+                    return Math.round((p.annualRoyalty?.current||0));
+                }
+                case 'platform_revenue_share': {
+                    return Math.round(((p.monthlyAdRevenue?.current||0) + (p.monthlySubRevenue?.current||0)) * 12);
+                }
+                default:
+                    // Generic fallback: multiply all numeric params together
+                    return Math.round(Object.values(p).reduce((acc, v) => acc * (v.current||1), 1));
             }
         }
 
-        function getTaxRate(country) {
-            const annualUSD = JOB_DATA.countries[country].annualUSD;
-            if (annualUSD < 30000) return 0.10;
-            if (annualUSD < 60000) return 0.22;
-            if (annualUSD < 100000) return 0.24;
-            return 0.32;
-        }
-
-        function calcLTVAdvanced(country) {
-            const c = JOB_DATA.countries[country];
-            const bonusOn = document.getElementById('toggle-bonus').checked;
-            const inflationOn = document.getElementById('toggle-inflation').checked;
-            const taxOn = document.getElementById('toggle-tax').checked;
-
-            const bonusRate = bonusOn ? (document.getElementById('bonus-slider').value / 100) : 0;
-            const inflationRate = inflationOn ? 0.03 : 0; // 默认 3% CPI
-            const taxRate = taxOn ? getTaxRate(country) : 0;
-
-            // Base LTV
-            let ltv = c.annualUSD * c.career;
-
-            // + Bonus
+        // Compute LTV = annual × careerYears, with optional bonus/inflation/tax
+        function calcLTVFromParams(params, incomeType, jobMeta) {
+            const annual = calcAnnualIncome(params, incomeType, jobMeta);
+            const careerYrs = params.careerYears?.current || 20;
+            // Optional toggles
+            const bonusOn = document.getElementById('aic-toggle-bonus')?.checked;
+            const inflationOn = document.getElementById('aic-toggle-inflation')?.checked;
+            const taxOn = document.getElementById('aic-toggle-tax')?.checked;
+            const bonusRate = bonusOn ? (parseFloat(document.getElementById('aic-bonus-slider')?.value||0) / 100) : 0;
+            let ltv = annual * careerYrs;
             if (bonusOn) ltv = ltv * (1 + bonusRate);
-
-            // × 通胀折现（实际购买力）
+            // Simple inflation discount (3% CPI)
             if (inflationOn) {
                 let realLTV = 0;
-                for (let yr = 0; yr < c.career; yr++) {
-                    realLTV += c.annualUSD * (1 + bonusRate) / Math.pow(1 + inflationRate, yr);
+                for (let yr = 0; yr < careerYrs; yr++) {
+                    realLTV += annual * (1 + bonusRate) / Math.pow(1.03, yr);
                 }
                 ltv = realLTV;
             }
-
-            // − 税后
-            if (taxOn) ltv = ltv * (1 - taxRate);
-
+            if (taxOn) {
+                const taxRate = annual < 30000 ? 0.10 : annual < 60000 ? 0.22 : annual < 100000 ? 0.24 : 0.32;
+                ltv = ltv * (1 - taxRate);
+            }
             return Math.round(ltv);
         }
-        // ── end of inserted functions ──
+
+        // Render the full calculator UI into #annualIncomeCalc
+        function renderAnnualIncomeCalc(country) {
+            const wrap = document.getElementById('annualIncomeCalc');
+            if (!wrap || !INCOME_TYPES) return;
+
+            const incomeType = INCOME_TYPES[JOB_DATA.meta.incomeType];
+            if (!incomeType) return;
+
+            const params = buildCalcParams(JOB_DATA, incomeType);
+            const countryData = JOB_DATA.countries[country];
+            const symbol = countryData?.symbol || '$';
+            const showBonus = incomeType.bonusApplicable && JOB_DATA.meta.bonusApplicable;
+            const showInflation = incomeType.inflationSensitive;
+
+            // Determine the primary adjustable variable (first input that isn't careerYears, inflationRate, taxRate)
+            const adjustableKeys = (incomeType.calculatorInputs || []).filter(k =>
+                !['careerYears', 'inflationRate', 'taxRate', 'bonusRate'].includes(k)
+            );
+            const primaryKey = adjustableKeys[0] || 'tasksPerHour';
+
+            // Build controls HTML
+            const fieldHTML = (key, p, isPrimary) => {
+                const cls = isPrimary ? 'aic-field aic-primary-slider' : 'aic-field';
+                return `<div class="${cls}">
+                    <div class="aic-field-label"><span>${p.label}</span><span class="aic-field-val" id="aic-val-${key}">${p.current}${p.unit ? ' ' + p.unit : ''}</span></div>
+                    <div class="aic-input-row">
+                        <input type="range" class="aic-slider" id="aic-range-${key}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.current}" data-key="${key}">
+                        <input type="number" class="aic-input" id="aic-num-${key}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.current}" data-key="${key}">
+                        ${p.unit ? `<span class="aic-input-unit">${p.unit}</span>` : ''}
+                    </div>
+                </div>`;
+            };
+
+            const controlKeys = incomeType.calculatorInputs.filter(k => params[k]);
+
+            // Presets for delivery count
+            const presetDefs = (primaryKey === 'tasksPerHour') ? [
+                { label: 'Casual', val: 1, desc: '1/hr' },
+                { label: 'Part-Time', val: 2, desc: '2/hr' },
+                { label: 'Avg Dasher', val: params[primaryKey].default, desc: params[primaryKey].default+'/hr', isDefault: true },
+                { label: 'Busy', val: 4, desc: '4/hr' },
+                { label: 'Max Effort', val: params[primaryKey].max, desc: params[primaryKey].max+'/hr' },
+            ] : null;
+
+            const annualIncome = calcAnnualIncome(params, incomeType, JOB_DATA.meta);
+            const ltv = calcLTVFromParams(params, incomeType, JOB_DATA.meta);
+
+            wrap.innerHTML = `
+                <div class="aic-header">
+                    <span class="aic-title"><span class="aic-current-dot"></span>Interactive Income Simulator — ${JOB_DATA.meta.job}</span>
+                    <span class="aic-type-badge">${incomeType.icon} ${incomeType.label}</span>
+                </div>
+                ${presetDefs ? `<div class="aic-presets" id="aic-presets">${presetDefs.map(pr => `<button class="aic-preset${pr.isDefault?' active':''}" data-val="${pr.val}" data-key="${primaryKey}">${pr.desc} · ${pr.label}</button>`).join('')}</div>` : ''}
+                <div class="aic-controls" id="aic-controls">
+                    ${controlKeys.map(k => fieldHTML(k, params[k], k === primaryKey)).join('')}
+                </div>
+                <div class="aic-toggle-row">
+                    <label class="aic-toggle"><input type="checkbox" id="aic-toggle-bonus" ${showBonus?'':'disabled'}> Bonus</label>
+                    ${showBonus ? `<div class="aic-bonus-slider-wrap"><input type="range" class="aic-slider" id="aic-bonus-slider" min="${Math.round(JOB_DATA.meta.bonusRange[0]*100)}" max="${Math.round(JOB_DATA.meta.bonusRange[1]*100)}" value="${Math.round((JOB_DATA.meta.bonusRange[0]+JOB_DATA.meta.bonusRange[1])/2*100)}" step="1"><span class="aic-bonus-val" id="aic-bonus-val">${Math.round((JOB_DATA.meta.bonusRange[0]+JOB_DATA.meta.bonusRange[1])/2*100)}%</span></div>` : ''}
+                    <label class="aic-toggle"><input type="checkbox" id="aic-toggle-inflation" ${showInflation?'':'disabled'}> Inflation (3%)</label>
+                    <label class="aic-toggle"><input type="checkbox" id="aic-toggle-tax"> After Tax</label>
+                </div>
+                <div class="aic-chart-area" id="aic-chart-area"></div>
+                <div class="aic-summary-row">
+                    <div class="aic-summary-card" style="--glow:color-mix(in oklch, var(--accent) 15%, transparent)">
+                        <div class="aic-summary-label">Annual Income</div>
+                        <div class="aic-summary-val" style="color:#fff">${symbol}${annualIncome.toLocaleString('en-US')}</div>
+                        <div class="aic-summary-sub">${JOB_DATA.meta.incomeNote || 'Based on current parameters'}</div>
+                    </div>
+                    <div class="aic-summary-card">
+                        <div class="aic-summary-label">Career LTV (${params.careerYears?.current||20} yrs)</div>
+                        <div class="aic-summary-val" style="color:var(--accent)">${symbol}${ltv.toLocaleString('en-US')}</div>
+                        <div class="aic-summary-sub">Lifetime earnings projection</div>
+                    </div>
+                    <div class="aic-summary-card">
+                        <div class="aic-summary-label">Monthly Equivalent</div>
+                        <div class="aic-summary-val" style="color:var(--green)">${symbol}${Math.round(annualIncome/12).toLocaleString('en-US')}</div>
+                        <div class="aic-summary-sub">≈ ${symbol}${Math.round(annualIncome/52).toLocaleString('en-US')}/week</div>
+                    </div>
+                </div>
+                <div class="aic-formula-note">📐 ${incomeType.code} formula: annual = ${incomeType.ltv_base?.split('×')[0]||'params'} … (see income-types.json for full derivation)</div>
+            `;
+
+            // Render chart
+            renderAICChart(params, incomeType, primaryKey, symbol, country);
+
+            // Bind events
+            bindCalcEvents(params, incomeType, primaryKey, symbol, country);
+        }
+
+        function renderAICChart(params, incomeType, primaryKey, symbol, country) {
+            const area = document.getElementById('aic-chart-area');
+            if (!area) return;
+
+            const pKey = primaryKey;
+            const p = params[pKey];
+            if (!p) return;
+
+            const W = 860, H = 220, padL = 55, padR = 30, padT = 24, padB = 38;
+            const cW = W - padL - padR, cH = H - padT - padB;
+
+            // Compute income for each value of the primary parameter
+            const steps = 60;
+            const pts = [];
+            let maxInc = 0;
+            for (let i = 0; i <= steps; i++) {
+                const val = p.min + (i / steps) * (p.max - p.min);
+                const testParams = JSON.parse(JSON.stringify(params));
+                testParams[pKey].current = val;
+                const inc = calcAnnualIncome(testParams, incomeType, JOB_DATA.meta);
+                pts.push({ x: val, y: inc });
+                if (inc > maxInc) maxInc = inc;
+            }
+
+            const currentIncome = calcAnnualIncome(params, incomeType, JOB_DATA.meta);
+            if (currentIncome > maxInc) maxInc = currentIncome;
+            if (maxInc < 1) maxInc = 1;
+
+            const minInc = Math.max(0, pts[0].y * 0.5);
+            const xOf = v => padL + ((v - p.min) / (p.max - p.min)) * cW;
+            const yOf = v => padT + cH - ((v - minInc) / (maxInc - minInc)) * cH;
+
+            // Grid lines
+            let inner = '';
+            for (let g = 0; g <= 4; g++) {
+                const y = padT + (g / 4) * cH;
+                const val = Math.round(maxInc - (g / 4) * (maxInc - minInc));
+                inner += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#222" stroke-width="1"/>
+                <text x="${padL-5}" y="${y+4}" text-anchor="end" fill="#555" font-size="10">${val>=1000?'$'+(val/1000).toFixed(0)+'K':val}</text>`;
+            }
+
+            // X-axis labels
+            const xSteps = 7;
+            for (let g = 0; g <= xSteps; g++) {
+                const val = Math.round(p.min + (g / xSteps) * (p.max - p.min));
+                const x = padL + (g / xSteps) * cW;
+                inner += `<text x="${x}" y="${H-5}" text-anchor="middle" fill="#555" font-size="10">${val}</text>`;
+            }
+
+            // Curve
+            let d = '';
+            pts.forEach((pt, i) => {
+                d += (i === 0 ? 'M' : 'L') + xOf(pt.x).toFixed(1) + ',' + yOf(pt.y).toFixed(1);
+            });
+            inner += `<path d="${d}" fill="none" stroke="url(#aicGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+            // Area fill under curve
+            if (pts.length > 0) {
+                const fillD = d + ` L${xOf(pts[pts.length-1].x).toFixed(1)},${yOf(minInc)} L${xOf(pts[0].x).toFixed(1)},${yOf(minInc)} Z`;
+                inner += `<path d="${fillD}" fill="url(#aicAreaGrad)" opacity="0.15"/>`;
+            }
+
+            // Current value marker
+            const cx = xOf(params[pKey].current);
+            const cy = yOf(currentIncome);
+            inner += `<line x1="${cx}" y1="${padT}" x2="${cx}" y2="${H-padB}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5,4" class="aic-marker-line"/>`;
+            inner += `<circle cx="${cx}" cy="${cy}" r="7" fill="var(--accent)" stroke="var(--surface)" stroke-width="2.5" class="aic-marker-line"/>`;
+            inner += `<text x="${cx}" y="${padT-6}" text-anchor="middle" fill="var(--accent)" font-size="11" font-weight="700" class="aic-marker-line">${symbol}${Math.round(currentIncome).toLocaleString('en-US')}</text>`;
+
+            // Default marker (dashed line at default position)
+            const defaultX = xOf(p.default);
+            const defaultPt = pts.find(pt => Math.abs(pt.x - p.default) < 0.01) || pts[0];
+            const defaultY = defaultPt ? yOf(defaultPt.y) : yOf(0);
+            inner += `<line x1="${defaultX}" y1="${padT}" x2="${defaultX}" y2="${H-padB}" stroke="#555" stroke-width="1" stroke-dasharray="3,5"/>`;
+            inner += `<text x="${defaultX}" y="${H-padB+15}" text-anchor="middle" fill="#666" font-size="10">Avg: ${p.default}${p.unit||''}</text>`;
+
+            const defs = `<defs>
+                <linearGradient id="aicGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="var(--accent)"/>
+                    <stop offset="100%" stop-color="var(--green)"/>
+                </linearGradient>
+                <linearGradient id="aicAreaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="var(--green)" stop-opacity="0.3"/>
+                </linearGradient>
+            </defs>`;
+
+            area.innerHTML = `<svg id="aicSVG" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${defs}${inner}</svg>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-top:4px;padding:0 8px">
+                <span>${p.label} ${p.unit ? '('+p.unit+')' : ''}</span>
+                <span>Annual Income</span>
+            </div>`;
+        }
+
+        function bindCalcEvents(params, incomeType, primaryKey, symbol, country) {
+            const controlKeys = incomeType.calculatorInputs.filter(k => params[k]);
+
+            function updateAll() {
+                // Read current values from DOM
+                controlKeys.forEach(key => {
+                    const range = document.getElementById('aic-range-' + key);
+                    if (range) params[key].current = parseFloat(range.value);
+                });
+
+                const annualIncome = calcAnnualIncome(params, incomeType, JOB_DATA.meta);
+                const ltv = calcLTVFromParams(params, incomeType, JOB_DATA.meta);
+
+                // Update value labels
+                controlKeys.forEach(key => {
+                    const valEl = document.getElementById('aic-val-' + key);
+                    if (valEl) valEl.textContent = params[key].current + (params[key].unit ? ' ' + params[key].unit : '');
+                });
+
+                // Update summary cards
+                const wrap = document.getElementById('annualIncomeCalc');
+                if (wrap) {
+                    const vals = wrap.querySelectorAll('.aic-summary-val');
+                    if (vals[0]) vals[0].textContent = symbol + annualIncome.toLocaleString('en-US');
+                    if (vals[1]) vals[1].textContent = symbol + ltv.toLocaleString('en-US');
+                    if (vals[2]) vals[2].textContent = symbol + Math.round(annualIncome/12).toLocaleString('en-US');
+                    const subs = wrap.querySelectorAll('.aic-summary-sub');
+                    if (subs[2]) subs[2].textContent = '≈ ' + symbol + Math.round(annualIncome/52).toLocaleString('en-US') + '/week';
+                }
+
+                // Update chart
+                renderAICChart(params, incomeType, primaryKey, symbol, country);
+
+                // Update presets
+                const presetBtns = document.querySelectorAll('#aic-presets .aic-preset');
+                presetBtns.forEach(btn => {
+                    const targetVal = parseFloat(btn.dataset.val);
+                    btn.classList.toggle('active', Math.abs(params[primaryKey].current - targetVal) < 0.001);
+                });
+            }
+
+            // Range sliders
+            controlKeys.forEach(key => {
+                const range = document.getElementById('aic-range-' + key);
+                const num = document.getElementById('aic-num-' + key);
+                if (range && num) {
+                    range.addEventListener('input', () => {
+                        num.value = range.value;
+                        params[key].current = parseFloat(range.value);
+                        updateAll();
+                    });
+                    num.addEventListener('change', () => {
+                        const v = Math.min(params[key].max, Math.max(params[key].min, parseFloat(num.value) || params[key].default));
+                        num.value = v;
+                        range.value = v;
+                        params[key].current = v;
+                        updateAll();
+                    });
+                }
+            });
+
+            // Preset buttons
+            const presetWrap = document.getElementById('aic-presets');
+            if (presetWrap) {
+                presetWrap.addEventListener('click', e => {
+                    const btn = e.target.closest('.aic-preset');
+                    if (!btn) return;
+                    const val = parseFloat(btn.dataset.val);
+                    const key = btn.dataset.key;
+                    if (params[key]) params[key].current = val;
+                    const range = document.getElementById('aic-range-' + key);
+                    const num = document.getElementById('aic-num-' + key);
+                    if (range) range.value = val;
+                    if (num) num.value = val;
+                    updateAll();
+                });
+            }
+
+            // Toggle switches
+            ['bonus', 'inflation', 'tax'].forEach(t => {
+                const toggle = document.getElementById('aic-toggle-' + t);
+                if (toggle) toggle.addEventListener('change', updateAll);
+            });
+            const bonusSlider = document.getElementById('aic-bonus-slider');
+            const bonusVal = document.getElementById('aic-bonus-val');
+            if (bonusSlider && bonusVal) {
+                bonusSlider.addEventListener('input', () => {
+                    bonusVal.textContent = bonusSlider.value + '%';
+                    updateAll();
+                });
+            }
+        }
+        // ── end Annual Income Curve Calculator ──
 
         document.getElementById('countryDropdown')?.addEventListener('click', e => { const item = e.target.closest('.cdd-item'); if (!item) return;
             currentCountry = item.dataset.country; document.querySelectorAll('.cdd-item').forEach(i => i.classList.remove('active')); item.classList.add('active'); const lbl = document.getElementById('countryPillLabel'); if (lbl) lbl.textContent = currentCountry;
